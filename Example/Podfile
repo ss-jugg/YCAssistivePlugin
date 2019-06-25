@@ -1,6 +1,6 @@
 use_frameworks!
 
-platform :ios, '8.0'
+platform :ios, '9.0'
 
 target 'YCAssistivePlugin_Example' do
   pod 'YCAssistivePlugin', :path => '../'
@@ -11,3 +11,6 @@ target 'YCAssistivePlugin_Example' do
     
   end
 end
+
+
+#pod 'YCNetworking', :path=> '../../YCNetworking'

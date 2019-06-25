@@ -63,9 +63,9 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		986CD7CE411B9B81F0A6744C /* Pods-YCAssistivePlugin_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YCAssistivePlugin_Tests.debug.xcconfig"; path = "Target Support Files/Pods-YCAssistivePlugin_Tests/Pods-YCAssistivePlugin_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		9AC227C22B87D49DE306ADC0 /* Pods-YCAssistivePlugin_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YCAssistivePlugin_Example.debug.xcconfig"; path = "Target Support Files/Pods-YCAssistivePlugin_Example/Pods-YCAssistivePlugin_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		D94E34B9F880F26BA1AF6B2F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		ED07E546A112AEA3E950CFF0 /* YCAssistivePlugin.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = YCAssistivePlugin.podspec; path = ../YCAssistivePlugin.podspec; sourceTree = "<group>"; };
-		EE5B362C35BBCDB33F410F59 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		D94E34B9F880F26BA1AF6B2F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		ED07E546A112AEA3E950CFF0 /* YCAssistivePlugin.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = YCAssistivePlugin.podspec; path = ../YCAssistivePlugin.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		EE5B362C35BBCDB33F410F59 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		FAB808D24F9D29470CB98D59 /* Pods_YCAssistivePlugin_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YCAssistivePlugin_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -193,7 +193,6 @@
 				986CD7CE411B9B81F0A6744C /* Pods-YCAssistivePlugin_Tests.debug.xcconfig */,
 				6FC432811E878C225F2A7E94 /* Pods-YCAssistivePlugin_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -258,6 +257,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -305,12 +305,14 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-YCAssistivePlugin_Example/Pods-YCAssistivePlugin_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/YCAssistivePlugin/YCAssistivePlugin.framework",
+				"${BUILT_PRODUCTS_DIR}/YYModel/YYModel.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YCAssistivePlugin.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYModel.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -501,9 +503,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "YCAssistivePlugin/YCAssistivePlugin-Prefix.pch";
 				INFOPLIST_FILE = "YCAssistivePlugin/YCAssistivePlugin-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -516,9 +520,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "YCAssistivePlugin/YCAssistivePlugin-Prefix.pch";
 				INFOPLIST_FILE = "YCAssistivePlugin/YCAssistivePlugin-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
