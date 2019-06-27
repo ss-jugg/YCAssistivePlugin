@@ -16,23 +16,16 @@ typedef NS_ENUM(NSUInteger, YCNetworkEnvironmentType) {
     YCNetworkEnvironmentTypeRelease,    //生产环境，配置
 };
 
-@interface YCNetworkEnvironmentModel : NSObject
-@property (nonatomic, copy) NSString *environmentName;
-@property (nonatomic, assign) YCNetworkEnvironmentType environmentType;
-
-+ (instancetype)environmentModelWithName:(NSString *)evnironmentName type:(YCNetworkEnvironmentType)environmentType;
-
-@end
-
 @interface YCNetworkEnvironment : NSObject
 
-@property (nonatomic, strong, readonly) NSArray<YCNetworkEnvironmentModel *> *environmentSources;
+/* 当前环境地址 */
+@property (nonatomic, copy, readonly) NSString *environmentAddress;
 
 + (instancetype)sharedInstance;
 
 - (void)install;
 
-- (YCNetworkEnvironmentModel *)currentEnvironment;
+- (void)switchEnvironmentForKey:(NSString *)key;
 
 @end
 

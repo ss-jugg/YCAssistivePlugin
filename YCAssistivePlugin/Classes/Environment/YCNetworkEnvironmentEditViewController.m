@@ -71,7 +71,7 @@
         self.selectedHandler(self.itemConfigurs);
     }
     
-    [self.tableView reloadData];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {

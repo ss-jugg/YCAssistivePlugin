@@ -24,6 +24,7 @@
     return [self.yc_delegate canBecomeKeyWindow:self];
 }
 
+
 - (BOOL)_canAffectStatusBarAppearance {
     return [self isKeyWindow];
 }

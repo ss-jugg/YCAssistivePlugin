@@ -11,13 +11,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface YCAssistiveManager : NSObject
 
+/* 原window */
+@property (nonatomic, strong, readonly) UIWindow *originWindow;
+/* 辅助window */
 @property (nonatomic, strong, readonly) YCAssistiveWindow *assistiveWindow;
 
 + (instancetype)sharedManager;
 
 - (void)showAssistive;
+- (void)makeAssistiveWindowAsKeyWindow;
 
 - (void)hideAssistive;
+- (void)revokeToOriginKeyWindow;
 
 @end
 

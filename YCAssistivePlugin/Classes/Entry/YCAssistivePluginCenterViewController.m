@@ -6,6 +6,7 @@
 //
 
 #import "YCAssistivePluginCenterViewController.h"
+#import "YCAssistiveManager.h"
 
 @interface YCAssistivePluginCenterViewController ()
 
@@ -13,16 +14,26 @@
 
 @implementation YCAssistivePluginCenterViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [[YCAssistiveManager sharedManager] makeAssistiveWindowAsKeyWindow];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor lightGrayColor];
     [self addChildrenControllers];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [[YCAssistiveManager sharedManager] revokeToOriginKeyWindow];
+}
+
 - (void)addChildrenControllers {
     
-    NSArray *viewControllers = @[@"YCNetworkEmvironmentViewController"];
-    NSArray *titles = @[@"server"];
+    NSArray *viewControllers = @[@"YCNetworkEmvironmentViewController",@"YCAssistiveHttpViewController"];
+    NSArray *titles = @[@"server",@"http"];
     [viewControllers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         UIViewController *viewController;
         viewController = [[NSClassFromString(obj) alloc] init];

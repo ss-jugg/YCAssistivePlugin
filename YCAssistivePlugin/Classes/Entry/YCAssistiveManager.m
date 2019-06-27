@@ -9,11 +9,10 @@
 #import "YCAssistivePluginViewController.h"
 @interface YCAssistiveManager ()<YCAssistiveWindowDelegate>
 
-/* <#mark#> */
 @property (nonatomic, assign) BOOL yc_canBecomeKeyWindow;
 
 /* 原始window */
-@property (nonatomic, strong) UIWindow *originWindow;
+@property (nonatomic, strong, readwrite) UIWindow *originWindow;
 /* 辅助window */
 @property (nonatomic, strong, readwrite) YCAssistiveWindow *assistiveWindow;
 /* 控制器 */
@@ -47,25 +46,18 @@
 #pragma mark - public
 - (void)showAssistive {
 
-    if (!self.yc_canBecomeKeyWindow) {
-        [self makeAssistiveWindowKeyWindow];
-    }
     self.assistiveWindow.hidden = NO;
 }
 
 - (void)hideAssistive {
     
-    if (self.yc_canBecomeKeyWindow) {
-        self.yc_canBecomeKeyWindow = NO;
-        [self returnToOriginKeyWindow];
-    }
     self.assistiveWindow.hidden = YES;
 }
 
-- (void)makeAssistiveWindowKeyWindow {
+- (void)makeAssistiveWindowAsKeyWindow {
     
     UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-    if (keyWindow != self.assistiveWindow) {
+    if (!self.yc_canBecomeKeyWindow && keyWindow != self.assistiveWindow) {
         self.originWindow = keyWindow;
         [keyWindow resignFirstResponder];
         [self.assistiveWindow makeKeyWindow];
@@ -73,9 +65,10 @@
     }
 }
 
-- (void)returnToOriginKeyWindow {
+- (void)revokeToOriginKeyWindow {
+    
     UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-    if (keyWindow == self.assistiveWindow) {
+    if (self.yc_canBecomeKeyWindow && keyWindow == self.assistiveWindow) {
         [keyWindow resignFirstResponder];
         [self.originWindow makeKeyWindow];
         self.yc_canBecomeKeyWindow = NO;

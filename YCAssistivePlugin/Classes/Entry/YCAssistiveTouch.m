@@ -87,6 +87,7 @@
     [self addGestureRecognizer:panGesture];
 }
 
+#pragma mark - 移动
 - (void)panGestureRecognizer:(UIPanGestureRecognizer *)panGesture {
 
     _transX = [panGesture translationInView:self].x;
@@ -151,6 +152,5 @@ CGFloat touch_minX(void) {
 CGFloat touch_maxX(YCAssistiveTouch* obj) {
     return (obj.superview.bounds.size.width - obj.initialFrame.size.width - touch_minX());
 }
-
 
 @end

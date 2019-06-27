@@ -9,6 +9,8 @@
 #import "YCAssistivePluginCenterViewController.h"
 #import "YCAssistiveTouch.h"
 #import "YCAssistiveMacro.h"
+#import "YCAssistiveDisplayView.h"
+#import "YCAssistiveItemPlugin.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 
 static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimationKey";
@@ -17,6 +19,8 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
 
 /* 辅助 */
 @property (nonatomic, strong) YCAssistiveTouch *assisticeTouch;
+/* 展示图 */
+@property (nonatomic, strong) YCAssistiveDisplayView *displayView;
 
 @end
 
@@ -26,6 +30,7 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.assisticeTouch];
+    [self.view addSubview:self.displayView];
 }
 
 - (BOOL)shouldHandleTouchAtPoint:(CGPoint)pointInWindow {
@@ -34,12 +39,23 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
     if (CGRectContainsPoint(self.assisticeTouch.frame, pointInWindow)) {
         shouldHandleTouch = YES;
     }
+    if (CGRectContainsPoint(self.displayView.frame, pointInWindow)) {
+        shouldHandleTouch = YES;
+    }
     if (self.presentedViewController) {
         shouldHandleTouch = YES;
     }
     return shouldHandleTouch;
 }
 
+
+- (void)openPluginItemsDisplayView:(BOOL)needOpen {
+    
+    self.assisticeTouch.hidden = needOpen;
+    self.displayView.hidden = !needOpen;
+}
+
+#pragma mark - view
 - (YCAssistiveTouch *)assisticeTouch {
     
     if (_assisticeTouch == nil) {
@@ -54,8 +70,28 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
                 [self presentViewController:centerVC animated:YES completion:nil];
             }
         }];
+        [_assisticeTouch.longPressSubject subscribeNext:^(id  _Nullable x) {
+            strong(self)
+            [self openPluginItemsDisplayView:YES];
+        }];
     }
     return _assisticeTouch;
+}
+
+- (YCAssistiveDisplayView *)displayView {
+    
+    if (_displayView == nil) {
+        _displayView = [[YCAssistiveDisplayView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        _displayView.longPressSubject = [RACSubject subject];
+        _displayView.center = self.view.center;
+        _displayView.hidden = YES;
+        weak(self);
+        [_displayView.longPressSubject subscribeNext:^(id  _Nullable x) {
+            strong(self);
+            [self openPluginItemsDisplayView:NO];
+        }];
+    }
+    return _displayView;
 }
 
 @end

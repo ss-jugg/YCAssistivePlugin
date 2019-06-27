@@ -34,7 +34,7 @@
     
     YCNetworkConfigur *configur = [self currentConfigur];
     if (configur.address.length > 0) {
-        return [[self.title stringByAppendingString:@"\n"] stringByAppendingString:configur.address];
+        return [self.title stringByAppendingString:configur.address];
     }
     return self.title;
 }

@@ -10,5 +10,6 @@
 
 #import "YCAssistiveManager.h"
 #import "YCNetworkEnvironment.h"
+#import "YCAssistiveSessionProtocol.h"
 
 #endif /* YCAssistivePlugin_h */

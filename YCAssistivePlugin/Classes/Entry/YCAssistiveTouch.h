@@ -13,7 +13,6 @@ static CGFloat kAssistiveTouchW = 40.0;
 
 /* 点击信号 */
 @property (nonatomic, strong) RACSubject *tapSubject;
-/* 长按信号 */
 @property (nonatomic, strong) RACSubject *longPressSubject;
 
 @end
