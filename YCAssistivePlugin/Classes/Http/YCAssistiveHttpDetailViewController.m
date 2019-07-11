@@ -45,6 +45,7 @@
     [self.view addSubview:self.tableView];
     self.tableView.frame = self.view.bounds;
     [self.tableView reloadData];
+    [self as_setNavigationBarTitle:@"详情"];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -92,7 +93,6 @@
             value = @"empty";
         }
         cell.nextImg.hidden = NO;
-        value = [NSString stringWithFormat:@"%@",self.httpModel.headerFields];
     }
     if (indexPath.row == 7) {
         if (self.httpModel.requestBody.length > 0) {

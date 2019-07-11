@@ -10,7 +10,7 @@
 #import "YCNetworkConfigStorage.h"
 #import "YCAssistiveMacro.h"
 #import <YCNetworking/YCNetworking.h>
-
+#import "YCAssistiveHttpPlugin.h"
 #define YC_ENV_FORMAT(a) ({ \
 NSString *r = a; \
 if (![a hasPrefix:@"http://"]) { \
@@ -24,22 +24,9 @@ r; \
 /* yc */
 @property (nonatomic, strong) YCNetworkConfigStorage *storage;
 
-/* 环境地址 */
-@property (nonatomic, copy, readwrite) NSString *environmentAddress;
-
 @end
 
 @implementation YCNetworkEnvironment
-
-#if DEBUG
-+ (void)load {
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [[YCNetworkEnvironment sharedInstance] install];
-    });
-}
-#endif
 
 + (instancetype)sharedInstance {
     
@@ -49,6 +36,21 @@ r; \
         _instance = [[YCNetworkEnvironment alloc] init];
     });
     return _instance;
+}
+
+- (instancetype)init {
+    
+    if (self = [super init]) {
+        self.environmentAddresses = [@[@{@"title":@"测试环境",
+                                         @"address":@"http://192.168.2.16"},
+                                       @{@"title":@"其他环境1",
+                                         @"address":@"http://192.168.2.11"},
+                                        @{@"title":@"预发环境",
+                                          @"address":@"http://demo.yunchejinrong.com"},
+                                       @{@"title":@"线上环境",
+                                         @"address":@"http://www.yuncheok.com"}] mutableCopy];
+    }
+    return self;
 }
 
 - (void)install {
@@ -62,34 +64,33 @@ r; \
     
     //合伙人app，获取缓存中测试环境地址
     if ([self.storage configursForKey:kPartnerApiKey].count > 0) {
-        self.environmentAddress = YC_ENV_FORMAT([self.storage configursForKey:kPartnerApiKey].firstObject.address);
+        kProjectAPIRoot = YC_ENV_FORMAT([self.storage configursForKey:kPartnerApiKey].firstObject.address);
     }else {
+        kProjectAPIRoot = kYCProjectAPIRoot;
         [self addDefaultAPIAddressesForKey:kPartnerApiKey];
     }
     //车商app地址，获取缓存中测试环境地址
     if ([self.storage configursForKey:kDealerApiKey].count > 0) {
-        self.environmentAddress = YC_ENV_FORMAT([self.storage configursForKey:kDealerApiKey].firstObject.address);
+        kProjectAPIRoot = YC_ENV_FORMAT([self.storage configursForKey:kPartnerApiKey].firstObject.address);
     }else {
+        kProjectAPIRoot = kYCProjectAPIRoot;
         [self addDefaultAPIAddressesForKey:kDealerApiKey];
     }
+    [[YCAssistiveHttpPlugin sharedInstance] addDebugHosts:@[kProjectAPIRoot]];
 }
 
 - (void)addDefaultAPIAddressesForKey:(NSString *)key {
     
-   
-    NSArray *addresses =@[ @{@"title":@"测试环境",
-                             @"address":@"http://192.168.2.11"},
-                           @{@"title":@"其他环境1",
-                             @"address":@"http://192.168.2.17"},
-                           @{@"title":@"其他环境2",
-                             @"address":@"http://192.168.2.16"},
-                           @{@"title":@"线上环境",
-                             @"address":@"http://www.yuncheok.com"}];
-    [addresses enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        YCNetworkConfigur *configur = [YCNetworkConfigur configurWithAddress:[self addressStringForApi:obj[@"address"]] remark:obj[@"title"]];
-        configur.selected = (idx == 0);
-        [self.storage addConfigur:configur forKey:key];
-    }];
+    YCNetworkConfigur *configur = [YCNetworkConfigur configurWithAddress:[self addressStringForApi:kYCProjectAPIRoot] remark:@"测试环境"];
+    configur.selected = YES;
+    [self.storage addConfigur:configur forKey:key];
+    
+    if (self.environmentAddresses.count > 0) {
+        [self.environmentAddresses enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            YCNetworkConfigur *configur = [YCNetworkConfigur configurWithAddress:[self addressStringForApi:obj[@"address"]] remark:obj[@"title"]];
+            [self.storage addConfigur:configur forKey:key];
+        }];
+    }
 }
 
 - (NSString *)addressStringForApi:(NSString *)api {
@@ -104,7 +105,8 @@ r; \
 - (void)switchEnvironmentForKey:(NSString *)key {
     
     YCNetworkConfigur *con = [self.storage selectedConfigurForKey:key];
-    self.environmentAddress = YC_ENV_FORMAT(con.address);
+    kProjectAPIRoot = YC_ENV_FORMAT(con.address);
+    [[YCAssistiveHttpPlugin sharedInstance] addDebugHosts:@[kProjectAPIRoot]];
 }
 
 #pragma mark - 环境

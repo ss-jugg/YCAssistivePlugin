@@ -6,9 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "YCAssistiveBaseViewController.h"
 @class YCNetworkConfigur;
-@interface YCNetworkEnvironmentEditViewController : UIViewController
-- (instancetype)initWithIdentifier:(NSString *)identifier configurs:(NSArray<YCNetworkConfigur *> *)configurs selectedHandler:(void (^)(NSArray <YCNetworkConfigur *> *))selectedHandler;
+@interface YCNetworkEnvironmentEditViewController : YCAssistiveBaseViewController
+- (instancetype)initWithIdentifier:(NSString *)identifier configurs:(NSArray<YCNetworkConfigur *> *)configurs;
 @end
 

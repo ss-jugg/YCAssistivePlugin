@@ -13,6 +13,8 @@ NSString *const kAssistiveHttpNotificationName = @"kAssistiveHttpNotificationNam
 
 @interface YCAssistiveHttpPlugin ()
 
+@property (nonatomic, strong, readwrite) NSMutableArray *debugHosts;
+
 @property (nonatomic, strong, readwrite) NSMutableArray<YCAssistiveHttpModel *> *httpModels;
 
 @end
@@ -32,10 +34,14 @@ NSString *const kAssistiveHttpNotificationName = @"kAssistiveHttpNotificationNam
 - (instancetype)init {
     
     if (self = [super init]) {
-        self.debugHosts = @[@"http://192.168.2.16"];
+        self.debugHosts = [NSMutableArray array];
         self.httpModels = [NSMutableArray array];
     }
     return self;
+}
+
+- (void)addDebugHosts:(NSArray<NSString *> *)hosts {
+    [self.debugHosts addObjectsFromArray:hosts];
 }
 
 - (void)addHttpModel:(YCAssistiveHttpModel *)model {

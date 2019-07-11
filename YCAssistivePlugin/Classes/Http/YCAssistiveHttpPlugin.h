@@ -15,10 +15,12 @@ extern NSString *const kAssistiveHttpNotificationName;
 + (instancetype)sharedInstance;
 
 /* 需要抓取的url, 不设置默认抓取全部 */
-@property (nonatomic, strong) NSArray *debugHosts;
+@property (nonatomic, strong, readonly) NSMutableArray *debugHosts;
 
 /* 数据模型组 */
 @property (nonatomic, strong, readonly) NSMutableArray<YCAssistiveHttpModel *> *httpModels;
+
+- (void)addDebugHosts:(NSArray<NSString *> *)hosts;
 
 - (void)addHttpModel:(YCAssistiveHttpModel *)model;
 

@@ -23,6 +23,9 @@ typedef NS_ENUM(NSUInteger, YCNetworkEnvironmentType) {
 
 + (instancetype)sharedInstance;
 
+/* 环境地址 */
+@property (nonatomic, strong) NSMutableArray *environmentAddresses;
+
 - (void)install;
 
 - (void)switchEnvironmentForKey:(NSString *)key;

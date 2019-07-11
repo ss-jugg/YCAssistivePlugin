@@ -6,28 +6,28 @@
 //
 
 #import "YCNetworkEnvironmentEditViewController.h"
+#import <Masonry/Masonry.h>
 #import "YCNetworkConfigurItem.h"
 #import "YCNetworkConfigur.h"
 #import "YCNetworkConfigStorage.h"
 #import "YCAssistiveMacro.h"
+#import "YCNetworkEnvironment.h"
 
 @interface YCNetworkEnvironmentEditViewController ()<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray <YCNetworkConfigur *> *itemConfigurs;
-@property (copy, nonatomic) void (^selectedHandler)(NSArray <YCNetworkConfigur *> *configurs);
 @property (copy, nonatomic) NSString *identifier;
 
 @end
 
 @implementation YCNetworkEnvironmentEditViewController
 
-- (instancetype)initWithIdentifier:(NSString *)identifier configurs:(NSArray<YCNetworkConfigur *> *)configurs selectedHandler:(void (^)(NSArray <YCNetworkConfigur *> *))selectedHandler {
+- (instancetype)initWithIdentifier:(NSString *)identifier configurs:(NSArray<YCNetworkConfigur *> *)configurs {
     
     if (self = [super init]) {
         _identifier = identifier;
         _itemConfigurs = [configurs mutableCopy];
-        _selectedHandler = selectedHandler;
     }
     return self;
 }
@@ -36,10 +36,21 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.tableView];
-    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    [self as_setRightBarItemTitle:@"确定"];
 }
 
+- (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
+    
+    [[YCNetworkEnvironment sharedInstance] switchEnvironmentForKey:self.identifier];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"loginOut" object:nil];
+    }];
+}
 
+#pragma mark - UITableViewDataSource/UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.itemConfigurs.count;
 }
@@ -58,20 +69,17 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    NSInteger seletedIndex = 0;
     for (NSInteger idx = 0; idx < self.itemConfigurs.count; idx++) {
         self.itemConfigurs[idx].selected = idx == indexPath.row;
         if (idx == indexPath.row) {
+            seletedIndex = idx;
             self.itemConfigurs[idx].app = self.identifier;
         } else {
             self.itemConfigurs[idx].app = @"";
         }
     }
-    
-    if (self.selectedHandler) {
-        self.selectedHandler(self.itemConfigurs);
-    }
-    
-    [self.navigationController popViewControllerAnimated:YES];
+    [self exchangeConfigurItemAtNewIndex:seletedIndex];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -81,12 +89,7 @@
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @[[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
         [self.itemConfigurs removeObjectAtIndex:indexPath.row];
-        
         self.itemConfigurs.firstObject.selected = YES;
-        
-        if (self.selectedHandler) {
-            self.selectedHandler(self.itemConfigurs);
-        }
         [self.tableView reloadData];
     }]];
 }
@@ -115,21 +118,15 @@
         for (YCNetworkConfigur *conf in self.itemConfigurs) {
             conf.selected = NO;
         }
-        
         configur.selected = YES;
-        [self.itemConfigurs addObject:configur];
+        [self.itemConfigurs insertObject:configur atIndex:0];
         
-        [self.tableView reloadData];
-        
-        if (self.selectedHandler) {
-            self.selectedHandler(self.itemConfigurs);
-        }
-        
-        [self.navigationController popViewControllerAnimated:YES];
+        [self exchangeConfigurItemAtNewIndex:0];
     }];
     [alertController addAction:saveAction];
     [self presentViewController:alertController animated:YES completion:nil];
 }
+
 
 - (UIButton *)tableFooterView {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -145,6 +142,15 @@
     return button;
 }
 
+#pragma mark - exchange item
+- (void)exchangeConfigurItemAtNewIndex:(NSInteger)index {
+    
+    [self.itemConfigurs exchangeObjectAtIndex:0 withObjectAtIndex:index];
+    [[YCNetworkConfigStorage sharedInstance] setConfigurs:self.itemConfigurs forKey:self.identifier];
+    [self.tableView reloadData];
+}
+
+#pragma mark - getter
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NAV_BAR_H, SCREEN_W, SCREE_SAFE_H) style:UITableViewStylePlain];

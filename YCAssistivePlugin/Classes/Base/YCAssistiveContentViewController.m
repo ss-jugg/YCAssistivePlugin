@@ -7,6 +7,7 @@
 
 #import "YCAssistiveContentViewController.h"
 #import <Masonry/Masonry.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #import "UIImage+AssistiveBundle.h"
 #import "UIFont+AssistiveFont.h"
 #import "YCAssistiveHttpPlugin.h"
@@ -24,8 +25,16 @@
         make.edges.equalTo(self.view);
     }];
     [self loadData];
-    [self as_setNavigationBarTitle:@"详情"];
+    [self as_setNavigationBarTitle:@"详细内容"];
     [self as_setRightBarItemTitle:@"复制"];
+}
+
+//MARK:复制
+- (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
+    
+    //使用剪切版实现复制功能
+    UIPasteboard *pboard = [UIPasteboard generalPasteboard];
+    pboard.string = self.content;
 }
 
 - (void)loadData {
@@ -43,7 +52,7 @@
     CGRect r = [self.content boundingRectWithSize:CGSizeMake(self.view.bounds.size.width, MAXFLOAT) options:option attributes:attributes context:nil];
     self.textView.contentSize = CGSizeMake(self.view.bounds.size.width, r.size.height);
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:self.content];
-    [attr addAttributes:attributes range:NSMakeRange(0, self.content.length)];
+    [attr addAttributes:attributes range:NSMakeRange(0, self.content.length + 60)];
     self.textView.attributedText = attr;
     attr = nil;
 }

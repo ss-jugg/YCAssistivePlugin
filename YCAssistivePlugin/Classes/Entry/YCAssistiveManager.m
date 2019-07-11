@@ -6,6 +6,7 @@
 //
 
 #import "YCAssistiveManager.h"
+#import "YCNetworkEnvironment.h"
 #import "YCAssistiveSessionProtocol.h"
 #import "YCAssistivePluginViewController.h"
 #import "YCAssistiveCrashPlugin.h"
@@ -47,6 +48,8 @@
 
 - (void)installPlugins {
     
+    //开启切换环境
+    [[YCNetworkEnvironment sharedInstance] install];
     //开启网络监测
     [YCAssistiveSessionProtocol startInterceptor];
     

@@ -24,7 +24,8 @@
     [super viewDidLoad];
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.left.top.right.equalTo(self.view);
+        make.bottom.equalTo(self.view.mas_bottomMargin);
     }];
     [self.tableView reloadData];
     [self as_setRightBarItemTitle:@"清空"];
