@@ -27,7 +27,6 @@
     [super viewDidLoad];
     self.tabBar.translucent = NO;
     [self.tabBar setBarTintColor:[UIColor as_mainColor]];
-    self.tabBar.tintColor = [UIColor whiteColor];
     [self addChildrenControllers];
     [self setTabbarTopLineColor];
 }
@@ -50,6 +49,8 @@
         viewController.title = titles[idx];
         viewController.tabBarItem.image = [[UIImage as_imageWithName:normalImages[idx]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         viewController.tabBarItem.selectedImage = [[UIImage as_imageWithName:selectedImages[idx]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [viewController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:UIControlStateNormal];
+        [viewController.tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor as_customColor:0x108eff]} forState:UIControlStateSelected];
         YCAssistiveNavigationController *nav = [[YCAssistiveNavigationController alloc] initWithRootViewController:viewController];
         [self addChildViewController:nav];
     }];
@@ -58,10 +59,10 @@
 #pragma mark -- 设置tabbar顶部的线
 - (void)setTabbarTopLineColor {
     //该表tabbard线条的颜色
-    CGRect rect = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 1);
+    CGRect rect = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 1/[UIScreen mainScreen].scale);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, [UIColor as_lineColor].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
     CGContextFillRect(context, rect);
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

@@ -12,6 +12,20 @@
 #import "YCNetworkConfigStorage.h"
 #import "YCAssistiveMacro.h"
 #import "YCNetworkEnvironment.h"
+#import "UIImage+AssistiveBundle.h"
+#import "UIFont+AssistiveFont.h"
+#import "UIColor+AssistiveColor.h"
+
+@interface YCNetworkDetailCell : UITableViewCell
+
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, strong) UIImageView *iconImg;
+@property (nonatomic, strong) UILabel *titleLbl;
+@property (nonatomic, strong) UILabel *detailLbl;
+@property (nonatomic, strong) UIImageView *selectedImg;
+
++ (CGFloat)heightForCell;
+@end
 
 @interface YCNetworkEnvironmentEditViewController ()<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 
@@ -34,20 +48,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    [self as_setRightBarItemTitle:@"确定"];
+    [self as_setRightBarItemTitle:@"新增"];
+    [self.tableView reloadData];
 }
 
 - (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
     
-    [[YCNetworkEnvironment sharedInstance] switchEnvironmentForKey:self.identifier];
-    [self dismissViewControllerAnimated:YES completion:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"loginOut" object:nil];
-    }];
+    [self addConfigurButtonOnClicked];
 }
 
 #pragma mark - UITableViewDataSource/UITableViewDelegate
@@ -55,31 +66,30 @@
     return self.itemConfigurs.count;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [YCNetworkDetailCell heightForCell];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+    YCNetworkDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:@"YCNetworkDetailCell"];
+    if (!cell) {
+        cell = [[YCNetworkDetailCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YCNetworkDetailCell"];
+    }
     YCNetworkConfigur *configur = self.itemConfigurs[indexPath.row];
-    cell.backgroundColor = configur.selected ? [[UIColor orangeColor] colorWithAlphaComponent:0.3] : [UIColor whiteColor];
-    cell.textLabel.text = configur.displayText;
-    cell.textLabel.backgroundColor = [UIColor clearColor];
-    cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.numberOfLines = 0;
+    cell.titleLbl.text = configur.address;
+    cell.detailLbl.text = configur.remark;
+    cell.selectedImg.hidden = !configur.selected;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    NSInteger seletedIndex = 0;
     for (NSInteger idx = 0; idx < self.itemConfigurs.count; idx++) {
-        self.itemConfigurs[idx].selected = idx == indexPath.row;
-        if (idx == indexPath.row) {
-            seletedIndex = idx;
-            self.itemConfigurs[idx].app = self.identifier;
-        } else {
-            self.itemConfigurs[idx].app = @"";
-        }
+        self.itemConfigurs[idx].selected = (idx == indexPath.row);
+        self.itemConfigurs[idx].app = self.identifier;
     }
-    [self exchangeConfigurItemAtNewIndex:seletedIndex];
+    [self changeIpAddress];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -115,52 +125,131 @@
         if (![configur isValid]) {
             return;
         }
-        for (YCNetworkConfigur *conf in self.itemConfigurs) {
-            conf.selected = NO;
-        }
-        configur.selected = YES;
-        [self.itemConfigurs insertObject:configur atIndex:0];
-        
-        [self exchangeConfigurItemAtNewIndex:0];
+        [self.itemConfigurs addObject:configur];
+        [self.tableView reloadData];
     }];
     [alertController addAction:saveAction];
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-
-- (UIButton *)tableFooterView {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [button setTitle:@" ➕ 添加 " forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(addConfigurButtonOnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    button.frame = (CGRect){
-        .origin = CGPointZero,
-        .size = CGSizeMake([UIScreen mainScreen].bounds.size.width, 50)
-    };
-    return button;
-}
-
 #pragma mark - exchange item
-- (void)exchangeConfigurItemAtNewIndex:(NSInteger)index {
-    
-    [self.itemConfigurs exchangeObjectAtIndex:0 withObjectAtIndex:index];
-    [[YCNetworkConfigStorage sharedInstance] setConfigurs:self.itemConfigurs forKey:self.identifier];
-    [self.tableView reloadData];
+- (void)changeIpAddress{
+
+    if (self.selectHandler) {
+        self.selectHandler(self.itemConfigurs);
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - getter
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NAV_BAR_H, SCREEN_W, SCREE_SAFE_H) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
-        _tableView.tableFooterView = [self tableFooterView];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.backgroundColor = [UIColor clearColor];
     }
     
     return _tableView;
+}
+
+@end
+
+
+@implementation YCNetworkDetailCell
+
++ (CGFloat)heightForCell {
+    return 92.0;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        
+        self.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:self.containerView];
+        [self.containerView addSubview:self.iconImg];
+        [self.containerView addSubview:self.titleLbl];
+        [self.containerView addSubview:self.detailLbl];
+        [self.containerView addSubview:self.selectedImg];
+        
+        [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsMake(12, 14, 0, 14));
+        }];
+        [self.iconImg mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.leading.offset(14);
+            make.size.mas_equalTo(CGSizeMake(22, 22));
+            make.centerY.equalTo(self.containerView);
+        }];
+        [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.iconImg.mas_right).offset(8);
+            make.top.mas_equalTo(16);
+            make.right.lessThanOrEqualTo(self.selectedImg.mas_left);
+        }];
+        [self.detailLbl mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.titleLbl.mas_left);
+            make.top.equalTo(self.titleLbl.mas_bottom).offset(8);
+            make.right.lessThanOrEqualTo(self.selectedImg.mas_left);
+        }];
+        [self.selectedImg mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.trailing.offset(-14);
+            make.size.mas_equalTo(CGSizeMake(22, 22));
+            make.centerY.equalTo(self.containerView);
+        }];
+    }
+    return self;
+}
+
+- (UIView *)containerView {
+    
+    if (_containerView == nil) {
+        _containerView = [[UIView alloc] init];
+        _containerView.backgroundColor = [UIColor whiteColor];
+        _containerView.layer.cornerRadius = 4.0;
+    }
+    return _containerView;
+}
+
+- (UIImageView *)iconImg {
+    
+    if (_iconImg == nil) {
+        _iconImg = [[UIImageView alloc] init];
+        
+    }
+    return _iconImg;
+}
+
+- (UILabel *)titleLbl {
+    
+    if (_titleLbl == nil) {
+        _titleLbl = [[UILabel alloc] init];
+        _titleLbl.textColor = [UIColor as_bodyColor];
+        _titleLbl.font = [UIFont as_15];
+        _titleLbl.textAlignment = NSTextAlignmentLeft;
+    }
+    return _titleLbl;
+}
+- (UILabel *)detailLbl {
+    
+    if (_detailLbl == nil) {
+        _detailLbl = [[UILabel alloc] init];
+        _detailLbl.textColor = [UIColor as_secondaryColor];
+        _detailLbl.font = [UIFont as_13];
+        _detailLbl.textAlignment = NSTextAlignmentLeft;
+        _detailLbl.numberOfLines = 0;
+    }
+    return _detailLbl;
+}
+
+- (UIImageView *)selectedImg {
+    
+    if (_selectedImg == nil) {
+        _selectedImg = [[UIImageView alloc] init];
+        
+    }
+    return _selectedImg;
 }
 
 @end

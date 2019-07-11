@@ -1,27 +1,22 @@
 //
-//  YCAssistiveHttpCell.m
+//  YCNetworkEnvironmentCell.m
 //  YCAssistivePlugin
 //
-//  Created by haima on 2019/7/3.
+//  Created by haima on 2019/7/11.
 //
 
-#import "YCAssistiveHttpCell.h"
+#import "YCNetworkEnvironmentCell.h"
 #import <Masonry/Masonry.h>
-#import "YCAssistiveHttpModel.h"
+#import "UIImage+AssistiveBundle.h"
 #import "UIFont+AssistiveFont.h"
 #import "UIColor+AssistiveColor.h"
 
-@interface YCAssistiveHttpCell ()
-
-/* <#mark#> */
-@property (nonatomic, strong) UIView *containerView;
-
+@interface YCNetworkEnvironmentCell ()
 
 @end
+@implementation YCNetworkEnvironmentCell
 
-@implementation YCAssistiveHttpCell
-
-+ (CGFloat)heightForHttpCell {
++ (CGFloat)heightFoNetworkCell {
     return 92.0;
 }
 
@@ -30,45 +25,43 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.contentView.backgroundColor = [UIColor clearColor];
         self.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.containerView];
+        [self.containerView addSubview:self.iconImg];
         [self.containerView addSubview:self.titleLbl];
         [self.containerView addSubview:self.detailLbl];
-        [self.containerView addSubview:self.readLbl];
+        [self.containerView addSubview:self.nextImg];
+        
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.leading.offset(14);
-            make.top.mas_equalTo(12);
             make.trailing.offset(-14);
-            make.height.mas_equalTo(80);
+            make.top.mas_equalTo(12);
+            make.bottom.equalTo(self.contentView.mas_bottom);
+        }];
+        [self.iconImg mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(20, 18));
+            make.centerY.equalTo(self.containerView);
+            make.leading.offset(14);
+        }];
+        [self.nextImg mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.containerView);
+            make.size.mas_equalTo(CGSizeMake(10, 16));
+            make.trailing.offset(-14);
         }];
         [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.offset(14);
-            make.top.equalTo(self.containerView).offset(16);
+            make.left.equalTo(self.iconImg.mas_right).offset(16);
+            make.top.mas_equalTo(16);
+            make.right.lessThanOrEqualTo(self.nextImg.mas_left);
             make.height.mas_equalTo(20);
         }];
         [self.detailLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.titleLbl);
+            make.left.equalTo(self.titleLbl.mas_left);
             make.top.equalTo(self.titleLbl.mas_bottom).offset(8);
-            make.height.mas_equalTo(20);
-        }];
-        [self.readLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.containerView);
-            make.trailing.offset(-14);
-            make.size.mas_equalTo(CGSizeMake(60, 30));
+            make.right.lessThanOrEqualTo(self.nextImg.mas_left);
         }];
     }
     return self;
-}
-
-- (void)bindHttpModel:(YCAssistiveHttpModel *)model {
-    
-    self.titleLbl.text = model.url.host;
-    self.detailLbl.text = [model.url.path substringWithRange:NSMakeRange(1, model.url.path.length-1)];
-    self.readLbl.text = (model.readFlag == 0) ? @"未读" : @"已读";
-    self.readLbl.textColor = (model.readFlag == 0)?[UIColor as_redColor]:[UIColor as_greenColor];
-    self.readLbl.layer.borderColor = (model.readFlag == 0)?[UIColor as_redColor].CGColor:[UIColor as_greenColor].CGColor;
-    
 }
 
 #pragma mark - getter
@@ -80,6 +73,23 @@
         _containerView.layer.cornerRadius = 4.0;
     }
     return _containerView;
+}
+
+- (UIImageView *)iconImg {
+    
+    if (_iconImg == nil) {
+        _iconImg = [[UIImageView alloc] init];
+        _iconImg.image = [UIImage  as_imageWithName:@"icon_ip"];
+    }
+    return _iconImg;
+}
+- (UIImageView *)nextImg {
+    
+    if (_nextImg == nil) {
+        _nextImg = [[UIImageView alloc] init];
+        _nextImg.image = [UIImage as_imageWithName:@"icon_next_white"];
+    }
+    return _nextImg;
 }
 - (UILabel *)titleLbl {
     
@@ -100,20 +110,6 @@
         _detailLbl.textAlignment = NSTextAlignmentLeft;
     }
     return _detailLbl;
-}
-
-- (UILabel *)readLbl {
-    
-    if (_readLbl == nil) {
-        _readLbl = [[UILabel alloc] init];
-        _readLbl.textColor = [UIColor as_redColor];
-        _readLbl.font = [UIFont as_13];
-        _readLbl.textAlignment = NSTextAlignmentCenter;
-        _readLbl.layer.cornerRadius = 4.0;
-        _readLbl.layer.borderWidth = 1/[UIScreen mainScreen].scale;
-        _readLbl.layer.borderColor = [UIColor as_redColor].CGColor;
-    }
-    return _readLbl;
 }
 
 @end

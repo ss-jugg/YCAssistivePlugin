@@ -12,6 +12,8 @@
 #import "YCNetworkEnvironmentEditViewController.h"
 #import "YCNetworkEnvironment.h"
 #import "YCAssistiveMacro.h"
+#import "YCNetworkEnvironmentCell.h"
+#import "YCNetworkEnvironment.h"
 
 @interface YCNetworkEmvironmentViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
@@ -25,10 +27,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"测试环境配置";
+    [self as_setNavigationBarTitle:@"测试环境配置"];
+    [self as_setLeftBarItemTitle:@"取消"];
+    [self as_setRightBarItemTitle:@"确定"];
     self.tableView.frame = self.view.bounds;
     [self.view addSubview:self.tableView];
-    [self as_setLeftBarItemTitle:@"取消"];
     [self setupItemConfigursMap];
 }
 
@@ -44,19 +47,17 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60.f;
+    return [YCNetworkEnvironmentCell heightFoNetworkCell];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCellID"];
+    YCNetworkEnvironmentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"YCNetworkEnvironmentCell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"UITableViewCellID"];
-        cell.backgroundColor = [UIColor whiteColor];
+        cell = [[YCNetworkEnvironmentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YCNetworkEnvironmentCell"];
     }
-    cell.textLabel.text = self.configurItems[indexPath.row].displayText;
-    cell.textLabel.backgroundColor = [UIColor clearColor];
-    cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.numberOfLines = 0;
+    YCNetworkConfigurItem *item = self.configurItems[indexPath.row];
+    cell.titleLbl.text = item.title;
+    cell.detailLbl.text = item.displayText;
     return cell;
 }
 
@@ -66,37 +67,40 @@
     YCNetworkConfigurItem *item = self.configurItems[indexPath.row];
     YCNetworkEnvironmentEditViewController *detailVC = [[YCNetworkEnvironmentEditViewController alloc] initWithIdentifier:item.identifier configurs:item.configurs];
     detailVC.navigationItem.title = item.title;
+    [detailVC setSelectHandler:^(NSMutableArray<YCNetworkConfigur *> *configs) {
+        [self exchangeConfigBySelected:configs];
+        item.configurs = configs;
+        [[YCNetworkEnvironment sharedInstance] switchEnvironmentForKey:item.identifier];
+        [self.storage setConfigurs:configs forKey:item.identifier];
+    }];
     [self.navigationController pushViewController:detailVC animated:YES];
 }
 
-- (void)confirmButtonOnClicked:(UIBarButtonItem *)item {
-    NSMutableArray *selectedConfigurs = [NSMutableArray array];
+- (void)exchangeConfigBySelected:(NSMutableArray<YCNetworkConfigur *> *)configs {
     
-    for (YCNetworkConfigurItem *item in self.configurItems) {
-        YCNetworkConfigur *selectedConfigur = nil;
-        for (YCNetworkConfigur *configur in item.configurs) {
-            if (configur.isSelected) {
-                selectedConfigur = configur;
-                [selectedConfigurs addObject:selectedConfigur];
-                break;
-            }
+    __block NSInteger index = 0;
+    [configs enumerateObjectsUsingBlock:^(YCNetworkConfigur * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.selected) {
+            index = idx;
+            *stop = YES;
         }
-        
-        NSMutableArray *mconfigurs = item.configurs.mutableCopy;
-        
-        if (selectedConfigur) {
-            [mconfigurs removeObject:selectedConfigur];
-            [mconfigurs insertObject:selectedConfigur atIndex:0];
-        }
-        
-        [self.storage setConfigurs:mconfigurs forKey:item.identifier];
+    }];
+    if (index > 0) {
+        YCNetworkConfigur *config = configs[index];
+        [configs removeObjectAtIndex:index];
+        [configs insertObject:config atIndex:0];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"loginOut" object:nil];
-    [self dismissViewControllerAnimated:YES completion:nil];
-
+    [self.tableView reloadData];
 }
 
+#pragma mark - 导航栏事件
 - (void)as_viewControllerDidTriggerLeftClick:(UIViewController *)viewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"loginOut" object:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

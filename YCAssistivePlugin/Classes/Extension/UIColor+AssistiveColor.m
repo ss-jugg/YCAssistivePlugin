@@ -55,11 +55,11 @@ alpha:1.0]
     return ASColorFromRGB(0xB3B7C2);
 }
 
-+ (UIColor *)as_httpCellColor {
++ (UIColor *)as_cellColor {
     return ASColorFromRGB(0x6200C0);
 }
 
-+ (UIColor *)as_crashCellColor {
-    return ASColorFromRGB(0xF4A500);
++ (UIColor *)as_customColor:(long long)hex {
+    return ASColorFromRGB(hex);
 }
 @end

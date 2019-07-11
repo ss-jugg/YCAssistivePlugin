@@ -86,14 +86,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return 6200C0
  */
-+ (UIColor *)as_httpCellColor;
++ (UIColor *)as_cellColor;
 
-/**
- 橘黄色
-
- @return F4A500
- */
-+ (UIColor *)as_crashCellColor;
++ (UIColor *)as_customColor:(long long)hex;
 
 @end
 

@@ -50,9 +50,9 @@
                                  NSForegroundColorAttributeName:[UIColor whiteColor],
                                  NSParagraphStyleAttributeName : style};
     CGRect r = [self.content boundingRectWithSize:CGSizeMake(self.view.bounds.size.width, MAXFLOAT) options:option attributes:attributes context:nil];
-    self.textView.contentSize = CGSizeMake(self.view.bounds.size.width, r.size.height);
+    self.textView.contentSize = CGSizeMake(self.view.bounds.size.width, r.size.height+60);
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:self.content];
-    [attr addAttributes:attributes range:NSMakeRange(0, self.content.length + 60)];
+    [attr addAttributes:attributes range:NSMakeRange(0, self.content.length)];
     self.textView.attributedText = attr;
     attr = nil;
 }
