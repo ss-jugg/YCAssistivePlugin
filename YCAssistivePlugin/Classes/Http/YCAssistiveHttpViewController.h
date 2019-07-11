@@ -6,10 +6,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "YCAssistiveBaseViewController.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface YCAssistiveHttpViewController : UIViewController
+@interface YCAssistiveHttpViewController : YCAssistiveBaseViewController
 
 @end
 

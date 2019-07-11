@@ -7,8 +7,10 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const kAssistiveHttpNotificationName;
+
 @class YCAssistiveHttpModel;
-@interface YCAssistiveHttpHelper : NSObject
+@interface YCAssistiveHttpPlugin : NSObject
 
 + (instancetype)sharedInstance;
 

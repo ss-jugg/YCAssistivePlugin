@@ -6,7 +6,7 @@
 //
 
 #import "YCAssistiveSessionProtocol.h"
-#import "YCAssistiveHttpHelper.h"
+#import "YCAssistiveHttpPlugin.h"
 #import "YCAssistiveURLSessionDemux.h"
 #import "YCAssistiveHttpModel.h"
 #import "YCAssistiveSessionConfigurationSwizzle.h"
@@ -57,14 +57,14 @@ static NSString *kUrlProtocolKey = @"YCAssistiveSessionProtocol";
         return NO;
     }
     
-    if ([NSURLProtocol propertyForKey:kUrlProtocolKey inRequest:request] ) {
+    if ([NSURLProtocol propertyForKey:kUrlProtocolKey inRequest:request]) {
         return NO;
     }
     
-    /* 数组内抓取的域名的请求通过 */
-    if ([[YCAssistiveHttpHelper sharedInstance] debugHosts].count > 0) {
+    /* 抓取指定域名接口数据 */
+    if ([[YCAssistiveHttpPlugin sharedInstance] debugHosts].count > 0) {
         NSString* url = [request.URL.absoluteString lowercaseString];
-        for (NSString* _url in [[YCAssistiveHttpHelper sharedInstance] debugHosts]) {
+        for (NSString* _url in [[YCAssistiveHttpPlugin sharedInstance] debugHosts]) {
             if ([url rangeOfString:[_url lowercaseString]].location != NSNotFound)
                 return YES;
         }
@@ -137,7 +137,7 @@ static NSString *kUrlProtocolKey = @"YCAssistiveSessionProtocol";
     
     [[self class] setProperty:@YES forKey:kUrlProtocolKey inRequest:recursiveRequest];
     
-    self.startTime = [NSDate timeIntervalSinceReferenceDate];
+    self.startTime = [[NSDate date] timeIntervalSince1970];
     
     // Latch the thread we were called on, primarily for debugging purposes.
     self.clientThread = [NSThread currentThread];
@@ -156,13 +156,14 @@ static NSString *kUrlProtocolKey = @"YCAssistiveSessionProtocol";
     if (self.task != nil) {
         [self.task cancel];
     }
-    NSURLRequest *request = self.task.currentRequest;
+    NSURLRequest *request = self.task.originalRequest?:self.task.currentRequest;
     NSURLResponse *response = self.task.response;
     YCAssistiveHttpModel *model = [[YCAssistiveHttpModel alloc] init];
     model.httpIndentifier = @(self.task.taskIdentifier).stringValue;
     model.url = request.URL;
     model.method = request.HTTPMethod;
-    
+    model.headerFields = request.allHTTPHeaderFields;
+    [self requestBodyWithModel:model request:request];
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     model.mineType = response.MIMEType;
     model.statusCode = [NSString stringWithFormat:@"%d",(int)httpResponse.statusCode];
@@ -170,8 +171,48 @@ static NSString *kUrlProtocolKey = @"YCAssistiveSessionProtocol";
     model.startTime = [NSString stringWithFormat:@"%fs",self.startTime];
     model.totalDuration = [NSString stringWithFormat:@"%fs",[[NSDate date] timeIntervalSince1970] - self.startTime];
     
-    [[YCAssistiveHttpHelper sharedInstance] addHttpModel:model];
+    [[YCAssistiveHttpPlugin sharedInstance] addHttpModel:model];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAssistiveHttpNotificationName object:nil];
+    });
 }
+
+- (void)requestBodyWithModel:(YCAssistiveHttpModel *)model request:(NSURLRequest *)request {
+    
+    if ([request HTTPBody]) {
+        model.requestBody = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
+    }
+    // if a request does not set HTTPBody, so here it's need to check HTTPBodyStream
+    else if ([request HTTPBodyStream]) {
+        // this is a bug may cause image can't upload when other thread read the same bodystream
+        // copy origin body stream and use the new can avoid this issure
+        NSURLRequest *copyR = [request copy];
+        NSInputStream *bodyStream = copyR.HTTPBodyStream;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [bodyStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+            [bodyStream open];
+            
+            uint8_t *buffer = NULL;
+            NSMutableData *streamData = [NSMutableData data];
+            
+            while ([bodyStream hasBytesAvailable]) {
+                buffer = (uint8_t *)malloc(sizeof(uint8_t) * 1024);
+                NSInteger length = [bodyStream read:buffer maxLength:sizeof(uint8_t) * 1024];
+                if (bodyStream.streamError || length <= 0) {
+                    break;
+                }
+                [streamData appendBytes:buffer length:length];
+                free(buffer);
+            }
+            [bodyStream close];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                model.requestBody = [NSString stringWithFormat:@"%@",streamData];
+            });
+        });
+    }
+}
+
 
 
 #pragma mark * NSURLSession delegate callbacks

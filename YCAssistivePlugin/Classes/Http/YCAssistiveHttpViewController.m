@@ -6,9 +6,13 @@
 //
 
 #import "YCAssistiveHttpViewController.h"
-#import "YCAssistiveHttpHelper.h"
+#import <Masonry/Masonry.h>
+#import "YCAssistiveHttpPlugin.h"
 #import "YCAssistiveHttpModel.h"
 #import "YCAssistiveMacro.h"
+#import "YCAssistiveHttpCell.h"
+#import "UIColor+AssistiveColor.h"
+#import "YCAssistiveHttpDetailViewController.h"
 
 @interface YCAssistiveHttpViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
@@ -18,40 +22,50 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor lightGrayColor];
-    self.tableView.frame = CGRectMake(0, NAV_BAR_H, SCREEN_W, SCREE_SAFE_H);
     [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    [self.tableView reloadData];
+    [self as_setRightBarItemTitle:@"清空"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadHttpData) name:kAssistiveHttpNotificationName object:nil];
+}
+
+- (void)reloadHttpData {
+    
     [self.tableView reloadData];
 }
 
+- (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
+    [[YCAssistiveHttpPlugin sharedInstance] clearAll];
+    [self.tableView reloadData];
+}
 
+#pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [YCAssistiveHttpHelper sharedInstance].httpModels.count;
+    return [YCAssistiveHttpPlugin sharedInstance].httpModels.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60.f;
+    return [YCAssistiveHttpCell heightForHttpCell];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCellID"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"UITableViewCellID"];
-        cell.backgroundColor = [UIColor whiteColor];
-    }
-    YCAssistiveHttpModel *httpModel = [YCAssistiveHttpHelper sharedInstance].httpModels[indexPath.row];
-    cell.textLabel.text = httpModel.url.host;
-    cell.textLabel.font = [UIFont systemFontOfSize:13.0];
-    cell.detailTextLabel.text = httpModel.url.path;
-    cell.detailTextLabel.font = [UIFont systemFontOfSize:13.0];
+    
+    YCAssistiveHttpCell *cell = [tableView dequeueReusableCellWithIdentifier:@"YCAssistiveHttpCell"];
+    YCAssistiveHttpModel *httpModel = [YCAssistiveHttpPlugin sharedInstance].httpModels[indexPath.row];
+    [cell bindHttpModel:httpModel];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    YCAssistiveHttpModel *model = [YCAssistiveHttpPlugin sharedInstance].httpModels[indexPath.row];
+    YCAssistiveHttpDetailViewController *detailVC = [[YCAssistiveHttpDetailViewController alloc] initWithHttpModel:model];
+    [self.navigationController pushViewController:detailVC animated:YES];
 }
 
+#pragma mark - getter
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
@@ -60,6 +74,7 @@
         _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth([UIScreen mainScreen].bounds), 0.01)];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.backgroundColor = [UIColor clearColor];
+        [_tableView registerClass:[YCAssistiveHttpCell class] forCellReuseIdentifier:@"YCAssistiveHttpCell"];
     }
     
     return _tableView;

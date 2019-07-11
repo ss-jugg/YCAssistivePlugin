@@ -6,8 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "YCAssistiveBaseViewController.h"
 
-@interface YCNetworkEmvironmentViewController : UIViewController
+@interface YCNetworkEmvironmentViewController : YCAssistiveBaseViewController
 
 @end
 

@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedManager;
 
+- (void)installPlugins;
+
 - (void)showAssistive;
 - (void)makeAssistiveWindowAsKeyWindow;
 

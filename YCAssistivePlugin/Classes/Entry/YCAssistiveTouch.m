@@ -8,13 +8,13 @@
 #import "YCAssistiveTouch.h"
 #import "YCAssistiveMacro.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import "UIImage+AssistiveBundle.h"
 
 @interface YCAssistiveTouch ()
 
 /* 初始时位置 */
 @property (nonatomic, assign) CGRect initialFrame;
-/* 显示文本 */
-@property (nonatomic, strong) UILabel *assistiveLabel;
+@property (nonatomic, strong) UIImageView *debugImg;
 
 @property (nonatomic, assign) CGFloat transX;
 @property (nonatomic, assign) CGFloat transY;
@@ -28,7 +28,6 @@
         self.initialFrame = frame;
         self.layer.cornerRadius = kAssistiveTouchW/2.0;
         self.layer.masksToBounds = YES;
-        self.backgroundColor = [UIColor colorWithRed:255/255.0 green:169/255.0 blue:26/255.0 alpha:1.0];
         [self setUpDefaultUIS];
         [self addTapGesture];
         [self addLongPressGesture];
@@ -39,14 +38,10 @@
 
 - (void)setUpDefaultUIS {
     
-    self.assistiveLabel = [UILabel new];
-    self.assistiveLabel.font = [UIFont systemFontOfSize:11.0];
-    self.assistiveLabel.textAlignment = NSTextAlignmentCenter;
-    self.assistiveLabel.numberOfLines = 0;
-    self.assistiveLabel.text = @"Debug";
-    self.assistiveLabel.textColor = [UIColor whiteColor];
-    self.assistiveLabel.frame = self.bounds;
-    [self addSubview:self.assistiveLabel];
+    self.debugImg = [[UIImageView alloc] init];
+    self.debugImg.image = [UIImage as_imageWithName:@"icon_debug"];
+    self.debugImg.frame = self.bounds;
+    [self addSubview:self.debugImg];
 }
 
 - (void)dealloc {

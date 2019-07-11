@@ -26,7 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"测试环境配置";
-    self.tableView.frame = CGRectMake(0, NAV_BAR_H, SCREEN_W, SCREE_SAFE_H);
+    self.tableView.frame = self.view.bounds;
     [self.view addSubview:self.tableView];
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancelButtonOnClicked:)];
     self.navigationItem.leftBarButtonItem = leftButton;
@@ -115,6 +115,7 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth([UIScreen mainScreen].bounds), 0.01)];
+        _tableView.backgroundColor = [UIColor clearColor];
     }
     
     return _tableView;

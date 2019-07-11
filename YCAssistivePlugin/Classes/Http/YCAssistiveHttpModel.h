@@ -16,6 +16,8 @@
 @property (nonatomic,copy)NSURL     *url;
 /* 请求方式 */
 @property (nonatomic,copy)NSString  *method;
+/* <#mark#> */
+@property (nonatomic, strong) NSDictionary *headerFields;
 /* 请求体 */
 @property (nonatomic,copy)NSString  *requestBody;
 /* 状态码 */
@@ -25,6 +27,7 @@
 @property (nonatomic,copy)NSString  *mineType;
 @property (nonatomic,copy)NSString  *startTime;
 @property (nonatomic,copy)NSString  *totalDuration;
-
+/* 已读标识，0-未读 1-已读 */
+@property (nonatomic, assign) short readFlag;
 @end
 

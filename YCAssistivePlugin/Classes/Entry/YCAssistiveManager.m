@@ -6,7 +6,9 @@
 //
 
 #import "YCAssistiveManager.h"
+#import "YCAssistiveSessionProtocol.h"
 #import "YCAssistivePluginViewController.h"
+#import "YCAssistiveCrashPlugin.h"
 @interface YCAssistiveManager ()<YCAssistiveWindowDelegate>
 
 @property (nonatomic, assign) BOOL yc_canBecomeKeyWindow;
@@ -41,6 +43,16 @@
         [UIApplication sharedApplication].applicationSupportsShakeToEdit = YES;
     }
     return self;
+}
+
+- (void)installPlugins {
+    
+    //开启网络监测
+    [YCAssistiveSessionProtocol startInterceptor];
+    
+    //开启crash捕捉
+    [[YCAssistiveCrashPlugin sharedPlugin] install];
+    
 }
 
 #pragma mark - public

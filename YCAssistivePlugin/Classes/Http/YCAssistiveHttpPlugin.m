@@ -6,23 +6,25 @@
 //  Created by haima on 2019/6/27.
 //
 
-#import "YCAssistiveHttpHelper.h"
+#import "YCAssistiveHttpPlugin.h"
 #import "YCAssistiveHttpModel.h"
 
-@interface YCAssistiveHttpHelper ()
+NSString *const kAssistiveHttpNotificationName = @"kAssistiveHttpNotificationName";
+
+@interface YCAssistiveHttpPlugin ()
 
 @property (nonatomic, strong, readwrite) NSMutableArray<YCAssistiveHttpModel *> *httpModels;
 
 @end
 
-@implementation YCAssistiveHttpHelper
+@implementation YCAssistiveHttpPlugin
 
 + (instancetype)sharedInstance {
     
-    static YCAssistiveHttpHelper *_instance;
+    static YCAssistiveHttpPlugin *_instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _instance = [[YCAssistiveHttpHelper alloc] init];
+        _instance = [[YCAssistiveHttpPlugin alloc] init];
     });
     return _instance;
 }
@@ -30,6 +32,7 @@
 - (instancetype)init {
     
     if (self = [super init]) {
+        self.debugHosts = @[@"http://192.168.2.16"];
         self.httpModels = [NSMutableArray array];
     }
     return self;
