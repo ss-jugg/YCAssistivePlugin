@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class RACSubject;
 @interface YCAssistiveDisplayView : UIView
 
-/* 双击信号 */
+/* 长按信号 */
 @property (nonatomic, strong) RACSubject *longPressSubject;
 
 - (void)reactTapWithCls:(Class)cls;

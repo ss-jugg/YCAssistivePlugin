@@ -15,7 +15,7 @@
 }
 
 + (NSString *)title {
-    return @"apple调试";
+    return @"VC plugin";
 }
 
 + (NSInteger)sortNumber {

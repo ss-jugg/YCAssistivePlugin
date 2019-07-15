@@ -18,6 +18,8 @@
 @property (nonatomic, strong) UILabel *tapLbl;
 /* 初始坐标 */
 @property (nonatomic, assign) CGRect initialFrame;
+/* 是否是插件列表页面 */
+@property (nonatomic, assign) BOOL isPluginsView;
 
 @end
 @implementation YCAssistiveDisplayView
@@ -42,39 +44,50 @@
 
 - (void)addGestures {
     
-    [self addTapGesture];
     [self addDragGesture];
     [self addLongPressGesture];
+    [self addTapGesture];
 }
 
 - (void)addTapGesture {
     
-    UITapGestureRecognizer *tapGesture = [self builderGesture:^(UITapGestureRecognizer *gesture) {
-        gesture.numberOfTouchesRequired = 1;
-        weak(self);
-        [gesture.rac_gestureSignal subscribeNext:^(__kindof UIGestureRecognizer * _Nullable x) {
-            strong(self);
-            [self _pluginFunctionView];
-        }];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] init];
+    weak(self);
+    [tapGesture.rac_gestureSignal subscribeNext:^(__kindof UIGestureRecognizer * _Nullable x) {
+        strong(self);
+        if (self.isPluginsView) {
+            [self displayViewAnimation];
+            return;
+        }
+        [self _pluginFunctionView];
     }];
     [self.tapLbl addGestureRecognizer:tapGesture];
 }
 
-- (UITapGestureRecognizer *)builderGesture:(void(^)(UITapGestureRecognizer *gesture))builder {
+- (void)displayViewAnimation {
     
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] init];
-    builder(gesture);
-    return gesture;
+    CGRect frame = self.frame;
+    if (CGRectGetHeight(frame) < 150) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.frame = CGRectMake(frame.origin.x, frame.origin.y, CGRectGetWidth(frame), 150);
+        }];
+    }else {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.frame = CGRectMake(frame.origin.x, frame.origin.y, CGRectGetWidth(frame), 20);
+        }];
+    }
 }
 
 - (void)_pluginFunctionView {
     
+    self.isPluginsView = YES;
     YCPluginFunctionViewModel *viewModel = [[YCPluginFunctionViewModel alloc] init];
     NSMutableArray *functions = [NSMutableArray array];
     for (Class<YCAssistiveItemPluginProtocol> plugin in kYCAssistivePlugins) {
         weak(self)
         YCPluginFunctionModel *model = [YCPluginFunctionModel functionModelWithTitle:[plugin title] command:[[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
             strong(self);
+            self.isPluginsView = NO;
             [self _resetDisplayView];
             [plugin reactTapForAssistantView:self];
             return [RACSignal empty];
@@ -128,6 +141,7 @@
     [UIView animateWithDuration:0.2 animations:^{
         pluginView.alpha = 1;
     }];
+    self.tapLbl.text = self.isPluginsView ? @"PLUGINS" : @"TAP ME";
 }
 
 //MARK:重置
@@ -168,6 +182,7 @@
         _tapLbl.backgroundColor = [UIColor orangeColor];
         _tapLbl.textAlignment = NSTextAlignmentCenter;
         _tapLbl.textColor = [UIColor whiteColor];
+        _tapLbl.userInteractionEnabled = YES;
     }
     return _tapLbl;
 }
