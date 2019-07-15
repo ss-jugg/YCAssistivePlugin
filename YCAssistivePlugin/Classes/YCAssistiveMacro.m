@@ -19,8 +19,7 @@ void YCSwizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelect
     }
 }
 
-NSString *const kPartnerApiKey = @"kPartnerApiKey";
-NSString *const kDealerApiKey = @"kDealerApiKey";
+NSString *const kAppEnvironmentApiKey = @"kAppEnvironmentApiKey";
 
 @implementation YCAssistiveMacro
 

@@ -19,7 +19,7 @@
 /* <#mark#> */
 @property (nonatomic, strong) NSDictionary *headerFields;
 /* 请求体 */
-@property (nonatomic,copy)NSString  *requestBody;
+@property (nonatomic,copy)NSData  *requestBody;
 /* 状态码 */
 @property (nonatomic,copy)NSString  *statusCode;
 /* 响应数据 */

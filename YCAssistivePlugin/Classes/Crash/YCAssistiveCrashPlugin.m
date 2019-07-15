@@ -110,11 +110,9 @@ NSString *const kAssitiveCrashException = @"exception";
     /* 日期 */
     [dict setObject:dateString forKey:@"date"];
     /* 难易度 */
-    [dict setObject:@0 forKey:@"situation"];
-    /* 是否已读 */
-    [dict setObject:@0 forKey:@"read"];
+    [dict setObject:@0 forKey:@"level"];
     /* 是否解决 */
-    [dict setObject:@0 forKey:@"solution"];
+    [dict setObject:@0 forKey:@"resolve"];
     /* 描述字段 */
     [dict setObject:@"" forKey:@"description"];
     

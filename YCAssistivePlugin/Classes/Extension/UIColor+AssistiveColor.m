@@ -20,7 +20,7 @@ alpha:1.0]
 }
 
 + (UIColor *)as_backgroudColor {
-    return ASColorFromRGB(0x021F28);
+    return ASColorFromRGB(0x002833);
 }
 
 + (UIColor *)as_lineColor {
@@ -56,7 +56,7 @@ alpha:1.0]
 }
 
 + (UIColor *)as_cellColor {
-    return ASColorFromRGB(0x6200C0);
+    return ASColorFromRGB(0x6100C5);
 }
 
 + (UIColor *)as_customColor:(long long)hex {

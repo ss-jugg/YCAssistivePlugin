@@ -41,8 +41,8 @@
     NSArray *viewControllers = @[@"YCNetworkEmvironmentViewController",@"YCAssistiveHttpViewController",@"YCAssistiveCrashViewController"];
     NSArray *titles = @[@"server",@"http",@"crash"];
     
-    NSArray *normalImages = @[@"qiehuan_default",@"icon_http_default",@"icon_log_default"];
-    NSArray *selectedImages = @[@"qiehuan_selected",@"icon_http_selected",@"icon_log_selected"];
+    NSArray *normalImages = @[@"qiehuan_default",@"icon_http_default",@"icon_crash_default"];
+    NSArray *selectedImages = @[@"qiehuan_selected",@"icon_http_selected",@"icon_crash_selected"];
     [viewControllers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         UIViewController *viewController;
         viewController = [[NSClassFromString(obj) alloc] init];

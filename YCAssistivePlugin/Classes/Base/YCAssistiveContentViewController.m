@@ -26,7 +26,7 @@
     }];
     [self loadData];
     [self as_setNavigationBarTitle:@"详细内容"];
-    [self as_setRightBarItemTitle:@"复制"];
+    [self as_setRightBarItemImage:[UIImage as_imageWithName:@"icon_copy"]];
 }
 
 //MARK:复制
@@ -35,6 +35,9 @@
     //使用剪切版实现复制功能
     UIPasteboard *pboard = [UIPasteboard generalPasteboard];
     pboard.string = self.content;
+    UIAlertController *alerVC = [UIAlertController alertControllerWithTitle:@"提示" message:@"复制成功！" preferredStyle:UIAlertControllerStyleAlert];
+    [alerVC addAction:[UIAlertAction actionWithTitle:@"我知道了" style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alerVC animated:YES completion:nil];
 }
 
 - (void)loadData {

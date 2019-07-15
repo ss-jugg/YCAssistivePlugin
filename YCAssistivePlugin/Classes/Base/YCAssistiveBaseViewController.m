@@ -16,7 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationDelegate = self;
     self.view.backgroundColor = [UIColor as_backgroudColor];
+    [self as_setupNavigationBar];
 }
 @end

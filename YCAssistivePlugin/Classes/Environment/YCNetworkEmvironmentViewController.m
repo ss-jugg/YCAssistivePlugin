@@ -37,8 +37,7 @@
 
 - (void)setupItemConfigursMap {
 
-    self.configurItems  = @[[YCNetworkConfigurItem configurItemWithTitle:@"合伙人app" identifier:kPartnerApiKey],
-                            [YCNetworkConfigurItem configurItemWithTitle:@"车商app" identifier:kDealerApiKey]];
+    self.configurItems  = @[[YCNetworkConfigurItem configurItemWithTitle:@"测试环境配置" identifier:kAppEnvironmentApiKey]];
     [self.tableView reloadData];
 }
 
@@ -70,8 +69,6 @@
     [detailVC setSelectHandler:^(NSMutableArray<YCNetworkConfigur *> *configs) {
         [self exchangeConfigBySelected:configs];
         item.configurs = configs;
-        [[YCNetworkEnvironment sharedInstance] switchEnvironmentForKey:item.identifier];
-        [self.storage setConfigurs:configs forKey:item.identifier];
     }];
     [self.navigationController pushViewController:detailVC animated:YES];
 }
@@ -80,7 +77,7 @@
     
     __block NSInteger index = 0;
     [configs enumerateObjectsUsingBlock:^(YCNetworkConfigur * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj.selected) {
+        if (obj.isSelected) {
             index = idx;
             *stop = YES;
         }
@@ -100,6 +97,10 @@
 
 - (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
     
+    [self.configurItems enumerateObjectsUsingBlock:^(YCNetworkConfigurItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.storage setConfigurs:obj.configurs forKey:obj.identifier];
+        [[YCNetworkEnvironment sharedInstance] switchEnvironmentForKey:obj.identifier];
+    }];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"loginOut" object:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }

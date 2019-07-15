@@ -180,7 +180,7 @@ static NSString *kUrlProtocolKey = @"YCAssistiveSessionProtocol";
 - (void)requestBodyWithModel:(YCAssistiveHttpModel *)model request:(NSURLRequest *)request {
     
     if ([request HTTPBody]) {
-        model.requestBody = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
+        model.requestBody = [request HTTPBody];
     }
     // if a request does not set HTTPBody, so here it's need to check HTTPBodyStream
     else if ([request HTTPBodyStream]) {
@@ -207,7 +207,7 @@ static NSString *kUrlProtocolKey = @"YCAssistiveSessionProtocol";
             [bodyStream close];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                model.requestBody = [NSString stringWithFormat:@"%@",streamData];
+                model.requestBody = streamData;
             });
         });
     }

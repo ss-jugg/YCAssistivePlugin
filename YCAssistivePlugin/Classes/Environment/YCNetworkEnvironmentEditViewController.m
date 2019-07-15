@@ -22,9 +22,10 @@
 @property (nonatomic, strong) UIImageView *iconImg;
 @property (nonatomic, strong) UILabel *titleLbl;
 @property (nonatomic, strong) UILabel *detailLbl;
-@property (nonatomic, strong) UIImageView *selectedImg;
 
 + (CGFloat)heightForCell;
+
+- (void)setDetailCell:(BOOL)isSelected;
 @end
 
 @interface YCNetworkEnvironmentEditViewController ()<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
@@ -52,8 +53,19 @@
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    [self as_setRightBarItemTitle:@"新增"];
+    [self as_setRightBarItemImage:[UIImage as_imageWithName:@"icon_add_white"]];
     [self.tableView reloadData];
+}
+
+- (void)viewWillLayoutSubviews {
+    
+    [super viewWillLayoutSubviews];
+    for (UIView *subView in self.tableView.subviews) {
+        if ([subView isKindOfClass:NSClassFromString(@"UISwipeActionPullView")]) {
+            CGRect frame = subView.frame;
+            subView.frame = CGRectMake(frame.origin.x, frame.origin.y+12, CGRectGetWidth(frame), CGRectGetHeight(frame)-12);
+        }
+    }
 }
 
 - (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
@@ -78,7 +90,7 @@
     YCNetworkConfigur *configur = self.itemConfigurs[indexPath.row];
     cell.titleLbl.text = configur.address;
     cell.detailLbl.text = configur.remark;
-    cell.selectedImg.hidden = !configur.selected;
+    [cell setDetailCell:configur.isSelected];
     return cell;
 }
 
@@ -92,14 +104,21 @@
     [self changeIpAddress];
 }
 
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.view setNeedsLayout];
+}
+
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewCellEditingStyleDelete;
 }
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @[[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        YCNetworkConfigur *config = self.itemConfigurs[indexPath.row];
         [self.itemConfigurs removeObjectAtIndex:indexPath.row];
-        self.itemConfigurs.firstObject.selected = YES;
+        if (config.isSelected && self.itemConfigurs.count > 0) {
+            self.itemConfigurs.firstObject.selected = YES;
+        }
         [self.tableView reloadData];
     }]];
 }
@@ -160,53 +179,54 @@
 @implementation YCNetworkDetailCell
 
 + (CGFloat)heightForCell {
-    return 92.0;
+    return 76.0;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.containerView];
         [self.containerView addSubview:self.iconImg];
         [self.containerView addSubview:self.titleLbl];
         [self.containerView addSubview:self.detailLbl];
-        [self.containerView addSubview:self.selectedImg];
         
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsMake(12, 14, 0, 14));
         }];
         [self.iconImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.leading.offset(14);
-            make.size.mas_equalTo(CGSizeMake(22, 22));
+            make.size.mas_equalTo(CGSizeMake(20, 20));
             make.centerY.equalTo(self.containerView);
         }];
         [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.iconImg.mas_right).offset(8);
-            make.top.mas_equalTo(16);
-            make.right.lessThanOrEqualTo(self.selectedImg.mas_left);
+            make.left.equalTo(self.iconImg.mas_right).offset(16);
+            make.top.mas_equalTo(8);
+            make.right.lessThanOrEqualTo(self.containerView.mas_right);
+            make.height.mas_equalTo(20);
         }];
         [self.detailLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.titleLbl.mas_left);
             make.top.equalTo(self.titleLbl.mas_bottom).offset(8);
-            make.right.lessThanOrEqualTo(self.selectedImg.mas_left);
-        }];
-        [self.selectedImg mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.trailing.offset(-14);
-            make.size.mas_equalTo(CGSizeMake(22, 22));
-            make.centerY.equalTo(self.containerView);
+            make.right.lessThanOrEqualTo(self.containerView.mas_right);
+            make.height.mas_equalTo(20);
         }];
     }
     return self;
+}
+
+- (void)setDetailCell:(BOOL)isSelected {
+    
+    self.iconImg.image = isSelected ? [UIImage as_imageWithName:@"icon_lianjie_green"]:[UIImage as_imageWithName:@"icon_lianjie"];
 }
 
 - (UIView *)containerView {
     
     if (_containerView == nil) {
         _containerView = [[UIView alloc] init];
-        _containerView.backgroundColor = [UIColor whiteColor];
+        _containerView.backgroundColor = [UIColor as_cellColor];
         _containerView.layer.cornerRadius = 4.0;
     }
     return _containerView;
@@ -216,7 +236,7 @@
     
     if (_iconImg == nil) {
         _iconImg = [[UIImageView alloc] init];
-        
+        _iconImg.image = [UIImage as_imageWithName:@"icon_lianjie"];
     }
     return _iconImg;
 }
@@ -225,7 +245,7 @@
     
     if (_titleLbl == nil) {
         _titleLbl = [[UILabel alloc] init];
-        _titleLbl.textColor = [UIColor as_bodyColor];
+        _titleLbl.textColor = [UIColor whiteColor];
         _titleLbl.font = [UIFont as_15];
         _titleLbl.textAlignment = NSTextAlignmentLeft;
     }
@@ -235,21 +255,12 @@
     
     if (_detailLbl == nil) {
         _detailLbl = [[UILabel alloc] init];
-        _detailLbl.textColor = [UIColor as_secondaryColor];
+        _detailLbl.textColor = [UIColor whiteColor];
         _detailLbl.font = [UIFont as_13];
         _detailLbl.textAlignment = NSTextAlignmentLeft;
         _detailLbl.numberOfLines = 0;
     }
     return _detailLbl;
-}
-
-- (UIImageView *)selectedImg {
-    
-    if (_selectedImg == nil) {
-        _selectedImg = [[UIImageView alloc] init];
-        
-    }
-    return _selectedImg;
 }
 
 @end

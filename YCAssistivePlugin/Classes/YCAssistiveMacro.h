@@ -23,8 +23,7 @@
 
 CF_EXPORT void YCSwizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelector);
 
-extern NSString *const kPartnerApiKey;
-extern NSString *const kDealerApiKey;
+extern NSString *const kAppEnvironmentApiKey;
 
 @interface YCAssistiveMacro : NSObject
 

@@ -46,15 +46,19 @@
     self.tableView.frame = self.view.bounds;
     [self.tableView reloadData];
     [self as_setNavigationBarTitle:@"详情"];
+    self.httpModel.readFlag = 1;
+}
+
+- (void)as_viewControllerDidTriggerLeftClick:(UIViewController *)viewController {
+    
+    if (self.readHttpBlock) {
+        self.readHttpBlock();
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return HttpTitles.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    return 56.0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -129,13 +133,17 @@
         vc.content = self.httpModel.url.absoluteString;
     }
     if (indexPath.row == 6 && self.httpModel.headerFields) {
-        NSString *content = [NSString stringWithFormat:@"%@",self.httpModel.headerFields];
+        NSMutableString *headerStr = [[NSMutableString alloc] init];
+        [self.httpModel.headerFields enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            [headerStr appendFormat:@"\n\"%@\" = \"%@\"", key, obj];
+        }];
         vc = [[YCAssistiveContentViewController alloc] init];
-        vc.content = content;
+        vc.content = headerStr;
     }
     if (indexPath.row == 7 && self.httpModel.requestBody.length > 0) {
+        NSString *body  =[[NSString alloc] initWithData:self.httpModel.requestBody encoding:NSUTF8StringEncoding];
         vc = [[YCAssistiveContentViewController alloc] init];
-        vc.content = self.httpModel.requestBody;
+        vc.content = body;
     }
     if (indexPath.row == 8 && self.httpModel.responseData.length > 0) {
         vc = [[YCAssistiveContentViewController alloc] init];
@@ -154,6 +162,9 @@
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.dataSource = self;
         _tableView.delegate = self;
+        _tableView.rowHeight = UITableViewAutomaticDimension;
+        _tableView.estimatedRowHeight = 64;
+        _tableView.backgroundColor = [UIColor clearColor];
     }
     return _tableView;
 }
@@ -176,6 +187,8 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.titleLbl];
         [self.contentView addSubview:self.detailLbl];
         [self.contentView addSubview:self.nextImg];
@@ -188,8 +201,8 @@
         [self.detailLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.leading.offset(14);
             make.top.equalTo(self.titleLbl.mas_bottom).offset(8);
-            make.height.mas_equalTo(20);
-            make.trailing.offset(-14);
+            make.right.equalTo(self.nextImg.mas_left).offset(-8);
+            make.bottom.lessThanOrEqualTo(self.contentView.mas_bottom).offset(-8).priorityHigh();
         }];
         [self.nextImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView);
@@ -211,7 +224,7 @@
     
     if (_titleLbl == nil) {
         _titleLbl = [[UILabel alloc] init];
-        _titleLbl.textColor = [UIColor as_bodyColor];
+        _titleLbl.textColor = [UIColor whiteColor];
         _titleLbl.font = [UIFont as_15_bold];
         _titleLbl.textAlignment = NSTextAlignmentLeft;
     }
@@ -221,9 +234,10 @@
     
     if (_detailLbl == nil) {
         _detailLbl = [[UILabel alloc] init];
-        _detailLbl.textColor = [UIColor as_secondaryColor];
+        _detailLbl.textColor = [UIColor whiteColor];
         _detailLbl.font = [UIFont as_13];
         _detailLbl.textAlignment = NSTextAlignmentLeft;
+        _detailLbl.numberOfLines = 0;
     }
     return _detailLbl;
 }
@@ -231,7 +245,7 @@
     
     if (_hLine == nil) {
         _hLine = [[UIView alloc] init];
-        _hLine.backgroundColor = [UIColor as_lineColor];
+        _hLine.backgroundColor = [UIColor whiteColor];
     }
     return _hLine;
 }
@@ -240,7 +254,7 @@
     
     if (_nextImg == nil) {
         _nextImg = [[UIImageView alloc] init];
-        _nextImg.image = [UIImage as_imageWithName:@"icon_next"];
+        _nextImg.image = [UIImage as_imageWithName:@"icon_next_white"];
     }
     return _nextImg;
 }

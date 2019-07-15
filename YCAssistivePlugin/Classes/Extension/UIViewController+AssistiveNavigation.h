@@ -23,6 +23,8 @@
 
 @property (nonatomic, strong) UIButton *as_rightButton;
 
+- (void)as_setupNavigationBar;
+
 - (void)as_setNavigationBarTitle:(NSString *)title;
 
 - (void)as_setLeftBarItemTitle:(NSString *)title;

@@ -10,13 +10,15 @@
 #import "YCAssistiveHttpModel.h"
 #import "UIFont+AssistiveFont.h"
 #import "UIColor+AssistiveColor.h"
+#import "UIImage+AssistiveBundle.h"
 
 @interface YCAssistiveHttpCell ()
 
 /* <#mark#> */
 @property (nonatomic, strong) UIView *containerView;
 
-
+/* uiim */
+@property (nonatomic, strong) UIImageView *flagImg;
 @end
 
 @implementation YCAssistiveHttpCell
@@ -35,7 +37,7 @@
         [self.contentView addSubview:self.containerView];
         [self.containerView addSubview:self.titleLbl];
         [self.containerView addSubview:self.detailLbl];
-        [self.containerView addSubview:self.readLbl];
+        [self.containerView addSubview:self.flagImg];
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.leading.offset(14);
             make.top.mas_equalTo(12);
@@ -52,10 +54,10 @@
             make.top.equalTo(self.titleLbl.mas_bottom).offset(8);
             make.height.mas_equalTo(20);
         }];
-        [self.readLbl mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.flagImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.containerView);
             make.trailing.offset(-14);
-            make.size.mas_equalTo(CGSizeMake(60, 30));
+            make.size.mas_equalTo(CGSizeMake(40, 30));
         }];
     }
     return self;
@@ -65,10 +67,7 @@
     
     self.titleLbl.text = model.url.host;
     self.detailLbl.text = [model.url.path substringWithRange:NSMakeRange(1, model.url.path.length-1)];
-    self.readLbl.text = (model.readFlag == 0) ? @"未读" : @"已读";
-    self.readLbl.textColor = (model.readFlag == 0)?[UIColor as_redColor]:[UIColor as_greenColor];
-    self.readLbl.layer.borderColor = (model.readFlag == 0)?[UIColor as_redColor].CGColor:[UIColor as_greenColor].CGColor;
-    
+    self.flagImg.image = model.readFlag == 1 ? [UIImage as_imageWithName:@"icon_read_tag"]:[UIImage as_imageWithName:@"icon_unread_tag"];
 }
 
 #pragma mark - getter
@@ -102,18 +101,12 @@
     return _detailLbl;
 }
 
-- (UILabel *)readLbl {
+- (UIImageView *)flagImg {
     
-    if (_readLbl == nil) {
-        _readLbl = [[UILabel alloc] init];
-        _readLbl.textColor = [UIColor as_redColor];
-        _readLbl.font = [UIFont as_13];
-        _readLbl.textAlignment = NSTextAlignmentCenter;
-        _readLbl.layer.cornerRadius = 4.0;
-        _readLbl.layer.borderWidth = 1/[UIScreen mainScreen].scale;
-        _readLbl.layer.borderColor = [UIColor as_redColor].CGColor;
+    if (_flagImg == nil) {
+        _flagImg = [[UIImageView alloc] init];
+        
     }
-    return _readLbl;
+    return _flagImg;
 }
-
 @end

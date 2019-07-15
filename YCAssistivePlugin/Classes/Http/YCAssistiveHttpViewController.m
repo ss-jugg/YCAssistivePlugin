@@ -63,6 +63,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     YCAssistiveHttpModel *model = [YCAssistiveHttpPlugin sharedInstance].httpModels[indexPath.row];
     YCAssistiveHttpDetailViewController *detailVC = [[YCAssistiveHttpDetailViewController alloc] initWithHttpModel:model];
+    [detailVC setReadHttpBlock:^{
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }];
     [self.navigationController pushViewController:detailVC animated:YES];
 }
 

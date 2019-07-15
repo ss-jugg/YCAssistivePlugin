@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *titleLbl;
 /* 地址 */
 @property (nonatomic, strong) UILabel *detailLbl;
-/* 已读标识 */
-@property (nonatomic, strong) UILabel *readLbl;
 
 + (CGFloat)heightForHttpCell;
 

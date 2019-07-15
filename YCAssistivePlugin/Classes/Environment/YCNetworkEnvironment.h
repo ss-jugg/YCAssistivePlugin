@@ -18,16 +18,21 @@ typedef NS_ENUM(NSUInteger, YCNetworkEnvironmentType) {
 
 @interface YCNetworkEnvironment : NSObject
 
-/* 当前环境地址 */
-@property (nonatomic, copy, readonly) NSString *environmentAddress;
-
 + (instancetype)sharedInstance;
 
-/* 环境地址 */
+/* 可切换的环境地址 */
 @property (nonatomic, strong) NSMutableArray *environmentAddresses;
 
+/**
+ 安装切换环境插件
+ */
 - (void)install;
 
+/**
+ 切换环境地址
+
+ @param key 对应app
+ */
 - (void)switchEnvironmentForKey:(NSString *)key;
 
 @end

@@ -17,12 +17,17 @@ static const CGFloat kASNBButtonImageWidth = 25.0f;
 
 static NSString *kASLeftButtonKey = @"kASLeftButtonKey";
 static NSString *kASRightButtonKey = @"kASLeftButtonKey";
+static NSString *kASNavigationDelegateKey = @"kASNavigationDelegateKey";
 
 @implementation UIViewController (AssistiveNavigation)
 @dynamic as_leftButton;
 @dynamic as_rightButton;
 
 #pragma mark - public
+- (void)as_setupNavigationBar {
+    
+    [self as_setLeftBarItemTitle:nil image:[UIImage as_imageWithName:@"icon_back_white"]];
+}
 
 - (void)as_setNavigationBarTitle:(NSString *)title {
     self.navigationItem.title = title;
@@ -113,10 +118,10 @@ static NSString *kASRightButtonKey = @"kASLeftButtonKey";
 
 #pragma mark - 代理
 - (id<YCAssistiveNavigationProtocol>)navigationDelegate {
-    return objc_getAssociatedObject(self, @selector(navigationDelegate));
+    return objc_getAssociatedObject(self, &kASNavigationDelegateKey);
 }
 - (void)setNavigationDelegate:(id<YCAssistiveNavigationProtocol>)navigationDelegate {
-    objc_setAssociatedObject(self, @selector(navigationDelegate), navigationDelegate, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, &kASNavigationDelegateKey, navigationDelegate, OBJC_ASSOCIATION_ASSIGN);
 }
 
 
@@ -150,8 +155,8 @@ static NSString *kASRightButtonKey = @"kASLeftButtonKey";
     if (!leftButton) {
         leftButton = [self _as_generateNavigationButtonWithSelector:@selector(_as_viewControllerDidTriggerLeftClick:)];
         leftButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        leftButton.imageEdgeInsets = UIEdgeInsetsMake(14, 0, 10, 0);
-        leftButton.titleEdgeInsets = UIEdgeInsetsMake(13, 0, 11, 0);
+        leftButton.imageEdgeInsets = UIEdgeInsetsMake(7, 0, 11, 0);
+        leftButton.titleEdgeInsets = UIEdgeInsetsMake(12, 0, 11, 0);
         objc_setAssociatedObject(self, &kASLeftButtonKey, leftButton, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return leftButton;

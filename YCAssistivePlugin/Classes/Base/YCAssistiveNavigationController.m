@@ -34,7 +34,6 @@
     
     if (self.viewControllers.count > 0) {
         viewController.hidesBottomBarWhenPushed = YES;
-        [self as_setLeftBarItemTitle:nil image:[UIImage as_imageWithName:@"icon_back_white"]];
     }
     [super pushViewController:viewController animated:animated];
     //fix:处理push后隐藏tabbar，并解决了iphonex push后tabbar上移问题

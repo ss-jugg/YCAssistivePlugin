@@ -62,19 +62,12 @@ r; \
 
 - (void)configNetworkAddressByCache {
     
-    //合伙人app，获取缓存中测试环境地址
-    if ([self.storage configursForKey:kPartnerApiKey].count > 0) {
-        kProjectAPIRoot = YC_ENV_FORMAT([self.storage configursForKey:kPartnerApiKey].firstObject.address);
+    //app，获取缓存中测试环境地址
+    if ([self.storage configursForKey:kAppEnvironmentApiKey].count > 0) {
+        kProjectAPIRoot = YC_ENV_FORMAT([self.storage configursForKey:kAppEnvironmentApiKey].firstObject.address);
     }else {
         kProjectAPIRoot = kYCProjectAPIRoot;
-        [self addDefaultAPIAddressesForKey:kPartnerApiKey];
-    }
-    //车商app地址，获取缓存中测试环境地址
-    if ([self.storage configursForKey:kDealerApiKey].count > 0) {
-        kProjectAPIRoot = YC_ENV_FORMAT([self.storage configursForKey:kPartnerApiKey].firstObject.address);
-    }else {
-        kProjectAPIRoot = kYCProjectAPIRoot;
-        [self addDefaultAPIAddressesForKey:kDealerApiKey];
+        [self addDefaultAPIAddressesForKey:kAppEnvironmentApiKey];
     }
     [[YCAssistiveHttpPlugin sharedInstance] addDebugHosts:@[kProjectAPIRoot]];
 }
