@@ -8,8 +8,7 @@
 #ifndef YCAssistivePlugin_h
 #define YCAssistivePlugin_h
 
+#import "YCAssistiveMacro.h"
 #import "YCAssistiveManager.h"
-#import "YCNetworkEnvironment.h"
-#import "YCAssistiveSessionProtocol.h"
 
 #endif /* YCAssistivePlugin_h */
