@@ -7,7 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+extern NSString *kYCAssistiveMemoryLeakNotificationName;
+
 
 @interface YCAssistiveMeomryLeakModel : NSObject
 
@@ -36,4 +37,3 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NS_ASSUME_NONNULL_END
