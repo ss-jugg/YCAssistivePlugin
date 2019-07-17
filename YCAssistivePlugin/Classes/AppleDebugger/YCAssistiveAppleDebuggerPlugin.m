@@ -25,7 +25,6 @@
 + (void)reactTapForAssistantView:(YCAssistiveDisplayView *)displayView {
     
     [displayView reactTapWithCls:[YCAssistiveAppleDebuggerView class]];
-    
 }
 
 @end
