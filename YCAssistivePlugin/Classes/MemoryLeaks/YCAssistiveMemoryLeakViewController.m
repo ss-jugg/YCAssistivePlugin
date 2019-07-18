@@ -8,6 +8,7 @@
 #import "YCAssistiveMemoryLeakViewController.h"
 #import <Masonry/Masonry.h>
 #import "YCAssistiveLeaksManager.h"
+#import "YCAssistiveMemoryLeakCell.h"
 
 @interface YCAssistiveMemoryLeakViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -26,6 +27,7 @@
         make.left.top.right.equalTo(self.view);
         make.bottom.equalTo(self.view.mas_bottomMargin);
     }];
+    [self.tableView reloadData];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -34,8 +36,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
-    return nil;
+    YCAssistiveMemoryLeakCell *cell = [tableView dequeueReusableCellWithIdentifier:@"YCAssistiveMemoryLeakCell"];
+    if (!cell) {
+        cell = [[YCAssistiveMemoryLeakCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YCAssistiveMemoryLeakCell"];
+    }
+    [cell bindModel:self.datas[indexPath.row]];
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

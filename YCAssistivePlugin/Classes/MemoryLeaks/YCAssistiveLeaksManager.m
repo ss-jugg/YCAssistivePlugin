@@ -6,7 +6,7 @@
 //
 
 #import "YCAssistiveLeaksManager.h"
-#import "MLeakedObjectProxy.h"
+#import "YCAssistiveMeomryLeakModel.h"
 
 NSString *kYCAssistiveMemoryLeakNotificationName = @"kYCAssistiveMemoryLeakNotificationName";
 @interface YCAssistiveLeaksManager ()
@@ -34,9 +34,3 @@ NSString *kYCAssistiveMemoryLeakNotificationName = @"kYCAssistiveMemoryLeakNotif
 
 @end
 
-
-@implementation YCAssistiveMeomryLeakModel
-
-
-
-@end

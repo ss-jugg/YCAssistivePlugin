@@ -18,6 +18,7 @@
 #import <UIKit/UIKit.h>
 
 #import "YCAssistiveLeaksManager.h"
+#import "YCAssistiveMeomryLeakModel.h"
 #if _INTERNAL_MLF_RC_ENABLED
 #import <FBRetainCycleDetector/FBRetainCycleDetector.h>
 #endif
@@ -62,15 +63,57 @@ static NSMutableSet *leakedObjectPtrs;
     
     [leakedObjectPtrs addObject:proxy.objectPtr];
     
+    YCAssistiveMeomryLeakModel *leakModel = [[YCAssistiveMeomryLeakModel alloc] init];
+    leakModel.objectPtr = @((uintptr_t)object);
+    leakModel.className = NSStringFromClass([object class]);
+    leakModel.viewStack = [object viewStack];
     if ([YCAssistiveLeaksManager shareManager].enableRetainCycle) {
-        [MLeaksMessenger alertWithTitle:@"Memory Leak"
-                                message:[NSString stringWithFormat:@"%@", proxy.viewStack]
-                               delegate:proxy
-                  additionalButtonTitle:@"Retain Cycle"];
+        [proxy findRetainCycleInObject:object block:^(NSArray *retainCycles) {
+            if (retainCycles && retainCycles.count > 0) {
+                leakModel.isRetainCycle = YES;
+                leakModel.retainCycle = retainCycles;
+                [MLeaksMessenger alertWithTitle:@"Retain Cycle" message:[NSString stringWithFormat:@"%@",retainCycles]];
+            }else {
+                [MLeaksMessenger alertWithTitle:@"Memory Leak" message:[NSString stringWithFormat:@"%@",[leakModel.viewStack componentsJoinedByString:@" -> "]]];
+            }
+            [[YCAssistiveLeaksManager shareManager] addLeakObject:leakModel];
+        }];
     }else {
-        [MLeaksMessenger alertWithTitle:@"Memory Leak"
-                                message:[NSString stringWithFormat:@"%@", proxy.viewStack]];
+        [[YCAssistiveLeaksManager shareManager] addLeakObject:leakModel];
+        [MLeaksMessenger alertWithTitle:@"Memory Leak" message:[NSString stringWithFormat:@"%@",[[object viewStack] componentsJoinedByString:@" -> "]]];
     }
+}
+
+- (void)findRetainCycleInObject:(id)object block:(void(^)(NSArray * retainCycles))block {
+    
+    if (!object) {
+        return;
+    }
+
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        FBRetainCycleDetector *detector = [FBRetainCycleDetector new];
+        [detector addCandidate:self.object];
+        NSSet *retainCycles = [detector findRetainCycles];
+        BOOL hasFound = NO;
+        NSArray *shiftedRetainCycle = nil;
+        for (NSArray *retainCycle in retainCycles) {
+            NSInteger index = 0;
+            for (FBObjectiveCGraphElement *element in retainCycle) {
+                if (element.object == object) {
+                    shiftedRetainCycle = [self shiftArray:retainCycle toIndex:index];
+                    hasFound = YES;
+                    break;
+                }
+                ++index;
+            }
+            if (hasFound) {
+                break;
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            block(shiftedRetainCycle);
+        });
+    });
 }
 
 - (void)dealloc {
@@ -84,53 +127,53 @@ static NSMutableSet *leakedObjectPtrs;
 }
 
 #pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (!buttonIndex) {
-        return;
-    }
-    
-    id object = self.object;
-    if (!object) {
-        return;
-    }
-    
-#if _INTERNAL_MLF_RC_ENABLED
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        FBRetainCycleDetector *detector = [FBRetainCycleDetector new];
-        [detector addCandidate:self.object];
-        NSSet *retainCycles = [detector findRetainCyclesWithMaxCycleLength:20];
-        
-        BOOL hasFound = NO;
-        for (NSArray *retainCycle in retainCycles) {
-            NSInteger index = 0;
-            for (FBObjectiveCGraphElement *element in retainCycle) {
-                if (element.object == object) {
-                    NSArray *shiftedRetainCycle = [self shiftArray:retainCycle toIndex:index];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MLeaksMessenger alertWithTitle:@"Retain Cycle"
-                                                message:[NSString stringWithFormat:@"%@", shiftedRetainCycle]];
-                    });
-                    hasFound = YES;
-                    break;
-                }
-                
-                ++index;
-            }
-            if (hasFound) {
-                break;
-            }
-        }
-        if (!hasFound) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MLeaksMessenger alertWithTitle:@"Retain Cycle"
-                                        message:@"Fail to find a retain cycle"];
-            });
-        }
-    });
-#endif
-}
+//
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+//    if (!buttonIndex) {
+//        return;
+//    }
+//
+//    id object = self.object;
+//    if (!object) {
+//        return;
+//    }
+//
+//#if _INTERNAL_MLF_RC_ENABLED
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//        FBRetainCycleDetector *detector = [FBRetainCycleDetector new];
+//        [detector addCandidate:self.object];
+//        NSSet *retainCycles = [detector findRetainCyclesWithMaxCycleLength:20];
+//
+//        BOOL hasFound = NO;
+//        for (NSArray *retainCycle in retainCycles) {
+//            NSInteger index = 0;
+//            for (FBObjectiveCGraphElement *element in retainCycle) {
+//                if (element.object == object) {
+//                    NSArray *shiftedRetainCycle = [self shiftArray:retainCycle toIndex:index];
+//
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [MLeaksMessenger alertWithTitle:@"Retain Cycle"
+//                                                message:[NSString stringWithFormat:@"%@", shiftedRetainCycle]];
+//                    });
+//                    hasFound = YES;
+//                    break;
+//                }
+//
+//                ++index;
+//            }
+//            if (hasFound) {
+//                break;
+//            }
+//        }
+//        if (!hasFound) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [MLeaksMessenger alertWithTitle:@"Retain Cycle"
+//                                        message:@"Fail to find a retain cycle"];
+//            });
+//        }
+//    });
+//#endif
+//}
 
 - (NSArray *)shiftArray:(NSArray *)array toIndex:(NSInteger)index {
     if (index == 0) {

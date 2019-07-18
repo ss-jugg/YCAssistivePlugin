@@ -8,20 +8,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString *kYCAssistiveMemoryLeakNotificationName;
-
-
-@interface YCAssistiveMeomryLeakModel : NSObject
-
-/* 内存泄漏类 */
-@property (nonatomic, copy) NSString *className;
-/* 泄漏内容 */
-@property (nonatomic, copy) NSString *viewStackContent;
-/* 是否循环引用 */
-@property (nonatomic, assign) BOOL isRetainCycle;
-/* 循环引用对象树 */
-@property (nonatomic, copy) NSString *retainCycleContent;
-@end
-
+@class YCAssistiveMeomryLeakModel;
 @interface YCAssistiveLeaksManager : NSObject
 
 /* 是否检测内存泄漏,默认YES */

@@ -38,11 +38,11 @@
 
 - (void)addChildrenControllers {
     
-    NSArray *viewControllers = @[@"YCNetworkEmvironmentViewController",@"YCAssistiveHttpViewController",@"YCAssistiveCrashViewController"];
-    NSArray *titles = @[@"server",@"http",@"crash"];
+    NSArray *viewControllers = @[@"YCNetworkEmvironmentViewController",@"YCAssistiveHttpViewController",@"YCAssistiveCrashViewController",@"YCAssistiveMemoryLeakViewController"];
+    NSArray *titles = @[@"server",@"http",@"crash",@"leak"];
     
-    NSArray *normalImages = @[@"qiehuan_default",@"icon_http_default",@"icon_crash_default"];
-    NSArray *selectedImages = @[@"qiehuan_selected",@"icon_http_selected",@"icon_crash_selected"];
+    NSArray *normalImages = @[@"qiehuan_default",@"icon_http_default",@"icon_crash_default",@"icon_leak_default"];
+    NSArray *selectedImages = @[@"qiehuan_selected",@"icon_http_selected",@"icon_crash_selected",@"icon_leak_selected"];
     [viewControllers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         UIViewController *viewController;
         viewController = [[NSClassFromString(obj) alloc] init];
