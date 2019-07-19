@@ -111,7 +111,7 @@
     NSMutableDictionary *dict = self.datas[indexPath.row];
     NSMutableDictionary *infoDict = dict[@"info"];
     NSMutableString *contentStr = @"".mutableCopy;
-    [contentStr appendFormat:@"崩溃类型：%@\n\n",dict[@"type"]];
+    [contentStr appendFormat:@"崩溃类型：%@\n\n",dict[@"typeName"]];
     [contentStr appendFormat:@"日期：%@\n\n",dict[@"date"]];
     [contentStr appendFormat:@"名称：%@\n\n",infoDict[@"name"]];
     [contentStr appendFormat:@"原因：%@\n\n",infoDict[@"reason"]];
@@ -191,7 +191,7 @@
     UIAlertAction *saveAction = [UIAlertAction actionWithTitle:@"保存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
         NSString *description = walertController.textFields.firstObject.text;
-        [dict setValue:description forKey:@"description"];
+        [dict setValue:description forKey:@"des"];
         [[YCAssistiveCrashPlugin sharedPlugin] replaceCrashLogToFileByKey:key withDict:dict];
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         self.tableView.editing = NO;

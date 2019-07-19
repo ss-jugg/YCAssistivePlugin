@@ -81,9 +81,8 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
 - (YCAssistiveDisplayView *)displayView {
     
     if (_displayView == nil) {
-        _displayView = [[YCAssistiveDisplayView alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
+        _displayView = [[YCAssistiveDisplayView alloc] initWithFrame:CGRectMake(0, 100, 150, 150)];
         _displayView.longPressSubject = [RACSubject subject];
-        _displayView.center = self.view.center;
         _displayView.hidden = YES;
         weak(self);
         [_displayView.longPressSubject subscribeNext:^(id  _Nullable x) {

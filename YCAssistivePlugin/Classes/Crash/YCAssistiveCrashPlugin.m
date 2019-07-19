@@ -94,7 +94,7 @@ NSString *const kAssitiveCrashException = @"exception";
         [detail setObject:[[exception callStackSymbols] componentsJoinedByString:@"\n"] forKey:@"backtrace"];
     }
     NSMutableDictionary * dict = [NSMutableDictionary dictionary];
-    [dict setObject:kAssitiveCrashException forKey:@"type"];
+    [dict setObject:kAssitiveCrashException forKey:@"typeName"];
     [dict setObject:detail forKey:@"info"];
     [self saveToFile:dict];
 }
@@ -114,7 +114,7 @@ NSString *const kAssitiveCrashException = @"exception";
     /* 是否解决 */
     [dict setObject:@0 forKey:@"resolve"];
     /* 描述字段 */
-    [dict setObject:@"" forKey:@"description"];
+    [dict setObject:@"" forKey:@"des"];
     
     /* 根据日期格式把文件写入本地 */
     NSString* savePath = [[_crashLogPath stringByAppendingPathComponent:dateString] stringByAppendingString:@".plist"];
@@ -218,7 +218,7 @@ void Assistive_SignalHandler(int sig) {
     [detail setObject:[NSString stringWithUTF8String:names[signal]] forKey:@"name"];
     
     NSMutableDictionary * dict = [NSMutableDictionary dictionary];
-    [dict setObject:kAssitiveCrashSignalException forKey:@"type"];
+    [dict setObject:kAssitiveCrashSignalException forKey:@"typeName"];
     [dict setObject:detail forKey:@"info"];
     
     [self saveToFile:dict];

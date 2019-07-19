@@ -99,7 +99,7 @@
 #pragma mark - 绑定数据
 - (void)bindDict:(NSDictionary *)dict {
     
-    self.titleLbl.text = [NSString stringWithFormat:@"崩溃类型：%@",dict[@"type"]];
+    self.titleLbl.text = [NSString stringWithFormat:@"崩溃类型：%@",dict[@"typeName"]];
     self.dateLbl.text = dict[@"date"];
     NSDictionary *infoDic = dict[@"info"];
     self.nameLbl.text = infoDic[@"name"];
