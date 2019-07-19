@@ -70,20 +70,23 @@
     model.isOn = isOn;
     if (indexPath.row == 0) {
         [YCAssistiveLeaksManager shareManager].enableLeaks = isOn;
+        [[NSUserDefaults standardUserDefaults] setObject:@(isOn) forKey:kYCAssistiveMemoryLeakKey];
         if (!isOn) {
             [YCAssistiveLeaksManager shareManager].enableRetainCycle = NO;
             YCAssistiveSettingModel *nextModel = self.settings[1];
             nextModel.isOn = NO;
-            
             [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:kYCAssistiveRetainCycleKey];
         }
     }
     if (indexPath.row == 1) {
+        [[NSUserDefaults standardUserDefaults] setObject:@(isOn) forKey:kYCAssistiveRetainCycleKey];
         [YCAssistiveLeaksManager shareManager].enableRetainCycle = isOn;
         if (isOn) {
             YCAssistiveSettingModel *preModel = self.settings[0];
             preModel.isOn = YES;
             [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kYCAssistiveMemoryLeakKey];
         }
     }
     
