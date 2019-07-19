@@ -16,6 +16,7 @@
 
 @interface YCAssistiveHttpViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSMutableArray *dataSource;
 @end
 
 @implementation YCAssistiveHttpViewController
@@ -38,13 +39,15 @@
 }
 
 - (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
+    
+    [self.dataSource removeAllObjects];
     [[YCAssistiveHttpPlugin sharedInstance] clearAll];
     [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [YCAssistiveHttpPlugin sharedInstance].httpModels.count;
+    return self.dataSource.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -54,14 +57,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     YCAssistiveHttpCell *cell = [tableView dequeueReusableCellWithIdentifier:@"YCAssistiveHttpCell"];
-    YCAssistiveHttpModel *httpModel = [YCAssistiveHttpPlugin sharedInstance].httpModels[indexPath.row];
+    YCAssistiveHttpModel *httpModel = self.dataSource[indexPath.row];
     [cell bindHttpModel:httpModel];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    YCAssistiveHttpModel *model = [YCAssistiveHttpPlugin sharedInstance].httpModels[indexPath.row];
+    YCAssistiveHttpModel *model = self.dataSource[indexPath.row];
     YCAssistiveHttpDetailViewController *detailVC = [[YCAssistiveHttpDetailViewController alloc] initWithHttpModel:model];
     [detailVC setReadHttpBlock:^{
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -84,4 +87,12 @@
     return _tableView;
 }
 
+- (NSMutableArray *)dataSource {
+    
+    if (_dataSource == nil) {
+        NSMutableArray *datas = [NSMutableArray arrayWithArray:[YCAssistiveHttpPlugin sharedInstance].httpModels];
+        _dataSource = [[[datas reverseObjectEnumerator] allObjects] mutableCopy];
+    }
+    return _dataSource;
+}
 @end

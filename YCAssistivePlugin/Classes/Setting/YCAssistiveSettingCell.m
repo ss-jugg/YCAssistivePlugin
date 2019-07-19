@@ -41,7 +41,7 @@
             make.right.lessThanOrEqualTo(self.contentView.mas_centerX);
         }];
         [self.settingSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(40, 20));
+            make.size.mas_equalTo(CGSizeMake(60, 30));
             make.trailing.offset(-14);
             make.centerY.equalTo(self.titleLbl);
         }];
@@ -65,8 +65,15 @@
 - (void)bindSettingModel:(YCAssistiveSettingModel *)model {
     
     self.titleLbl.text = model.title;
-    self.detailLbl.text = model.detail;
     self.settingSwitch.on = model.isOn;
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.detail];
+    //调整行距
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 4.0;
+    paragraphStyle.baseWritingDirection = NSWritingDirectionLeftToRight;
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [model.detail length])];
+    self.detailLbl.attributedText = attributedString;
+    attributedString = nil;
 }
 
 #pragma mark - getter

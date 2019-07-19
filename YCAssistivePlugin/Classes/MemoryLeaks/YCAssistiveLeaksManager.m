@@ -7,6 +7,7 @@
 
 #import "YCAssistiveLeaksManager.h"
 #import "YCAssistiveMeomryLeakModel.h"
+#import "YCAssistiveMacro.h"
 
 NSString *kYCAssistiveMemoryLeakNotificationName = @"kYCAssistiveMemoryLeakNotificationName";
 @interface YCAssistiveLeaksManager ()
@@ -21,8 +22,8 @@ NSString *kYCAssistiveMemoryLeakNotificationName = @"kYCAssistiveMemoryLeakNotif
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _instance = [[YCAssistiveLeaksManager alloc] init];
-        _instance.enableLeaks = NO;
-        _instance.enableRetainCycle = NO;
+        _instance.enableLeaks = [[NSUserDefaults standardUserDefaults] objectForKey:kYCAssistiveMemoryLeakKey];
+        _instance.enableRetainCycle = [[NSUserDefaults standardUserDefaults] objectForKey:kYCAssistiveRetainCycleKey];
         _instance.leakObjects = [[NSMutableArray alloc] init];
     });
     return _instance;

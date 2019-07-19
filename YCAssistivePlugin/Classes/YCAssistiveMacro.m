@@ -8,6 +8,9 @@
 #import "YCAssistiveMacro.h"
 #import <objc/runtime.h>
 
+NSString *const kYCAssistiveMemoryLeakKey = @"MemoryLeak";
+NSString *const kYCAssistiveRetainCycleKey = @"RetainCycle";
+
 void YCSwizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelector) {
     Method originalMethod = class_getInstanceMethod(cls, originalSelector);
     Method swizzledMethod = class_getInstanceMethod(cls, swizzledSelector);

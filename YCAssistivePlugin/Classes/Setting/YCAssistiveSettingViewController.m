@@ -7,6 +7,7 @@
 
 #import "YCAssistiveSettingViewController.h"
 #import <Masonry/Masonry.h>
+#import "YCAssistiveMacro.h"
 #import "YCAssistiveSettingCell.h"
 #import "YCAssistiveSettingModel.h"
 #import "YCAssistiveLeaksManager.h"
@@ -32,8 +33,13 @@
 
 - (void)setupSettings {
     
-    self.settings = @[[YCAssistiveSettingModel settingModelWithTitle:@"是否开启内存检测" detail:@"开启内存检测，若出现内存泄漏，会弹框提示，同事记录泄漏信息，在leak页面可查看"],
-                      [YCAssistiveSettingModel settingModelWithTitle:@"是否开启循环引用检测" detail:@"开启循环引用后，会自动开启内存检测"]];
+    YCAssistiveSettingModel *leakModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启内存检测" detail:@"开启内存检测，若出现内存泄漏，会弹框提示，同事记录泄漏信息，在leak页面可查看"];
+    leakModel.isOn = [[NSUserDefaults standardUserDefaults] objectForKey:kYCAssistiveMemoryLeakKey];
+    YCAssistiveSettingModel *retainCycleModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启循环引用检测" detail:@"开启循环引用后，会自动开启内存检测"];
+    retainCycleModel.isOn = [[NSUserDefaults standardUserDefaults] objectForKey:kYCAssistiveRetainCycleKey];
+    
+    self.settings = @[leakModel,retainCycleModel];
+
     [self.tableView reloadData];
 }
 
@@ -50,21 +56,37 @@
     }
     YCAssistiveSettingModel *model = self.settings[indexPath.row];
     [cell bindSettingModel:model];
+    weak(self);
     [cell.switchSignal subscribeNext:^(id  _Nullable x) {
-        model.isOn = [x boolValue];
-        if (indexPath.row == 0) {
-            [YCAssistiveLeaksManager shareManager].enableLeaks = [x boolValue];
-            if (![x boolValue]) {
-                [YCAssistiveLeaksManager shareManager].enableRetainCycle = NO;
-            }
-        }else {
-            [YCAssistiveLeaksManager shareManager].enableRetainCycle = [x boolValue];
-            if ([x boolValue]) {
-                [YCAssistiveLeaksManager shareManager].enableLeaks = YES;
-            }
-        }
+        strong(self);
+        [self changedAtIndexPath:indexPath switchOn:[x boolValue]];
     }];
     return cell;
+}
+
+- (void)changedAtIndexPath:(NSIndexPath *)indexPath switchOn:(BOOL)isOn {
+    
+    YCAssistiveSettingModel *model = self.settings[indexPath.row];
+    model.isOn = isOn;
+    if (indexPath.row == 0) {
+        [YCAssistiveLeaksManager shareManager].enableLeaks = isOn;
+        if (!isOn) {
+            [YCAssistiveLeaksManager shareManager].enableRetainCycle = NO;
+            YCAssistiveSettingModel *nextModel = self.settings[1];
+            nextModel.isOn = NO;
+            
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        }
+    }
+    if (indexPath.row == 1) {
+        [YCAssistiveLeaksManager shareManager].enableRetainCycle = isOn;
+        if (isOn) {
+            YCAssistiveSettingModel *preModel = self.settings[0];
+            preModel.isOn = YES;
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        }
+    }
+    
 }
 
 #pragma mark - getter

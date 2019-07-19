@@ -28,6 +28,7 @@
     
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor  = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
         
