@@ -36,10 +36,10 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
 - (BOOL)shouldHandleTouchAtPoint:(CGPoint)pointInWindow {
     
     BOOL shouldHandleTouch = NO;
-    if (CGRectContainsPoint(self.assisticeTouch.frame, pointInWindow)) {
+    if (CGRectContainsPoint(self.assisticeTouch.frame, pointInWindow) && !self.assisticeTouch.hidden) {
         shouldHandleTouch = YES;
     }
-    if (CGRectContainsPoint(self.displayView.frame, pointInWindow)) {
+    if (CGRectContainsPoint(self.displayView.frame, pointInWindow) && !self.displayView.hidden) {
         shouldHandleTouch = YES;
     }
     if (self.presentedViewController) {

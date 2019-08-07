@@ -10,9 +10,12 @@
 
 @implementation YCAssistiveAppleDebuggerPlugin
 
+#if DEBUG
 + (void)load {
     [self registerPlugin];
 }
+#endif
+
 
 + (NSString *)title {
     return @"VC plugin";

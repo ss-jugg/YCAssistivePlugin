@@ -9,9 +9,12 @@
 #import "YCAssistivePerformanceView.h"
 
 @implementation YCAssistivePerformancePlugin
+
+#if DEBUG
 + (void)load {
     [self registerPlugin];
 }
+#endif
 
 + (NSString *)title {
     return @"performance plugin";
