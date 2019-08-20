@@ -48,13 +48,14 @@
 
 - (void)installPlugins {
     
-    //开启切换环境
-    [[YCNetworkEnvironment sharedInstance] install];
-    //开启网络监测
-    [YCAssistiveSessionProtocol startInterceptor];
-    
     //开启crash捕捉
     [[YCAssistiveCrashPlugin sharedPlugin] install];
+    
+    //开启切换环境
+    [[YCNetworkEnvironment sharedInstance] install];
+    
+    //开启网络监测
+    [YCAssistiveSessionProtocol startInterceptor];
     
 }
 

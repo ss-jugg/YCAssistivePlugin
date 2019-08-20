@@ -107,6 +107,7 @@ NSString *const kAssitiveCrashException = @"exception";
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString* dateString = [formatter stringFromDate:[NSDate date]];
     
+    [dict setObject:[self appInfo] forKey:@"appInfo"];
     /* 日期 */
     [dict setObject:dateString forKey:@"date"];
     /* 难易度 */
@@ -123,6 +124,16 @@ NSString *const kAssitiveCrashException = @"exception";
     /* 更新总列表 */
     [_plist insertObject:dateString atIndex:0];
     [_plist writeToFile:[_crashLogPath stringByAppendingPathComponent:@"crashLog.plist"] atomically:YES];
+}
+
+- (NSString *)appInfo {
+    NSString *name = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    NSString *shortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString *device = [UIDevice currentDevice].model;
+    NSString *system = [NSString stringWithFormat:@"%@ %@",[UIDevice currentDevice].systemName,[UIDevice currentDevice].systemVersion];
+    NSString *uuid = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    return [NSString stringWithFormat:@"App_%@%@(%@)-Device_%@-System_%@-UUID%@", name, shortVersion, version,device, system, uuid];
 }
 
 #pragma mark - buplic
@@ -227,13 +238,15 @@ void Assistive_SignalHandler(int sig) {
 - (void)install {
     
     //注册回调函数
-    NSSetUncaughtExceptionHandler(&Assistive_HandleException);
-    signal(SIGABRT, Assistive_SignalHandler);
-    signal(SIGILL, Assistive_SignalHandler);
-    signal(SIGSEGV, Assistive_SignalHandler);
-    signal(SIGFPE, Assistive_SignalHandler);
-    signal(SIGBUS, Assistive_SignalHandler);
-    signal(SIGPIPE, Assistive_SignalHandler);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSSetUncaughtExceptionHandler(&Assistive_HandleException);
+        signal(SIGABRT, Assistive_SignalHandler);
+        signal(SIGILL, Assistive_SignalHandler);
+        signal(SIGSEGV, Assistive_SignalHandler);
+        signal(SIGFPE, Assistive_SignalHandler);
+        signal(SIGBUS, Assistive_SignalHandler);
+        signal(SIGPIPE, Assistive_SignalHandler);
+    });
 }
 
 - (void)dealloc {
