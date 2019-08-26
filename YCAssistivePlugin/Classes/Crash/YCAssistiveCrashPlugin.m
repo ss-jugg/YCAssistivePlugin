@@ -12,6 +12,8 @@
 NSString *const kAssitiveCrashSignalException = @"signal";
 NSString *const kAssitiveCrashException = @"exception";
 
+static NSUncaughtExceptionHandler *previousUncaughtExceptionHandler;
+
 @interface YCAssistiveCrashPlugin ()
 {
     //文件路径
@@ -177,7 +179,8 @@ NSString *const kAssitiveCrashException = @"exception";
 void Assistive_HandleException(NSException *exception) {
     
     [[YCAssistiveCrashPlugin sharedPlugin] saveException:exception];
-    [exception raise];
+    //调用之前注册的handler，避免覆盖
+    previousUncaughtExceptionHandler(exception);
 }
 
 void Assistive_SignalHandler(int sig) {
@@ -239,6 +242,7 @@ void Assistive_SignalHandler(int sig) {
     
     //注册回调函数
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        previousUncaughtExceptionHandler = NSGetUncaughtExceptionHandler();
         NSSetUncaughtExceptionHandler(&Assistive_HandleException);
         signal(SIGABRT, Assistive_SignalHandler);
         signal(SIGILL, Assistive_SignalHandler);
