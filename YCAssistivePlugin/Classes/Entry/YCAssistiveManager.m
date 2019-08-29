@@ -10,6 +10,8 @@
 #import "YCAssistiveSessionProtocol.h"
 #import "YCAssistivePluginViewController.h"
 #import "YCAssistiveCrashPlugin.h"
+#import <YCLogger/YCLogger.h>
+
 @interface YCAssistiveManager ()<YCAssistiveWindowDelegate>
 
 @property (nonatomic, assign) BOOL yc_canBecomeKeyWindow;
@@ -47,6 +49,9 @@
 }
 
 - (void)installPlugins {
+    
+    //开启日志
+    [[YCLoggerManager shareManager] startLogger];
     
     //开启crash捕捉
     [[YCAssistiveCrashPlugin sharedPlugin] install];

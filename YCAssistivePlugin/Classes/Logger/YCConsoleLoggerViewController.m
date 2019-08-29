@@ -20,6 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self as_setRightBarItemTitle:@"清空"];
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(self.view);
@@ -28,9 +29,15 @@
     [self.tableView reloadData];
 }
 
+- (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
+    
+    [[YCLoggerManager shareManager] removeAllConsoleLoggers];
+    [self.tableView reloadData];
+}
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [YCLoggerManager shareManager].loggerModels.count;
+    return [YCLoggerManager shareManager].loggers.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -39,8 +46,8 @@
     if (!cell) {
         cell = [[YCConsoleLoggerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YCConsoleLoggerCell"];
     }
-    YCConsoleLoggerModel *model = [YCLoggerManager shareManager].loggerModels[indexPath.row];
-    [cell bindDescribeValue:[model description]];
+    NSString *log = [YCLoggerManager shareManager].loggers[indexPath.row];
+    [cell bindDescribeValue:log];
     return cell;
 }
 
