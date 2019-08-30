@@ -48,7 +48,7 @@ r; \
                                         @{@"title":@"预发环境",
                                           @"address":@"http://demo.yunchejinrong.com"},
                                        @{@"title":@"线上环境",
-                                         @"address":@"http://www.yuncheok.com"}] mutableCopy];
+                                         @"address":@"http://system.yunchejinrong.com"}] mutableCopy];
     }
     return self;
 }
