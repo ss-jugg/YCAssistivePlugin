@@ -11,6 +11,7 @@
 #import "YCAssistivePluginViewController.h"
 #import "YCAssistiveCrashPlugin.h"
 #import <YCLogger/YCLogger.h>
+#import "YCScreenShotHelper.h"
 
 @interface YCAssistiveManager ()<YCAssistiveWindowDelegate>
 
@@ -62,6 +63,8 @@
     //开启网络监测
     [YCAssistiveSessionProtocol startInterceptor];
     
+    //开启截图
+    [[YCScreenShotHelper sharedInstance] setEnable:YES];
 }
 
 #pragma mark - public

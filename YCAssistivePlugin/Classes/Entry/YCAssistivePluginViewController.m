@@ -55,34 +55,42 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
 #pragma mark - 配置插件
 - (NSArray *)pluginItems {
     
+    NSMutableArray *items = [[NSMutableArray alloc] init];
     //截图
-    YCAssistivePluginItem *screenshotItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeScreenShot imageName:@"icon_button_screenshot"];
+    if ([YCScreenShotHelper sharedInstance].isEnable) {
+        YCAssistivePluginItem *screenshotItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeScreenShot imageName:@"icon_button_screenshot"];
+        weak(self);
+        [screenshotItem.tapSubject subscribeNext:^(id  _Nullable x) {
+            strong(self);
+            YCScreenShotPreviewViewController *previewVC = [[YCScreenShotPreviewViewController alloc] init];
+            previewVC.shotImage = [[YCScreenShotHelper sharedInstance] imageFromCurrentScreen];
+            [self presentViewController:previewVC animated:YES completion:nil];
+        }];
+        [items addObject:screenshotItem];
+    }
+    //查看视图层级
     weak(self);
-    [screenshotItem.tapSubject subscribeNext:^(id  _Nullable x) {
+    YCAssistivePluginItem *hierarchyItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeHierarchy imageName:@"icon_button_hierarchy"];
+    [hierarchyItem.tapSubject subscribeNext:^(id  _Nullable x) {
         strong(self);
-        YCScreenShotPreviewViewController *previewVC = [[YCScreenShotPreviewViewController alloc] init];
-        previewVC.shotImage = [[YCScreenShotHelper sharedInstance] imageFromCurrentScreen];
-        [self presentViewController:previewVC animated:YES completion:nil];
+        
     }];
+    [items addObject:hierarchyItem];
     //定位当前视图VC
     YCAssistivePluginItem *findVCItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeFindVC imageName:@"icon_button_findVC"];
     [findVCItem.tapSubject subscribeNext:^(id  _Nullable x) {
         strong(self);
         [self.displayView reactTapWithCls:[YCAssistiveAppleDebuggerView class]];
     }];
-    //查看视图层级
-    YCAssistivePluginItem *hierarchyItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeHierarchy imageName:@"icon_button_hierarchy"];
-    [hierarchyItem.tapSubject subscribeNext:^(id  _Nullable x) {
-        strong(self);
-        
-    }];
+    [items addObject:findVCItem];
     //性能检测
     YCAssistivePluginItem *performanceItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypePerformance imageName:@"icon_button_performance"];
     [performanceItem.tapSubject subscribeNext:^(id  _Nullable x) {
         strong(self);
         [self.displayView reactTapWithCls:[YCAssistivePerformanceView class]];
     }];
-    return @[screenshotItem,findVCItem,hierarchyItem,performanceItem];
+    [items addObject:performanceItem];
+    return items.copy;
 }
 
 #pragma mark - view

@@ -56,7 +56,7 @@ alpha:1.0]
 }
 
 + (UIColor *)as_cellColor {
-    return ASColorFromRGB(0x6100C5);
+    return ASColorFromRGB(0x004455);
 }
 
 + (UIColor *)as_customColor:(long long)hex {

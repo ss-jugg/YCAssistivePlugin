@@ -12,6 +12,7 @@
 #import "UIView+AssistiveUtils.h"
 #import "YCScreenShotHelper.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveMacro.h"
 
 @interface YCScreenShotPreviewViewController ()<YCScreenShotToolBarDelegate>
 
@@ -68,13 +69,15 @@
 
 - (void)confirmAction {
     
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"提示" message:@"请输入图片名称" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"保存图片" message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"请输入图片名称";
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
     }];
+    weak(alertVC);
     UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        strong(alertVC);
         [self doConfirmAction:alertVC.textFields.firstObject.text];
     }];
     [alertVC addAction:cancel];
