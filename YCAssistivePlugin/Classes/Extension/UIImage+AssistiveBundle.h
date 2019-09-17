@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (AssistiveBundle)
 + (UIImage *)as_imageWithName:(NSString *)imageName;
+
 @end
 
 NS_ASSUME_NONNULL_END

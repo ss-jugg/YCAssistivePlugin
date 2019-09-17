@@ -7,10 +7,8 @@
 
 #import "YCAssistiveDisplayView.h"
 #import <ReactiveObjC/ReactiveObjC.h>
-#import "YCPluginFunctionView.h"
-#import "YCPluginFunctionViewModel.h"
-#import "YCAssistiveItemPlugin.h"
 #import "YCAssistiveMacro.h"
+#import "CAAnimation+BadgeAnimation.h"
 
 @interface YCAssistiveDisplayView ()
 
@@ -33,19 +31,13 @@
         [self addSubview:self.tapLbl];
         self.tapLbl.frame = CGRectMake(0, 0, frame.size.width, 20);
         [self addGestures];
-        [self _pluginFunctionView];
     }
     return self;
-}
-
-- (void)dealloc {
-    [self.longPressSubject sendCompleted];
 }
 
 - (void)addGestures {
     
     [self addDragGesture];
-    [self addLongPressGesture];
     [self addTapGesture];
 }
 
@@ -55,60 +47,9 @@
     weak(self);
     [tapGesture.rac_gestureSignal subscribeNext:^(__kindof UIGestureRecognizer * _Nullable x) {
         strong(self);
-        if (self.isPluginsView) {
-            [self displayViewAnimation];
-            return;
-        }
-        [self _pluginFunctionView];
+        [self hideAnimation];
     }];
     [self.tapLbl addGestureRecognizer:tapGesture];
-}
-
-- (void)displayViewAnimation {
-    
-    CGRect frame = self.frame;
-    if (CGRectGetHeight(frame) < 150) {
-        [UIView animateWithDuration:0.5 animations:^{
-            self.frame = CGRectMake(frame.origin.x, frame.origin.y, CGRectGetWidth(frame), 150);
-        }];
-    }else {
-        [UIView animateWithDuration:0.5 animations:^{
-            self.frame = CGRectMake(frame.origin.x, frame.origin.y, CGRectGetWidth(frame), 20);
-        }];
-    }
-}
-
-- (void)_pluginFunctionView {
-    
-    self.isPluginsView = YES;
-    YCPluginFunctionViewModel *viewModel = [[YCPluginFunctionViewModel alloc] init];
-    NSMutableArray *functions = [NSMutableArray array];
-    for (Class<YCAssistiveItemPluginProtocol> plugin in kYCAssistivePlugins) {
-        weak(self)
-        YCPluginFunctionModel *model = [YCPluginFunctionModel functionModelWithTitle:[plugin title] command:[[RACCommand alloc] initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
-            strong(self);
-            self.isPluginsView = NO;
-            [self _resetDisplayView];
-            [plugin reactTapForAssistantView:self];
-            return [RACSignal empty];
-        }]];
-        [functions addObject:model];
-    }
-    viewModel.functions = functions;
-    [self _reactPluginView:[[YCPluginFunctionView alloc] initWithViewModel:viewModel]];
-}
-
-- (void)addLongPressGesture {
-    
-    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] init];
-    weak(self)
-    [longPressGesture.rac_gestureSignal subscribeNext:^(__kindof UIGestureRecognizer * _Nullable x) {
-        strong(self)
-        if (self.longPressSubject) {
-            [self.longPressSubject sendNext:x];
-        }
-    }];
-    [self addGestureRecognizer:longPressGesture];
 }
 
 - (void)addDragGesture {
@@ -128,6 +69,23 @@
     
     UIView *view = [[cls alloc] init];
     [self _reactPluginView:view];
+    if (self.hidden) {
+        [self showAnimation];
+    }
+}
+
+- (void)showAnimation {
+    
+    self.hidden = NO;
+    CABasicAnimation *ani = [CAAnimation scaleAnimationWithDuration:0.2 frameValue:0.1 toValue:1.0];
+    [self.layer addAnimation:ani forKey:@"scale"];
+}
+
+- (void)hideAnimation {
+    
+    CABasicAnimation *ani = [CAAnimation scaleAnimationWithDuration:0.2 frameValue:1.0 toValue:0.1];
+    [self.layer addAnimation:ani forKey:@"scale"];
+    self.hidden = YES;
 }
 
 #pragma mark - private
@@ -141,7 +99,6 @@
     [UIView animateWithDuration:0.2 animations:^{
         pluginView.alpha = 1;
     }];
-    self.tapLbl.text = self.isPluginsView ? @"PLUGINS" : @"TAP ME";
 }
 
 //MARK:重置
@@ -177,7 +134,7 @@
     
     if (_tapLbl == nil) {
         _tapLbl = [[UILabel alloc] init];
-        _tapLbl.text = @"TAP ME";
+        _tapLbl.text = @"CLOSE";
         _tapLbl.font = [UIFont systemFontOfSize:11.0];
         _tapLbl.backgroundColor = [UIColor orangeColor];
         _tapLbl.textAlignment = NSTextAlignmentCenter;

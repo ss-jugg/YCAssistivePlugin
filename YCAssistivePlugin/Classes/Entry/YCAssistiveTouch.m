@@ -9,12 +9,18 @@
 #import "YCAssistiveMacro.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "UIImage+AssistiveBundle.h"
+#import "YCAssistivePluginButton.h"
+#import "YCAssistivePluginItem.h"
+
+#define YCRotationAngle M_PI / 20
 
 @interface YCAssistiveTouch ()
 
-/* 初始时位置 */
-@property (nonatomic, assign) CGRect initialFrame;
-@property (nonatomic, strong) UIImageView *debugImg;
+@property (nonatomic, strong) UIImageView *debugImgView;
+
+@property (nonatomic, strong) NSArray<YCAssistivePluginItem *> *pluginItems;
+
+@property (nonatomic, strong) NSArray *pluginButtons;
 
 @property (nonatomic, assign) CGFloat transX;
 @property (nonatomic, assign) CGFloat transY;
@@ -22,26 +28,95 @@
 @end
 @implementation YCAssistiveTouch
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithPluginItems:(NSArray<YCAssistivePluginItem *> *)pluginItems {
     
-    if (self = [super initWithFrame:frame]) {
-        self.initialFrame = frame;
+    if (self = [super init]) {
+        self.pluginItems = pluginItems;
+        self.frame = CGRectMake(10, CGRectGetHeight([UIScreen mainScreen].bounds)/2.0 - kAssistiveTouchW/2.0, kAssistiveTouchW, kAssistiveTouchW);
         self.layer.cornerRadius = kAssistiveTouchW/2.0;
-        self.layer.masksToBounds = YES;
         [self setUpDefaultUIS];
         [self addTapGesture];
         [self addLongPressGesture];
         [self addDragGesture];
+        self.isLocationAtLeftSide = YES;
     }
     return self;
 }
 
 - (void)setUpDefaultUIS {
     
-    self.debugImg = [[UIImageView alloc] init];
-    self.debugImg.image = [UIImage as_imageWithName:@"icon_debug"];
-    self.debugImg.frame = self.bounds;
-    [self addSubview:self.debugImg];
+    UIImageView *debugImg = [[UIImageView alloc] init];
+    debugImg.image = [UIImage as_imageWithName:@"icon_button_debug"];
+    debugImg.frame = self.bounds;
+    self.debugImgView = debugImg;
+    
+    [self addItems];
+    
+    [self addSubview:debugImg];
+    
+}
+
+- (void)addItems {
+    
+    NSMutableArray *buttons = [[NSMutableArray alloc] initWithCapacity:self.pluginItems.count];
+    
+    [self.pluginItems enumerateObjectsUsingBlock:^(YCAssistivePluginItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        YCAssistivePluginButton *button = [YCAssistivePluginButton pluginButtonWithSize:CGSizeMake(kAssistiveTouchW, kAssistiveTouchW) image:obj.pluginImage target:self action:@selector(tapItem:)];
+        button.tag = idx;
+        button.center = self.debugImgView.center;
+        button.hidden = YES;
+        [self addSubview:button];
+        [buttons addObject:button];
+    }];
+    self.pluginButtons = buttons;
+}
+
+- (void)showItems {
+    
+    if (!self.isShow) {
+        self.isShow = YES;
+        if (self.isLocationAtLeftSide) {
+            [self itemShowRoundTypeWithOffsetAngle:-M_PI/2.0];
+        }else {
+            [self itemShowRoundTypeWithOffsetAngle:M_PI/2.0];
+        }
+    }else {
+        [self hideItems];
+    }
+}
+
+- (void)itemShowRoundTypeWithOffsetAngle:(CGFloat)offsetAngle{
+    
+    CGFloat count = self.pluginItems.count;
+    for (YCAssistivePluginButton *button in self.pluginButtons) {
+        button.hidden = NO;
+        CGFloat angle = [self caculateRoundAngleWithOffsetAngle:offsetAngle index:count];
+        [button itemShowWithAngle:angle];
+        count --;
+    }
+}
+
+- (CGFloat)caculateRoundAngleWithOffsetAngle:(CGFloat)offsetAngle index:(CGFloat)index{
+    
+    CGFloat angle = M_PI / (self.pluginButtons.count);
+    angle = angle * index - angle / 2.0 + offsetAngle;
+    return angle;
+}
+
+- (void)hideItems {
+    
+    for (YCAssistivePluginButton *button in self.pluginButtons) {
+        [button itemHide];
+        button.hidden = YES;
+    }
+    self.isShow = NO;
+}
+
+- (void)tapItem:(YCAssistivePluginButton *)btn {
+    
+    [self hideItems];
+    YCAssistivePluginItem *item = self.pluginItems[btn.tag];
+    [item.tapSubject sendNext:nil];
 }
 
 - (void)dealloc {
@@ -50,12 +125,29 @@
     [self.longPressSubject sendCompleted];
 }
 
+#pragma mark - 重写hitTest:withEvent:方法，检查是否点击item
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    
+    if (self.isShow) {
+        for (YCAssistivePluginButton *button in self.pluginButtons) {
+            CGPoint buttonPoint = [button convertPoint:point fromView:self];
+            if ([button pointInside:buttonPoint withEvent:event]) {
+                return button;
+            }
+        }
+    }
+    return [super hitTest:point withEvent:event];
+}
+
 #pragma mark - 手势事件
 - (void)addTapGesture {
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] init];
     weak(self)
     [tapGesture.rac_gestureSignal subscribeNext:^(__kindof UIGestureRecognizer * _Nullable x) {
         strong(self)
+        if (self.isShow) {
+            [self hideItems];
+        }
         if (self.tapSubject) {
             [self.tapSubject sendNext:x];
         }
@@ -70,9 +162,10 @@
     weak(self)
     [longPressGesture.rac_gestureSignal subscribeNext:^(__kindof UIGestureRecognizer * _Nullable x) {
         strong(self)
-        if (self.longPressSubject) {
-            [self.longPressSubject sendNext:x];
+        if (x.state != UIGestureRecognizerStateBegan) {
+            return;
         }
+        [self showItems];
     }];
     [self addGestureRecognizer:longPressGesture];
 }
@@ -128,6 +221,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.frame = CGRectMake(x, y, width, height);
     }];
+    self.isLocationAtLeftSide = (x < self.superview.frame.size.width/2.0);
 }
 
 CGFloat touch_minY(YCAssistiveTouch* obj) {
@@ -137,7 +231,7 @@ CGFloat touch_minY(YCAssistiveTouch* obj) {
 
 CGFloat touch_maxY(YCAssistiveTouch* obj) {
     CGFloat bottom = 86.0;
-    return (obj.superview.bounds.size.height - obj.initialFrame.size.height - bottom);
+    return (obj.superview.bounds.size.height - CGRectGetHeight(obj.frame) - bottom);
 }
 
 CGFloat touch_minX(void) {
@@ -145,7 +239,7 @@ CGFloat touch_minX(void) {
 }
 
 CGFloat touch_maxX(YCAssistiveTouch* obj) {
-    return (obj.superview.bounds.size.width - obj.initialFrame.size.width - touch_minX());
+    return (obj.superview.bounds.size.width - CGRectGetWidth(obj.frame) - touch_minX());
 }
 
 @end
