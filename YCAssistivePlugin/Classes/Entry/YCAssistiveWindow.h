@@ -6,19 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "YCAssistiveBaseWindow.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@class YCAssistiveWindow;
-@protocol YCAssistiveWindowDelegate <NSObject>
-@required
-- (BOOL)window:(YCAssistiveWindow *)window shouldHandleTouchAtPoint:(CGPoint)pointInWindow;
-- (BOOL)canBecomeKeyWindow:(YCAssistiveWindow *)window;
-@end
 
-@interface YCAssistiveWindow : UIWindow
-/* <#mark#> */
-@property (nonatomic, weak) id<YCAssistiveWindowDelegate> yc_delegate;
+@interface YCAssistiveWindow : YCAssistiveBaseWindow
+
 @end
 
 NS_ASSUME_NONNULL_END

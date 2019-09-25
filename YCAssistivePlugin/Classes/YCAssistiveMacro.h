@@ -6,16 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "YCAssistiveDefine.h"
 
-extern NSString *const kYCAssistiveMemoryLeakKey;
-extern NSString *const kYCAssistiveRetainCycleKey;
 
-#define weak(object) __weak __typeof(object)weak = object;
-#define strong(object) __weak __typeof(object)object = weak;
-
-CF_EXPORT void YCSwizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelector);
-
-extern NSString *const kAppEnvironmentApiKey;
 
 @interface YCAssistiveMacro : NSObject
 

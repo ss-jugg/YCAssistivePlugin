@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "YCAssistiveWindow.h"
+#import "YCScreenShotWindow.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface YCAssistiveManager : NSObject
@@ -20,11 +22,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)installPlugins;
 
+- (void)showPluginWindow:(YCAssistiveBaseWindow *)window;
+
+- (void)showPluginWindow:(YCAssistiveBaseWindow *)window completion:(void(^_Nullable)(void))completion;
+
+- (void)hidePluginWindow:(YCAssistiveBaseWindow *)window;
+
+- (void)hidePluginWindow:(YCAssistiveBaseWindow *)window completion:(void(^_Nullable)(void))completion;
+
+- (void)showHomeWindow;
+
 - (void)showAssistive;
-- (void)makeAssistiveWindowAsKeyWindow;
 
 - (void)hideAssistive;
-- (void)revokeToOriginKeyWindow;
+
+
+
 
 @end
 

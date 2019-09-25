@@ -15,7 +15,6 @@
     YCAssistivePluginItem *item = [[YCAssistivePluginItem alloc] init];
     item.pluginType = type;
     item.pluginImage = [UIImage as_imageWithName:imageName];
-    item.tapSubject = [RACSubject subject];
     return item;
 }
 @end

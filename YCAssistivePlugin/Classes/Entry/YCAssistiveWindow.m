@@ -6,6 +6,8 @@
 //
 
 #import "YCAssistiveWindow.h"
+#import "UIWindow+AssistiveEntry.h"
+#import "YCAssistivePluginViewController.h"
 
 @implementation YCAssistiveWindow
 
@@ -13,30 +15,28 @@
     
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor clearColor];
-        self.windowLevel = UIWindowLevelStatusBar + 119;
+        self.windowLevel = UIWindowLevelStatusBar + 100;
+        [self initializeRootVC];
     }
     return self;
 }
 
-#if DEBUG
-- (BOOL)_canBecomeKeyWindow {
-    return [self.yc_delegate canBecomeKeyWindow:self];
-}
-
-
-- (BOOL)_canAffectStatusBarAppearance {
-    return [self isKeyWindow];
-}
-#endif
-
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    BOOL pointInside = NO;
-    if ([self.yc_delegate window:self shouldHandleTouchAtPoint:point]) {
-        pointInside = [super pointInside:point withEvent:event];
+- (void)initializeRootVC {
+    
+    self.backgroundColor = [UIColor clearColor];
+    if (!self.rootViewController) {
+        self.rootViewController = [[YCAssistivePluginViewController alloc] init];
     }
-    return pointInside;
+}
+
+- (BOOL)yc_canBecomeKeyWindow {
+    return NO;
+}
+
+//不能让该View成为keyWindow，每一次它要成为keyWindow的时候，都要将appDelegate的window指为keyWindow
+- (void)becomeKeyWindow{
+    UIWindow *appWindow = [[UIApplication sharedApplication].delegate window];
+    [appWindow makeKeyWindow];
 }
 
 @end

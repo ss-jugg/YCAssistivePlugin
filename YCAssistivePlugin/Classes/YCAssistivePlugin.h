@@ -10,5 +10,6 @@
 
 #import "YCAssistiveMacro.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 
 #endif /* YCAssistivePlugin_h */

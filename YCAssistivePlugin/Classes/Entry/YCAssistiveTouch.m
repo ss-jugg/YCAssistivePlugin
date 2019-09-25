@@ -116,7 +116,9 @@
     
     [self hideItems];
     YCAssistivePluginItem *item = self.pluginItems[btn.tag];
-    [item.tapSubject sendNext:nil];
+    if ([item.plugin respondsToSelector:@selector(pluginDidLoad)]) {
+        [item.plugin pluginDidLoad];
+    }
 }
 
 - (void)dealloc {
@@ -125,18 +127,18 @@
     [self.longPressSubject sendCompleted];
 }
 
-#pragma mark - 重写hitTest:withEvent:方法，检查是否点击item
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+#pragma mark - 重写pointInside:withEvent:方法，检查是否点击item
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     
     if (self.isShow) {
         for (YCAssistivePluginButton *button in self.pluginButtons) {
-            CGPoint buttonPoint = [button convertPoint:point fromView:self];
+            CGPoint buttonPoint = [self convertPoint:point toView:button];
             if ([button pointInside:buttonPoint withEvent:event]) {
                 return button;
             }
         }
     }
-    return [super hitTest:point withEvent:event];
+    return [super pointInside:point withEvent:event];
 }
 
 #pragma mark - 手势事件
