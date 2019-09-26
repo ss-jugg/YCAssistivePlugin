@@ -14,24 +14,44 @@
 #import "UIColor+AssistiveColor.h"
 #import "YCAssistiveHttpDetailViewController.h"
 #import "UIViewController+AssistiveUtil.h"
+#import "UIView+AssistiveUtils.h"
+#import "YCAssistiveSearchView.h"
+#import "YCAssistiveDefine.h"
 
 @interface YCAssistiveHttpViewController ()<UITableViewDataSource,UITableViewDelegate>
+
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *dataSource;
+
+@property (nonatomic, strong) YCAssistiveSearchView *searchView;
 @end
 
 @implementation YCAssistiveHttpViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self initialUI];
+    [self.tableView reloadData];
+}
+
+- (void)initialUI {
+    
+    self.searchView = [[YCAssistiveSearchView alloc] initWithFrame:CGRectMake(0, 0, AS_ScreenWidth, 44)];
+    weak(self);
+    [self.searchView setSearchBlock:^(NSString * _Nonnull text) {
+        strong(self);
+        [self searchHttpModel:text];
+    }];
+    [self.view addSubview:self.searchView];
+    
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self.view);
+        make.top.mas_equalTo(64);
+        make.left.right.equalTo(self.view);
         make.bottom.equalTo(self.view.mas_bottomMargin);
     }];
     [self as_setLeftBarItemTitle:@"关闭"];
     [self as_setRightBarItemTitle:@"清空"];
-    [self.tableView reloadData];
 }
 
 - (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
@@ -44,6 +64,20 @@
 - (void)as_viewControllerDidTriggerLeftClick:(UIViewController *)viewController  {
     
     [self pluginWindowDidClosed];
+}
+
+- (void)searchHttpModel:(NSString *)key {
+    
+    NSMutableArray *datas = [[NSMutableArray alloc] init];
+    NSMutableArray *originModels = [YCAssistiveNetworkManager shareManager].httpModels;
+    [originModels enumerateObjectsUsingBlock:^(YCAssistiveHttpModel *_Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.url.absoluteString.lowercaseString containsString:key.lowercaseString] || key.length == 0) {
+            [datas addObject:obj];
+        }
+    }];
+    self.dataSource = [[[datas reverseObjectEnumerator] allObjects] mutableCopy];
+    [self.tableView reloadData];
+    [self.tableView setContentOffset:CGPointMake(0, 0) animated:NO];
 }
 
 #pragma mark - UITableViewDataSource

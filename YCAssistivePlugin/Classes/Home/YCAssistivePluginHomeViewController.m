@@ -15,7 +15,11 @@
 #import "YCURLPlugin.h"
 #import "YCAppInfoPlugin.h"
 #import "YCCrashPlugin.h"
+
+#import "YCMemoryLeaksPlugin.h"
+
 #import "YCColorSnapPlugin.h"
+#import "YCLargeImagePlugin.h"
 
 #import "UIViewController+AssistiveUtil.h"
 
@@ -108,11 +112,18 @@
 - (YCAssistiveFunctionViewModel *)performanceDetectionFunctions {
     
     YCAssistiveFunctionModel *performance = [YCAssistiveFunctionModel functionModelWithName:@"卡顿检测" imageName:@"icon_home_ framerate" des:@""];
+    
     YCAssistiveFunctionModel *cpu = [YCAssistiveFunctionModel functionModelWithName:@"cpu检测" imageName:@"icon_home_cpu" des:@""];
+    
     YCAssistiveFunctionModel *memory = [YCAssistiveFunctionModel functionModelWithName:@"内存检测" imageName:@"icon_home_memory" des:@""];
-    YCAssistiveFunctionModel *flow = [YCAssistiveFunctionModel functionModelWithName:@"流量监测" imageName:@"icon_home_flow" des:@""];
+    
     YCAssistiveFunctionModel *leak = [YCAssistiveFunctionModel functionModelWithName:@"泄漏检测" imageName:@"icon_home_leak" des:@""];
-    YCAssistiveFunctionViewModel *viewModel = [YCAssistiveFunctionViewModel viewModelWithTitle:@"性能检测" models:@[performance,cpu,memory,flow,leak]];
+    leak.plugin = [[YCMemoryLeaksPlugin alloc] init];
+    
+    YCAssistiveFunctionModel *datu = [YCAssistiveFunctionModel functionModelWithName:@"大图检测" imageName:@"icon_home_datu" des:@""];
+    datu.plugin = [[YCLargeImagePlugin alloc] init];
+    
+    YCAssistiveFunctionViewModel *viewModel = [YCAssistiveFunctionViewModel viewModelWithTitle:@"性能检测" models:@[performance,cpu,memory,leak,datu]];
     return viewModel;
 }
 
@@ -121,9 +132,9 @@
     YCAssistiveFunctionModel *color = [YCAssistiveFunctionModel functionModelWithName:@"颜色吸取" imageName:@"icon_home_colorsucker" des:@""];
     color.plugin = [[YCColorSnapPlugin alloc] init];
     
-    YCAssistiveFunctionModel *hierarchy = [YCAssistiveFunctionModel functionModelWithName:@"页面层级" imageName:@"icon_home_hierarchy" des:@""];
-    YCAssistiveFunctionModel *ruler = [YCAssistiveFunctionModel functionModelWithName:@"标尺" imageName:@"icon_home_ruler" des:@""];
-    YCAssistiveFunctionViewModel *viewModel = [YCAssistiveFunctionViewModel viewModelWithTitle:@"视觉工具" models:@[color,hierarchy,ruler]];
+//    YCAssistiveFunctionModel *hierarchy = [YCAssistiveFunctionModel functionModelWithName:@"页面层级" imageName:@"icon_home_hierarchy" des:@""];
+
+    YCAssistiveFunctionViewModel *viewModel = [YCAssistiveFunctionViewModel viewModelWithTitle:@"视觉工具" models:@[color]];
     return viewModel;
 }
 

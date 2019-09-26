@@ -42,6 +42,10 @@ static NSString *kUrlProtocolKey = @"YCAssistiveSessionProtocol";
 //MARK:过滤请求
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
     
+    if (![YCNetworkInterceptor shareInterceptor].shouldInterceptor) {
+        return NO;
+    }
+    
     if ([NSURLProtocol propertyForKey:kUrlProtocolKey inRequest:request]) {
         return NO;
     }

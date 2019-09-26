@@ -29,8 +29,8 @@
     NSArray *controllers = @[@"YCAssistiveHttpViewController",
                              @"YCAssistiveNetworkFlowViewController"];
     NSArray *titles = @[@"网络列表",@"流量统计"];
-    NSArray *normalImages = @[@"icon_flowstatistics_default",@"icon_networklist_default"];
-    NSArray *selectedImages = @[@"icon_flowstatistics_selected",@"icon_networklist_selected"];
+    NSArray *normalImages = @[@"icon_networklist_default",@"icon_flowstatistics_default"];
+    NSArray *selectedImages = @[@"icon_networklist_selected",@"icon_flowstatistics_selected"];
     NSMutableArray *controllerArr = [NSMutableArray array];
     [controllers enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         Class cls = NSClassFromString(controllers[idx]);

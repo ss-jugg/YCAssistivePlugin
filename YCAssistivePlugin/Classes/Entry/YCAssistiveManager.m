@@ -12,6 +12,7 @@
 #import "YCScreenShotHelper.h"
 #import "YCAssitiveWindowFactory.h"
 #import "YCAssistiveNetworkManager.h"
+#import "YCLargeImageInterceptor.h"
 
 @interface YCAssistiveManager ()
 
@@ -67,6 +68,7 @@
     [[YCNetworkEnvironment sharedInstance] install];
     
     [[YCAssistiveNetworkManager shareManager] setCanIntercept:YES];
+    [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:YES];
     
     //开启截图
     [[YCScreenShotHelper sharedInstance] setEnable:YES];

@@ -12,6 +12,7 @@
 #import "UIColor+AssistiveColor.h"
 #import "YCAssistiveCrashCell.h"
 #import "YCAssistiveContentViewController.h"
+#import "UIViewController+AssistiveUtil.h"
 
 @interface YCAssistiveCrashViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -26,6 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self as_setNavigationBarTitle:@"崩溃记录"];
+    [self as_setLeftBarItemTitle:@"关闭"];
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(self.view);
@@ -43,6 +45,11 @@
             subView.frame = CGRectMake(frame.origin.x, frame.origin.y+12, CGRectGetWidth(frame), CGRectGetHeight(frame)-12);
         }
     }
+}
+
+- (void)as_viewControllerDidTriggerLeftClick:(UIViewController *)viewController {
+    
+    [self pluginWindowDidClosed];
 }
 
 #pragma mark - UITableViewDataSource

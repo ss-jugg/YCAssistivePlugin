@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param endAngle   结束角度
  *  @param center     圆心
  *  @param radius     半径
- *  @param delegate
+ *  @param delegate 代理
  *  @param clockwise  顺时针（NO）逆时针（YES）
  *
  *  @return CAKeyframeAnimation

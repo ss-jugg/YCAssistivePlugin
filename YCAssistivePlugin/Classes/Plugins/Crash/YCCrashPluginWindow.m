@@ -12,7 +12,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     
     if (self = [super initWithFrame:frame]) {
-        self.rootViewController = [self navigationController:[[YCAssistiveNavigationController alloc] init]];
+        self.rootViewController = [self navigationController:[[YCAssistiveCrashViewController alloc] init]];
     }
     return self;
 }

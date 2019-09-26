@@ -16,7 +16,7 @@
 #import "YCMemoryLeaksPluginWindow.h"
 #import "YCAppInfoPluginWindow.h"
 #import "YCAssistiveDebuggerPluginWindow.h"
-
+#import "YCLargeImagePluginWindow.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface YCAssitiveWindowFactory : NSObject
@@ -40,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (YCAppInfoPluginWindow *)appInfoPluginWindow;
 
 + (YCAssistiveDebuggerPluginWindow *)debuggerPluginWindow;
+
++ (YCLargeImagePluginWindow *)largeImagePluginWindow;
 @end
 
 NS_ASSUME_NONNULL_END
