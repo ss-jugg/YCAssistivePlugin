@@ -71,7 +71,7 @@
     //开启网络检测
     [[YCAssistiveNetworkManager shareManager] setCanIntercept:YES];
     //开启大图检测
-    [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:YES];
+    [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:NO];
     
     //开启内存泄漏检测
     [[YCAssistiveLeaksManager shareManager] setEnableLeaks:YES];
