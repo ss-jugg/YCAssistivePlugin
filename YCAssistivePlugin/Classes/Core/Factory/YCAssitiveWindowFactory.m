@@ -64,6 +64,15 @@
     return (YCAssistiveFPSPluginWindow *)[self createWindowWithClassName:NSStringFromClass(YCAssistiveFPSPluginWindow.class)];
 }
 
++ (YCAssistiveCPUPluginWindow *)cpuPluginWindow {
+    
+    return (YCAssistiveCPUPluginWindow *)[self createWindowWithClassName:NSStringFromClass(YCAssistiveCPUPluginWindow.class)];
+}
+
++ (YCAssistiveMemoryPluginWindow *)memoryPluginWindow {
+    return (YCAssistiveMemoryPluginWindow *)[self createWindowWithClassName:NSStringFromClass(YCAssistiveMemoryPluginWindow.class)];
+}
+
 + (YCAssistiveBaseWindow *)createWindowWithClassName:(NSString *)className {
     NSAssert(className, ([NSString stringWithFormat:@"%@ can't register a class.",className]));
     Class cls = NSClassFromString(className);

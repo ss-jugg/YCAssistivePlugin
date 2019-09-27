@@ -19,6 +19,8 @@
 #import "YCLargeImagePluginWindow.h"
 
 #import "YCAssistiveFPSPluginWindow.h"
+#import "YCAssistiveCPUPluginWindow.h"
+#import "YCAssistiveMemoryPluginWindow.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface YCAssitiveWindowFactory : NSObject
@@ -46,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (YCLargeImagePluginWindow *)largeImagePluginWindow;
 
 + (YCAssistiveFPSPluginWindow *)fpsPluginWindow;
++ (YCAssistiveCPUPluginWindow *)cpuPluginWindow;
++ (YCAssistiveMemoryPluginWindow *)memoryPluginWindow;
 @end
 
 NS_ASSUME_NONNULL_END

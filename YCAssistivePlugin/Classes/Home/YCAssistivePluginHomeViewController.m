@@ -18,6 +18,8 @@
 #import "YCLoggerPlugin.h"
 #import "YCMemoryLeaksPlugin.h"
 #import "YCAssistiveFPSPlugin.h"
+#import "YCAssistiveCPUPlugin.h"
+#import "YCAssistiveMemoryPlugin.h"
 #import "YCColorSnapPlugin.h"
 #import "YCLargeImagePlugin.h"
 
@@ -116,8 +118,10 @@
     performance.plugin = [[YCAssistiveFPSPlugin alloc] init];
     
     YCAssistiveFunctionModel *cpu = [YCAssistiveFunctionModel functionModelWithName:@"cpu检测" imageName:@"icon_home_cpu" des:@""];
+    cpu.plugin = [[YCAssistiveCPUPlugin alloc] init];
     
     YCAssistiveFunctionModel *memory = [YCAssistiveFunctionModel functionModelWithName:@"内存检测" imageName:@"icon_home_memory" des:@""];
+    memory.plugin = [[YCAssistiveMemoryPlugin alloc] init];
     
     YCAssistiveFunctionModel *leak = [YCAssistiveFunctionModel functionModelWithName:@"泄漏检测" imageName:@"icon_home_leak" des:@""];
     leak.plugin = [[YCMemoryLeaksPlugin alloc] init];

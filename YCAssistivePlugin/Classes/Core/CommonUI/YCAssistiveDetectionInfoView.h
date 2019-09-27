@@ -16,6 +16,8 @@ typedef void(^DetectionCloseBlock)(void);
 
 @property (nonatomic, copy) DetectionCloseBlock closeBlock;
 
+- (void)setDetectionInfoViewTitle:(NSString *)title;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -36,7 +36,7 @@
     self.layer.borderWidth = 1.0;
     
     self.titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.as_width, 20)];
-    self.titleLbl.font = [UIFont systemFontOfSize:15];
+    self.titleLbl.font = [UIFont systemFontOfSize:13];
     self.titleLbl.textColor = [UIColor as_mainColor];
     self.titleLbl.textAlignment = NSTextAlignmentCenter;
     [self addSubview:self.titleLbl];
@@ -54,6 +54,10 @@
     self.closeButton.layer.borderWidth = 1.0;
     self.closeButton.layer.borderColor = [UIColor as_mainColor].CGColor;
     [self addSubview:self.closeButton];
+}
+
+- (void)setDetectionInfoViewTitle:(NSString *)title {
+    self.titleLbl.text = title;
 }
 
 - (void)closeButtonClicked:(UIButton *)sender {

@@ -31,6 +31,7 @@
 - (void)setupUI {
     
     self.infoView = [[YCAssistiveDetectionInfoView alloc] initWithFrame:CGRectMake(10, 44, AS_ScreenWidth-20, 90)];
+    [self.infoView setDetectionInfoViewTitle:@"帧率检测"];
     weak(self);
     [self.infoView setCloseBlock:^{
         strong(self);
