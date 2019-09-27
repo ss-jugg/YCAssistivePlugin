@@ -9,6 +9,7 @@
 #import <Masonry/Masonry.h>
 #import "YCAssistiveLeaksManager.h"
 #import "YCAssistiveMemoryLeakCell.h"
+#import "UIViewController+AssistiveUtil.h"
 
 @interface YCAssistiveMemoryLeakViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -22,12 +23,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self as_setNavigationBarTitle:@"内存泄漏"];
+    [self as_setLeftBarItemTitle:@"关闭"];
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(self.view);
         make.bottom.equalTo(self.view.mas_bottomMargin);
     }];
     [self.tableView reloadData];
+}
+
+- (void)as_viewControllerDidTriggerLeftClick:(UIViewController *)viewController {
+    [self pluginWindowDidClosed];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

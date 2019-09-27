@@ -6,14 +6,14 @@
 //
 
 #import "YCLoggerPluginWindow.h"
-#import "YCLoggerViewController.h"
+#import "YCConsoleLoggerViewController.h"
 
 @implementation YCLoggerPluginWindow
 
 - (instancetype)initWithFrame:(CGRect)frame  {
     
     if (self = [super initWithFrame:frame]) {
-        self.rootViewController = [self navigationController:[[YCLoggerViewController alloc] init]];
+        self.rootViewController = [self navigationController:[[YCConsoleLoggerViewController alloc] init]];
     }
     return self;
 }

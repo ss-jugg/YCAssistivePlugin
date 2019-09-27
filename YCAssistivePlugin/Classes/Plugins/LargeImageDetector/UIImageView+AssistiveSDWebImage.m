@@ -37,22 +37,28 @@
         __weak typeof(self) weafSelf = self;
         id replaceBlock = ^(UIImage *image, NSError *error, NSInteger cacheType, NSURL *imageURL){
             
-            NSData *data = [[SDImageCache sharedImageCache] diskImageDataForKey:[[SDWebImageManager sharedManager] cacheKeyForURL:imageURL]];
-            NSString *size = [NSByteCountFormatter stringFromByteCount:data.length countStyle: NSByteCountFormatterCountStyleBinary];
-            if (data.length > [YCLargeImageInterceptor shareInterceptor].minimumSize) {
-                NSString *drawText = [NSString stringWithFormat:@"url : %@ \n size : %@",[url absoluteString],size];
-                weafSelf.image = [weafSelf drawText:drawText inImage:image];
-                YCLargeImageModel *imageModel = [[YCLargeImageModel alloc] init];
-                imageModel.url = imageURL;
-                imageModel.imageData = data;
-                imageModel.size = size;
-                [[YCLargeImageInterceptor shareInterceptor] addImageModel:imageModel];
-            }else {
-                weafSelf.image = image;
-            }
-            if (completedBlock) {
-                completedBlock(weafSelf.image, error, cacheType,imageURL);
-            }
+            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                NSData *data = [[SDImageCache sharedImageCache] diskImageDataForKey:[[SDWebImageManager sharedManager] cacheKeyForURL:imageURL]];
+                NSString *size = [NSByteCountFormatter stringFromByteCount:data.length countStyle: NSByteCountFormatterCountStyleBinary];
+                UIImage *newImage = nil;
+                if (data.length > [YCLargeImageInterceptor shareInterceptor].minimumSize) {
+                    NSString *drawText = [NSString stringWithFormat:@"url : %@ \n size : %@",[url absoluteString],size];
+                    newImage = [weafSelf drawText:drawText inImage:image];
+                    YCLargeImageModel *imageModel = [[YCLargeImageModel alloc] init];
+                    imageModel.url = imageURL;
+                    imageModel.imageData = data;
+                    imageModel.size = size;
+                    [[YCLargeImageInterceptor shareInterceptor] addImageModel:imageModel];
+                }else {
+                    newImage = image;
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weafSelf.image = newImage;
+                    if (completedBlock) {
+                        completedBlock(newImage, error, cacheType,imageURL);
+                    }
+                });
+            });
         };
        
         [self assistive_sd_setImageWithURL:url placeholderImage:placeholder options:options progress:progressBlock completed:replaceBlock];

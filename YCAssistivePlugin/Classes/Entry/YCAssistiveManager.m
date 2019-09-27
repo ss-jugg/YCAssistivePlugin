@@ -13,6 +13,7 @@
 #import "YCAssitiveWindowFactory.h"
 #import "YCAssistiveNetworkManager.h"
 #import "YCLargeImageInterceptor.h"
+#import "YCAssistiveLeaksManager.h"
 
 @interface YCAssistiveManager ()
 
@@ -67,8 +68,14 @@
     //开启切换环境
     [[YCNetworkEnvironment sharedInstance] install];
     
+    //开启网络检测
     [[YCAssistiveNetworkManager shareManager] setCanIntercept:YES];
+    //开启大图检测
     [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:YES];
+    
+    //开启内存泄漏检测
+    [[YCAssistiveLeaksManager shareManager] setEnableLeaks:YES];
+    [[YCAssistiveLeaksManager shareManager] setEnableRetainCycle:YES];
     
     //开启截图
     [[YCScreenShotHelper sharedInstance] setEnable:YES];

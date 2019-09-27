@@ -15,6 +15,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)iphoneSystemVersion;
 
++ (NSString *)screenResolution;
+
++ (NSString *)languageCode;
+
++ (NSString *)batteryLevel;
+
++ (NSString *)cpuType;
+
++ (NSString *)appName;
+
 + (NSString *)bundleIdentifier;
 
 + (NSString *)bundleVersion;

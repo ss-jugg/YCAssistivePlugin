@@ -7,6 +7,7 @@
 
 #import "YCAppInfoUtil.h"
 #import <sys/utsname.h>
+#import <mach-o/arch.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
@@ -20,6 +21,29 @@
 
 + (NSString *)iphoneSystemVersion {
     return [UIDevice currentDevice].systemVersion;
+}
+
++ (NSString *)screenResolution {
+    return [NSString stringWithFormat:@"%ld * %ld",(long)(CGRectGetWidth([UIScreen mainScreen].bounds) * [UIScreen mainScreen].scale),(long)(CGRectGetHeight([UIScreen mainScreen].bounds) * [UIScreen mainScreen].scale)];
+}
+
++ (NSString *)languageCode {
+    return [NSLocale preferredLanguages].firstObject ?: @"Unknown";
+}
+
++ (NSString *)batteryLevel {
+    return [UIDevice currentDevice].batteryLevel != -1 ? [NSString stringWithFormat:@"%ld%%",(long)([UIDevice currentDevice].batteryLevel * 100)] : @"Unknown";
+}
+
++ (NSString *)cpuType {
+    
+    return [NSString stringWithUTF8String:NXGetLocalArchInfo()->description]?:@"Unknown";
+}
+
++ (NSString *)appName {
+    
+    NSDictionary *infoDic = [NSBundle mainBundle].infoDictionary;
+    return infoDic[@"CFBundleDisplayName"] ?: infoDic[@"CFBundleName"] ?: @"Unknown";
 }
 
 + (NSString *)bundleIdentifier {

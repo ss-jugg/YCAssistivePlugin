@@ -42,15 +42,20 @@
     
     self.dataSource = [[NSMutableArray alloc] init];
     
-    YCAppInfoModel *nameModel = [YCAppInfoModel modelWithName:@"设备名称" value:[YCAppInfoUtil iphoneName]];
-    YCAppInfoModel *typeModel = [YCAppInfoModel modelWithName:@"手机型号" value:[YCAppInfoUtil iphoneType]];
-    YCAppInfoModel *systemModel = [YCAppInfoModel modelWithName:@"系统版本" value:[YCAppInfoUtil iphoneSystemVersion]];
-    [self.dataSource addObject:@{@"title":@"手机信息",@"info":@[nameModel,typeModel,systemModel]}];
+    YCAppInfoModel *nameModel = [YCAppInfoModel modelWithName:@"Device Name" value:[YCAppInfoUtil iphoneName]];
+    YCAppInfoModel *typeModel = [YCAppInfoModel modelWithName:@"Device Mode" value:[YCAppInfoUtil iphoneType]];
+    YCAppInfoModel *systemModel = [YCAppInfoModel modelWithName:@"System Version" value:[YCAppInfoUtil iphoneSystemVersion]];
+    YCAppInfoModel *screenModel = [YCAppInfoModel modelWithName:@"Screen Resolution" value:[YCAppInfoUtil screenResolution]];
+    YCAppInfoModel *languageModel = [YCAppInfoModel modelWithName:@"Language" value:[YCAppInfoUtil languageCode]];
+    YCAppInfoModel *batteryModel = [YCAppInfoModel modelWithName:@"Battery Level" value:[YCAppInfoUtil batteryLevel]];
+    YCAppInfoModel *cpuModel = [YCAppInfoModel modelWithName:@"CPU Type" value:[YCAppInfoUtil cpuType]];
+    [self.dataSource addObject:@{@"title":@"Device Info",@"info":@[nameModel,typeModel,systemModel,screenModel,languageModel,batteryModel,cpuModel]}];
     
+    YCAppInfoModel *appNameModel = [YCAppInfoModel modelWithName:@"App Name" value:[YCAppInfoUtil appName]];
     YCAppInfoModel *bundleModel = [YCAppInfoModel modelWithName:@"Bundle ID" value:[YCAppInfoUtil bundleIdentifier]];
     YCAppInfoModel *bundleVersionModel = [YCAppInfoModel modelWithName:@"Version" value:[YCAppInfoUtil bundleVersion]];
     YCAppInfoModel *versionModel = [YCAppInfoModel modelWithName:@"Short Version" value:[YCAppInfoUtil bundleShortVersionString]];
-    [self.dataSource addObject:@{@"title":@"APP信息",@"info":@[bundleModel,bundleVersionModel,versionModel]}];
+    [self.dataSource addObject:@{@"title":@"APP Info",@"info":@[appNameModel,bundleModel,bundleVersionModel,versionModel]}];
     
     YCAppInfoModel *locationModel = [YCAppInfoModel modelWithName:@"定位权限" value:[YCAppInfoUtil locationAuthority]];
     YCAppInfoModel *cameraModel = [YCAppInfoModel modelWithName:@"相机权限" value:[YCAppInfoUtil cameraAuthority]];

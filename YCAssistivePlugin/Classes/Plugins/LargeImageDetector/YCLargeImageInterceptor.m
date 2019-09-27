@@ -84,9 +84,7 @@
     model.url = request.URL;
     model.imageData = responseData;
     model.size = [NSByteCountFormatter stringFromByteCount:byte countStyle: NSByteCountFormatterCountStyleBinary];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     [self addImageModel:model];
-    dispatch_semaphore_signal(semaphore);
 }
 
 @end

@@ -15,9 +15,9 @@
 #import "YCURLPlugin.h"
 #import "YCAppInfoPlugin.h"
 #import "YCCrashPlugin.h"
-
+#import "YCLoggerPlugin.h"
 #import "YCMemoryLeaksPlugin.h"
-
+#import "YCAssistiveFPSPlugin.h"
 #import "YCColorSnapPlugin.h"
 #import "YCLargeImagePlugin.h"
 
@@ -98,7 +98,8 @@
     http.plugin = [[YCURLPlugin alloc] init];
     
     YCAssistiveFunctionModel *logger = [YCAssistiveFunctionModel functionModelWithName:@"用户日志" imageName:@"icon_home_logger" des:@"调试日志记录"];
-
+    logger.plugin = [[YCLoggerPlugin alloc] init];
+    
     YCAssistiveFunctionModel *crash = [YCAssistiveFunctionModel functionModelWithName:@"崩溃记录" imageName:@"icon_home_crash" des:@"崩溃日志记录"];
     crash.plugin = [[YCCrashPlugin alloc] init];
 
@@ -112,6 +113,7 @@
 - (YCAssistiveFunctionViewModel *)performanceDetectionFunctions {
     
     YCAssistiveFunctionModel *performance = [YCAssistiveFunctionModel functionModelWithName:@"卡顿检测" imageName:@"icon_home_ framerate" des:@""];
+    performance.plugin = [[YCAssistiveFPSPlugin alloc] init];
     
     YCAssistiveFunctionModel *cpu = [YCAssistiveFunctionModel functionModelWithName:@"cpu检测" imageName:@"icon_home_cpu" des:@""];
     

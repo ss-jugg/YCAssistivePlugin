@@ -6,7 +6,13 @@
 //
 
 #import "YCLoggerPlugin.h"
-
+#import "YCAssitiveWindowFactory.h"
+#import "YCAssistiveManager.h"
 @implementation YCLoggerPlugin
+
+- (void)pluginDidLoad {
+
+    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory loggerPluginWindow]];
+}
 
 @end

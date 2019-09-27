@@ -32,11 +32,11 @@
         }];
         [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.containerView);
-            make.leading.offset(14);
+            make.leading.offset(8);
         }];
         [self.containerView addSubview:self.nextImgView];
         [self.nextImgView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.trailing.offset(-14);
+            make.trailing.offset(-8);
             make.centerY.equalTo(self.containerView);
             make.size.mas_equalTo(CGSizeMake(10, 16));
         }];
@@ -58,7 +58,7 @@
     
     if (!_titleLbl) {
         _titleLbl = [[UILabel alloc] init];
-        _titleLbl.font = [UIFont as_15];
+        _titleLbl.font = [UIFont as_13];
         _titleLbl.textColor = [UIColor whiteColor];
         _titleLbl.textAlignment = NSTextAlignmentLeft;
     }
