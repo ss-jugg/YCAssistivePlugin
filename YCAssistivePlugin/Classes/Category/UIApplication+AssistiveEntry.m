@@ -6,7 +6,9 @@
 //
 
 #import "UIApplication+AssistiveEntry.h"
-#import "YCAssistiveMacro.h"
+#import "YCAssistiveDefine.h"
+#import "YCAssistiveManager.h"
+
 @implementation UIApplication (AssistiveEntry)
 #if DEBUG
 + (void)load {
@@ -20,6 +22,11 @@
 - (void)yc_at_entry_motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event {
     
     [self yc_at_entry_motionBegan:motion withEvent:event];
+    if ([YCAssistiveManager sharedManager].assistiveWindow.hidden) {
+        [[YCAssistiveManager sharedManager] showAssistive];
+    }else {
+        [[YCAssistiveManager sharedManager] hideAssistive];
+    }
 }
 #endif
 @end

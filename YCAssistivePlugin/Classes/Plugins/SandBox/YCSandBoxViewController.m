@@ -6,6 +6,7 @@
 //
 
 #import "YCSandBoxViewController.h"
+#import <Masonry/Masonry.h>
 #import "YCSandBoxModel.h"
 #import "YCAssistiveDefine.h"
 
@@ -22,7 +23,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self initialData];
+    [self initialUI];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -31,13 +33,41 @@
     
 }
 
-
+#pragma mark - 初始化
 - (void)initialUI {
     
     [self as_setNavigationBarTitle:@"沙盒浏览器"];
-//    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, AS_ScreenWidth, <#CGFloat height#>)];
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 }
 
+- (void)initialData {
+    
+    self.fileList = [[NSMutableArray alloc] init];
+    self.rootPath = NSHomeDirectory();
+}
+
+
+- (void)fetchFiles:(NSString *)filePath {
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+}
+
+#pragma mark - getter
+- (UITableView *)tableView {
+    
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] init];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+    return _tableView;
+}
 
 
 @end
