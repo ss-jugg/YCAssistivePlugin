@@ -126,7 +126,7 @@
     
     if (_dataSource == nil) {
         NSMutableArray *datas = [NSMutableArray arrayWithArray:[YCAssistiveNetworkManager shareManager].httpModels];
-        _dataSource = [[[datas reverseObjectEnumerator] allObjects] mutableCopy];
+        _dataSource = datas;
     }
     return _dataSource;
 }

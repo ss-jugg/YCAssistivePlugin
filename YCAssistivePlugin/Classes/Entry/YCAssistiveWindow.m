@@ -6,7 +6,6 @@
 //
 
 #import "YCAssistiveWindow.h"
-#import "UIWindow+AssistiveEntry.h"
 #import "YCAssistivePluginViewController.h"
 
 @implementation YCAssistiveWindow
@@ -27,10 +26,6 @@
     if (!self.rootViewController) {
         self.rootViewController = [[YCAssistivePluginViewController alloc] init];
     }
-}
-
-- (BOOL)yc_canBecomeKeyWindow {
-    return NO;
 }
 
 //不能让该View成为keyWindow，每一次它要成为keyWindow的时候，都要将appDelegate的window指为keyWindow

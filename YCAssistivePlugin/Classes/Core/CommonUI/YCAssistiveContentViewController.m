@@ -12,7 +12,10 @@
 #import "UIFont+AssistiveFont.h"
 
 @interface YCAssistiveContentViewController ()
+
 @property (nonatomic, strong) UITextView *textView;
+@property (nonatomic, strong) UIImageView *imageView;
+
 @end
 
 @implementation YCAssistiveContentViewController
@@ -20,12 +23,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self.textView];
+    [self.view addSubview:self.imageView];
     [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
+    [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(200, 200));
+    }];
     [self loadData];
     [self as_setNavigationBarTitle:@"详细内容"];
-    [self as_setRightBarItemImage:[UIImage as_imageWithName:@"icon_copy"]];
+    if (self.content) {
+        [self as_setRightBarItemImage:[UIImage as_imageWithName:@"icon_copy"]];
+    }
 }
 
 //MARK:复制
@@ -41,6 +51,17 @@
 
 - (void)loadData {
     
+    if (self.image) {
+        self.imageView.hidden = NO;
+        self.textView.hidden = YES;
+        self.imageView.image = self.image;
+        return;
+    }
+    self.imageView.hidden = YES;
+    self.textView.hidden = NO;
+    if (self.content.length == 0) {
+        return;
+    }
     NSStringDrawingOptions option = NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
     NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     [style setLineBreakMode:NSLineBreakByWordWrapping];
@@ -65,6 +86,16 @@
         _textView.backgroundColor = [UIColor clearColor];
     }
     return _textView;
+}
+
+- (UIImageView *)imageView {
+    
+    if (!_imageView) {
+        _imageView = [[UIImageView alloc] init];
+        _imageView.contentMode = UIViewContentModeScaleToFill;
+        _imageView.hidden = YES;
+    }
+    return _imageView;
 }
 
 @end

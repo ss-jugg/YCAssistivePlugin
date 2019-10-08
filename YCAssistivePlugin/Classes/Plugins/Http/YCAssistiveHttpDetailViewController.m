@@ -150,7 +150,11 @@
     }
     if (indexPath.row == 8 && self.httpModel.responseData.length > 0) {
         vc = [[YCAssistiveContentViewController alloc] init];
-        vc.content = [YCAssistiveURLUtil convertJsonFromData:self.httpModel.responseData];
+        if (self.httpModel.isImage) {
+            vc.image = self.httpModel.image;
+        }else {
+            vc.content = [YCAssistiveURLUtil convertJsonFromData:self.httpModel.responseData];
+        }
     }
     if (vc) {
         [self.navigationController pushViewController:vc animated:YES];

@@ -29,7 +29,10 @@
 @property (nonatomic,copy) NSString  *totalDuration;
 /* 已读标识，0-未读 1-已读 */
 @property (nonatomic, assign) short readFlag;
-
+/* 是否是图片 */
+@property (nonatomic, assign) BOOL isImage;
+/* 图片 */
+@property (nonatomic, strong) UIImage *image;
 /* 上行流量(header+body) */
 @property (nonatomic, copy) NSString *uploadFlow;
 /* 下行流量(头部+body) */

@@ -109,7 +109,7 @@
         weak(self);
         [[_settingSwitch rac_signalForControlEvents:UIControlEventValueChanged] subscribeNext:^(__kindof UISwitch * _Nullable x) {
             strong(self);
-            [self.bindedModel.switchSignal sendNext:x];
+            [self.bindedModel.switchSignal sendNext:@(x.isOn)];
         }];
         _settingSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5);
     }

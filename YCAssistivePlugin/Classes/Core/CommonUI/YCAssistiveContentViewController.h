@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface YCAssistiveContentViewController : YCAssistiveBaseViewController
 
 @property (nonatomic, copy) NSString *content;
+@property (nonatomic, strong) UIImage *image;
 
 @end
 

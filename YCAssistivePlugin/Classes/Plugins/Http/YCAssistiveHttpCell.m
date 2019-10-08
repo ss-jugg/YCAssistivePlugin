@@ -97,6 +97,7 @@
         _detailLbl.textColor = [UIColor whiteColor];
         _detailLbl.font = [UIFont as_13];
         _detailLbl.textAlignment = NSTextAlignmentLeft;
+        _detailLbl.numberOfLines = 0;
     }
     return _detailLbl;
 }

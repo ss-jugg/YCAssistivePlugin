@@ -68,7 +68,7 @@
     model.totalDuration = [NSString stringWithFormat:@"%fs",[[NSDate date] timeIntervalSince1970] - startTime];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    [self.httpModels addObject:model];
+    [self.httpModels insertObject:model atIndex:0];
     dispatch_semaphore_signal(semaphore);
 }
 

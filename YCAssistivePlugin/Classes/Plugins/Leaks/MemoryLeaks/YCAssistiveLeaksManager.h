@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *kYCAssistiveMemoryLeakNotificationName;
 @class YCAssistiveMeomryLeakModel;
 @interface YCAssistiveLeaksManager : NSObject
 

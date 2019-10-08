@@ -39,14 +39,14 @@
     YCAssistiveSettingModel *leakModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启内存检测" detail:@"开启内存检测，若出现内存泄漏，会弹框提示，同时记录泄漏信息，在【泄漏检测】可查看。"];
     leakModel.isOn = [[YCAssistiveCache shareInstance] leakDetectionSwitch];
     [leakModel.switchSignal subscribeNext:^(id  _Nullable x) {
-        [YCAssistiveLeaksManager shareManager].enableLeaks = x;
-        [[YCAssistiveCache shareInstance] saveLeakDetectionSwitch:x];
+        [YCAssistiveLeaksManager shareManager].enableLeaks = [x boolValue];
+        [[YCAssistiveCache shareInstance] saveLeakDetectionSwitch:[x boolValue]];
     }];
-    YCAssistiveSettingModel *largeImageModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启大图检测" detail:@"开启大图检测，若图片超过指定大小会被标记，同时记录图片，在【大图检测】可查看;关闭大图检测，必需重启后才能生效。"];
+    YCAssistiveSettingModel *largeImageModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启大图检测" detail:@"开启大图检测，若图片超过指定大小会被标记，同时记录图片，在【大图检测】可查看。"];
     largeImageModel.isOn = [[YCAssistiveCache shareInstance] largeImageDetectionSwitch];
     [largeImageModel.switchSignal subscribeNext:^(id  _Nullable x) {
-        [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:x];
-        [[YCAssistiveCache shareInstance] saveLargeImageDetectionSwitch:x];
+        [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:[x boolValue]];
+        [[YCAssistiveCache shareInstance] saveLargeImageDetectionSwitch:[x boolValue]];
     }];
     self.settings = @[leakModel,largeImageModel];
 
