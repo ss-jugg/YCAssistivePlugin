@@ -18,13 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (UIViewController *)yc_currentShowingViewController;
 
-/**
- Whether can become key window.
- 
- @return Result.
- */
-- (BOOL)yc_canBecomeKeyWindow;
-
 @end
 
 NS_ASSUME_NONNULL_END
