@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <ReactiveObjC/ReactiveObjC.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface YCAssistiveSettingModel : NSObject<NSCoding>
@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *detail;
 /* <#mark#> */
 @property (nonatomic, assign) BOOL isOn;
+/* <#备注#> */
+@property (nonatomic, strong) RACSubject *switchSignal;
 
 + (instancetype)settingModelWithTitle:(NSString *)title detail:(NSString *)detail;
 @end

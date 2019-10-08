@@ -15,6 +15,7 @@
     settingModel.title = title;
     settingModel.detail = detail;
     settingModel.isOn = NO;
+    settingModel.switchSignal = [RACSubject subject];
     return settingModel;
 }
 

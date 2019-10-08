@@ -12,6 +12,7 @@
 
 @implementation NSURLSessionConfiguration (Assistive)
 
+#if DEBUG
 + (void)load {
     
     static dispatch_once_t onceToken;
@@ -20,6 +21,7 @@
         YCSwizzleInstanceMethod(object_getClass(self), @selector(ephemeralSessionConfiguration), @selector(assistive_ephemeralSessionConfiguration));
     });
 }
+#endif
 
 + (NSURLSessionConfiguration *)assistive_defaultSessionConfiguration {
     

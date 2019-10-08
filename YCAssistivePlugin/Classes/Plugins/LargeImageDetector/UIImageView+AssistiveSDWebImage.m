@@ -14,9 +14,9 @@
 
 @implementation UIImageView (AssistiveSDWebImage)
 
+#if DEBUG
 + (void)load {
  
-#ifdef DEBUG
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -26,9 +26,8 @@
     }
 #pragma clang diagnostic pop
     
-#endif
-    
 }
+#endif
 
 - (void)assistive_sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(NSUInteger)options progress:(id)progressBlock completed:(void(^)(UIImage *image, NSError *error, NSInteger cacheType, NSURL *imageURL))completedBlock{
 

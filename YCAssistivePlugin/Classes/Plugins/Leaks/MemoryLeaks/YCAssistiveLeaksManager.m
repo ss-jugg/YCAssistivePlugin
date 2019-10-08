@@ -23,7 +23,6 @@ NSString *kYCAssistiveMemoryLeakNotificationName = @"kYCAssistiveMemoryLeakNotif
     dispatch_once(&onceToken, ^{
         _instance = [[YCAssistiveLeaksManager alloc] init];
         _instance.enableLeaks = [[NSUserDefaults standardUserDefaults] objectForKey:kYCAssistiveMemoryLeakKey];
-        _instance.enableRetainCycle = [[NSUserDefaults standardUserDefaults] objectForKey:kYCAssistiveRetainCycleKey];
         _instance.leakObjects = [[NSMutableArray alloc] init];
     });
     return _instance;

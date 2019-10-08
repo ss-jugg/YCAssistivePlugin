@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /* 检测到的图片 */
 @property (nonatomic, strong) NSMutableArray *images;
-/* 最小检测大小,默认500KB */
+/* 最小检测大小,默认200KB */
 @property (nonatomic, assign) NSInteger minimumSize;
 @property (nonatomic, assign) BOOL canIntercept;
 

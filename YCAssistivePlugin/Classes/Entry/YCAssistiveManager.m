@@ -14,6 +14,7 @@
 #import "YCAssistiveNetworkManager.h"
 #import "YCLargeImageInterceptor.h"
 #import "YCAssistiveLeaksManager.h"
+#import "YCAssistiveCache.h"
 
 @interface YCAssistiveManager ()
 
@@ -70,14 +71,15 @@
     
     //开启网络检测
     [[YCAssistiveNetworkManager shareManager] setCanIntercept:YES];
-    //开启大图检测
-    [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:NO];
     
-    //开启内存泄漏检测
-    [[YCAssistiveLeaksManager shareManager] setEnableLeaks:YES];
-    [[YCAssistiveLeaksManager shareManager] setEnableRetainCycle:YES];
+    //大图检测
+    BOOL isLargeImageDetectionOn = [[YCAssistiveCache shareInstance] largeImageDetectionSwitch];
+    [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:isLargeImageDetectionOn];
     
-    //开启截图
+    //内存泄漏检测
+    BOOL isLeakDetectionOn = [[YCAssistiveCache shareInstance] leakDetectionSwitch];
+    [[YCAssistiveLeaksManager shareManager] setEnableLeaks:isLeakDetectionOn];
+
     [[YCScreenShotHelper sharedInstance] setEnable:YES];
 }
 

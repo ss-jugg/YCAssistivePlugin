@@ -46,7 +46,7 @@
     
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(64);
+        make.top.mas_equalTo(44);
         make.left.right.equalTo(self.view);
         make.bottom.equalTo(self.view.mas_bottomMargin);
     }];

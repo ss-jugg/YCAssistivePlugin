@@ -13,8 +13,6 @@ extern NSString *kYCAssistiveMemoryLeakNotificationName;
 
 /* 是否检测内存泄漏,默认YES */
 @property (nonatomic, assign) BOOL enableLeaks;
-/* 是否开启循环引用检测，默认YES */
-@property (nonatomic, assign) BOOL enableRetainCycle;
 
 @property (nonatomic, strong, readonly) NSMutableArray *leakObjects;
 

@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) UIView *hLine;
 
+@property (nonatomic, strong) YCAssistiveSettingModel *bindedModel;
 @end
 
 @implementation YCAssistiveSettingCell
@@ -64,6 +65,7 @@
 
 - (void)bindSettingModel:(YCAssistiveSettingModel *)model {
     
+    self.bindedModel = model;
     self.titleLbl.text = model.title;
     self.settingSwitch.on = model.isOn;
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:model.detail];
@@ -107,7 +109,7 @@
         weak(self);
         [[_settingSwitch rac_signalForControlEvents:UIControlEventValueChanged] subscribeNext:^(__kindof UISwitch * _Nullable x) {
             strong(self);
-            [self.switchSignal sendNext:@(x.isOn)];
+            [self.bindedModel.switchSignal sendNext:x];
         }];
         _settingSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5);
     }

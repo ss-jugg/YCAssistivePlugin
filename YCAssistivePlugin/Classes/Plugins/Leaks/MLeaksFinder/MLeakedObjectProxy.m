@@ -67,21 +67,16 @@ static NSMutableSet *leakedObjectPtrs;
     leakModel.objectPtr = @((uintptr_t)object);
     leakModel.className = NSStringFromClass([object class]);
     leakModel.viewStack = [object viewStack];
-    if ([YCAssistiveLeaksManager shareManager].enableRetainCycle) {
-        [proxy findRetainCycleInObject:object block:^(NSArray *retainCycles) {
-            if (retainCycles && retainCycles.count > 0) {
-                leakModel.isRetainCycle = YES;
-                leakModel.retainCycle = retainCycles;
-                [MLeaksMessenger alertWithTitle:@"Retain Cycle" message:[NSString stringWithFormat:@"%@",retainCycles]];
-            }else {
-                [MLeaksMessenger alertWithTitle:@"Memory Leak" message:[NSString stringWithFormat:@"%@",[leakModel.viewStack componentsJoinedByString:@" -> "]]];
-            }
-            [[YCAssistiveLeaksManager shareManager] addLeakObject:leakModel];
-        }];
-    }else {
+    [proxy findRetainCycleInObject:object block:^(NSArray *retainCycles) {
+        if (retainCycles && retainCycles.count > 0) {
+            leakModel.isRetainCycle = YES;
+            leakModel.retainCycle = retainCycles;
+            [MLeaksMessenger alertWithTitle:@"Retain Cycle" message:[NSString stringWithFormat:@"%@",retainCycles]];
+        }else {
+            [MLeaksMessenger alertWithTitle:@"Memory Leak" message:[NSString stringWithFormat:@"%@",[leakModel.viewStack componentsJoinedByString:@" -> "]]];
+        }
         [[YCAssistiveLeaksManager shareManager] addLeakObject:leakModel];
-        [MLeaksMessenger alertWithTitle:@"Memory Leak" message:[NSString stringWithFormat:@"%@",[[object viewStack] componentsJoinedByString:@" -> "]]];
-    }
+    }];
 }
 
 - (void)findRetainCycleInObject:(id)object block:(void(^)(NSArray * retainCycles))block {

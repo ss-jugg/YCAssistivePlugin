@@ -10,7 +10,6 @@
 #import "YCAssistiveMacro.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "YCAssistivePluginItem.h"
-#import "YCAssistivePerformanceView.h"
 #import "YCAssistiveManager.h"
 #import "YCScreenShotPlugin.h"
 #import "YCColorSnapPlugin.h"

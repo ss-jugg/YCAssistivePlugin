@@ -11,6 +11,8 @@
 #import "YCAssistiveSettingCell.h"
 #import "YCAssistiveSettingModel.h"
 #import "YCAssistiveLeaksManager.h"
+#import "YCAssistiveCache.h"
+#import "YCLargeImageInterceptor.h"
 @interface YCAssistiveSettingViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -29,16 +31,24 @@
         make.bottom.equalTo(self.view.mas_bottom);
     }];
     [self setupSettings];
+    [self as_setNavigationBarTitle:@"设置"];
 }
 
 - (void)setupSettings {
     
-    YCAssistiveSettingModel *leakModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启内存检测" detail:@"开启内存检测，若出现内存泄漏，会弹框提示，同事记录泄漏信息，在leak页面可查看"];
-    leakModel.isOn = [[NSUserDefaults standardUserDefaults] objectForKey:kYCAssistiveMemoryLeakKey];
-    YCAssistiveSettingModel *retainCycleModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启循环引用检测" detail:@"开启循环引用后，会自动开启内存检测"];
-    retainCycleModel.isOn = [[NSUserDefaults standardUserDefaults] objectForKey:kYCAssistiveRetainCycleKey];
-    
-    self.settings = @[leakModel,retainCycleModel];
+    YCAssistiveSettingModel *leakModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启内存检测" detail:@"开启内存检测，若出现内存泄漏，会弹框提示，同时记录泄漏信息，在【泄漏检测】可查看。"];
+    leakModel.isOn = [[YCAssistiveCache shareInstance] leakDetectionSwitch];
+    [leakModel.switchSignal subscribeNext:^(id  _Nullable x) {
+        [YCAssistiveLeaksManager shareManager].enableLeaks = x;
+        [[YCAssistiveCache shareInstance] saveLeakDetectionSwitch:x];
+    }];
+    YCAssistiveSettingModel *largeImageModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启大图检测" detail:@"开启大图检测，若图片超过指定大小会被标记，同时记录图片，在【大图检测】可查看;关闭大图检测，必需重启后才能生效。"];
+    largeImageModel.isOn = [[YCAssistiveCache shareInstance] largeImageDetectionSwitch];
+    [largeImageModel.switchSignal subscribeNext:^(id  _Nullable x) {
+        [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:x];
+        [[YCAssistiveCache shareInstance] saveLargeImageDetectionSwitch:x];
+    }];
+    self.settings = @[leakModel,largeImageModel];
 
     [self.tableView reloadData];
 }
@@ -56,40 +66,7 @@
     }
     YCAssistiveSettingModel *model = self.settings[indexPath.row];
     [cell bindSettingModel:model];
-    weak(self);
-    [cell.switchSignal subscribeNext:^(id  _Nullable x) {
-        strong(self);
-        [self changedAtIndexPath:indexPath switchOn:[x boolValue]];
-    }];
     return cell;
-}
-
-- (void)changedAtIndexPath:(NSIndexPath *)indexPath switchOn:(BOOL)isOn {
-    
-    YCAssistiveSettingModel *model = self.settings[indexPath.row];
-    model.isOn = isOn;
-    if (indexPath.row == 0) {
-        [YCAssistiveLeaksManager shareManager].enableLeaks = isOn;
-        [[NSUserDefaults standardUserDefaults] setObject:@(isOn) forKey:kYCAssistiveMemoryLeakKey];
-        if (!isOn) {
-            [YCAssistiveLeaksManager shareManager].enableRetainCycle = NO;
-            YCAssistiveSettingModel *nextModel = self.settings[1];
-            nextModel.isOn = NO;
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-            [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:kYCAssistiveRetainCycleKey];
-        }
-    }
-    if (indexPath.row == 1) {
-        [[NSUserDefaults standardUserDefaults] setObject:@(isOn) forKey:kYCAssistiveRetainCycleKey];
-        [YCAssistiveLeaksManager shareManager].enableRetainCycle = isOn;
-        if (isOn) {
-            YCAssistiveSettingModel *preModel = self.settings[0];
-            preModel.isOn = YES;
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kYCAssistiveMemoryLeakKey];
-        }
-    }
-    
 }
 
 #pragma mark - getter
