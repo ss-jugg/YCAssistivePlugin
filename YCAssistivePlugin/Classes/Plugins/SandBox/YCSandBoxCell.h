@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @class YCSandBoxModel;
 @interface YCSandBoxCell : UITableViewCell
-
++ (CGFloat)heightForCell;
 - (void)renderUIWithModel:(YCSandBoxModel *)model;
 @end
 

@@ -107,18 +107,4 @@
     return httpBody;
 }
 
-// byte格式化为 B KB MB 方便流量查看
-+ (NSString *)formatByte:(CGFloat)byte{
-    double convertedValue = byte;
-    int multiplyFactor = 0;
-    NSArray *tokens = [NSArray arrayWithObjects:@"B",@"KB",@"MB",@"GB",@"TB",nil];
-    
-    while (convertedValue > 1024) {
-        convertedValue /= 1024;
-        multiplyFactor++;
-    }
-    return [NSString stringWithFormat:@"%4.2f%@",convertedValue, [tokens objectAtIndex:multiplyFactor]]; ;
-}
-
-
 @end

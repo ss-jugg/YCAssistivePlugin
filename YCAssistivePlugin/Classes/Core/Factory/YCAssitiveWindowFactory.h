@@ -21,6 +21,7 @@
 #import "YCAssistiveFPSPluginWindow.h"
 #import "YCAssistiveCPUPluginWindow.h"
 #import "YCAssistiveMemoryPluginWindow.h"
+#import "YCSandBoxPluginWindow.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface YCAssitiveWindowFactory : NSObject
@@ -50,6 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (YCAssistiveFPSPluginWindow *)fpsPluginWindow;
 + (YCAssistiveCPUPluginWindow *)cpuPluginWindow;
 + (YCAssistiveMemoryPluginWindow *)memoryPluginWindow;
+
++ (YCSandBoxPluginWindow *)sandBoxPluginWindow;
 @end
 
 NS_ASSUME_NONNULL_END

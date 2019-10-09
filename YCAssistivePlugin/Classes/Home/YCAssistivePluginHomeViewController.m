@@ -22,6 +22,7 @@
 #import "YCAssistiveMemoryPlugin.h"
 #import "YCColorSnapPlugin.h"
 #import "YCLargeImagePlugin.h"
+#import "YCSandBoxPlugin.h"
 #import "UIImage+AssistiveBundle.h"
 #import "UIViewController+AssistiveUtil.h"
 #import "YCAssistiveSettingViewController.h"
@@ -116,7 +117,10 @@
     YCAssistiveFunctionModel *appInfo = [YCAssistiveFunctionModel functionModelWithName:@"app信息" imageName:@"icon_home_appinfo" des:@""];
     appInfo.plugin = [[YCAppInfoPlugin alloc] init];
     
-    YCAssistiveFunctionViewModel *viewModel = [YCAssistiveFunctionViewModel viewModelWithTitle:@"常用功能" models:@[switcher,http,logger,crash,appInfo]];
+    YCAssistiveFunctionModel *sandBox = [YCAssistiveFunctionModel functionModelWithName:@"沙盒浏览" imageName:@"icon_home_sandbox" des:@""];
+    sandBox.plugin = [[YCSandBoxPlugin alloc] init];
+    
+    YCAssistiveFunctionViewModel *viewModel = [YCAssistiveFunctionViewModel viewModelWithTitle:@"常用功能" models:@[switcher,http,logger,crash,appInfo,sandBox]];
     return viewModel;
 }
 

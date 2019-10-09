@@ -6,12 +6,14 @@
 //
 
 #import "YCSandBoxPlugin.h"
+#import "YCAssitiveWindowFactory.h"
+#import "YCAssistiveManager.h"
 
 @implementation YCSandBoxPlugin
 
 - (void)pluginDidLoad {
     
-    
+    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory sandBoxPluginWindow]];
 }
 
 @end

@@ -23,9 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSData *)getHttpBodyFromRequest:(NSURLRequest *)request;
 
-// byte格式化为 B KB MB 方便流量查看
-+ (NSString *)formatByte:(CGFloat)byte;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -73,6 +73,11 @@
     return (YCAssistiveMemoryPluginWindow *)[self createWindowWithClassName:NSStringFromClass(YCAssistiveMemoryPluginWindow.class)];
 }
 
++ (YCSandBoxPluginWindow *)sandBoxPluginWindow {
+    
+    return (YCSandBoxPluginWindow *)[self createWindowWithClassName:NSStringFromClass(YCSandBoxPluginWindow.class)];
+}
+
 + (YCAssistiveBaseWindow *)createWindowWithClassName:(NSString *)className {
     NSAssert(className, ([NSString stringWithFormat:@"%@ can't register a class.",className]));
     Class cls = NSClassFromString(className);

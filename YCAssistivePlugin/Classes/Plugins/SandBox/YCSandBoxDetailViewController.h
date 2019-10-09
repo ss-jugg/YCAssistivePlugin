@@ -1,16 +1,17 @@
 //
-//  YCSandBoxViewController.h
+//  YCSandBoxDetailViewController.h
 //  YCAssistivePlugin
 //
-//  Created by shenweihang on 2019/10/8.
+//  Created by shenweihang on 2019/10/9.
 //
 
 #import "YCAssistiveBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface YCSandBoxViewController : YCAssistiveBaseViewController
+@interface YCSandBoxDetailViewController : YCAssistiveBaseViewController
 
+/* 文件路径 */
 @property (nonatomic, copy) NSString *filePath;
 
 @end

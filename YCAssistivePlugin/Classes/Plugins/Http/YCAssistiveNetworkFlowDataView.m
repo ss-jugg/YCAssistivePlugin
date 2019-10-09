@@ -10,7 +10,7 @@
 #import "UIColor+AssistiveColor.h"
 #import "UIView+AssistiveUtils.h"
 #import "YCAssistiveNetworkManager.h"
-#import "YCAssistiveURLUtil.h"
+#import "YCAssistiveUtil.h"
 
 @interface YCAssistiveNetworkDataView : UIView
 
@@ -89,14 +89,14 @@
         totalUploadByte += obj.uploadFlow.floatValue;
         totalDownloadByte += obj.downFlow.floatValue;
     }];
-    NSString *upload = [YCAssistiveURLUtil formatByte:totalUploadByte];
-    NSString *download = [YCAssistiveURLUtil formatByte:totalDownloadByte];
+    NSString *upload = [YCAssistiveUtil formatByte:totalUploadByte];
+    NSString *download = [YCAssistiveUtil formatByte:totalDownloadByte];
     
     CGFloat width = self.as_width / 3.0;
     CGFloat offsetY = 20 + 40 + 20;
     
     self.totalView = [[YCAssistiveNetworkDataView alloc] initWithFrame:CGRectMake(0, 20, self.as_width, 40)];
-    [self.totalView renderUIWithTitle:@"总计抓包" value:[YCAssistiveURLUtil formatByte:(totalUploadByte+totalDownloadByte)]];
+    [self.totalView renderUIWithTitle:@"总计抓包" value:[YCAssistiveUtil formatByte:(totalUploadByte+totalDownloadByte)]];
     [self addSubview:self.totalView];
     
     NSInteger count = [YCAssistiveNetworkManager shareManager].httpModels.count;

@@ -6,8 +6,15 @@
 //
 
 #import "YCSandBoxPluginWindow.h"
-
+#import "YCSandBoxViewController.h"
 @implementation YCSandBoxPluginWindow
 
+- (instancetype)initWithFrame:(CGRect)frame {
+    
+    if (self = [super initWithFrame:frame]) {
+        self.rootViewController = [self navigationControllerByClass:YCSandBoxViewController.class];
+    }
+    return self;
+}
 
 @end

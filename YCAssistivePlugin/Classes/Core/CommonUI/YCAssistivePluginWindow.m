@@ -15,6 +15,11 @@
     return nav;
 }
 
+- (YCAssistiveNavigationController *)navigationControllerByClass:(Class)cls {
+    UIViewController *vc = [[cls alloc] init];
+    return [self navigationController:vc];
+}
+
 - (void)pluginWindowDidClosed {
     
     [[YCAssistiveManager sharedManager] showAssistive];

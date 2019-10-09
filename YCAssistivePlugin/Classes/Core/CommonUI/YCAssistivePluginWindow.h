@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface YCAssistivePluginWindow : YCAssistiveBaseWindow<YCAssistivePluginWindowDelegate>
 
 - (YCAssistiveNavigationController *)navigationController:(UIViewController *)vc;
+- (YCAssistiveNavigationController *)navigationControllerByClass:(Class)cls;
 
 @end
 
