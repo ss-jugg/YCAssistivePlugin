@@ -152,9 +152,6 @@
                                     UIActivityTypePostToVimeo, UIActivityTypePostToTencentWeibo];
     controller.excludedActivityTypes = excludedActivities;
     [self presentViewController:controller animated:YES completion:nil];
-    controller.completionWithItemsHandler = ^(UIActivityType  _Nullable activityType, BOOL completed, NSArray * _Nullable returnedItems, NSError * _Nullable activityError) {
-        
-    };
 }
 
 #pragma mark - getter

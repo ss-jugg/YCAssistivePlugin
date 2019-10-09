@@ -11,6 +11,7 @@
 #import "YCAssistiveDefine.h"
 #import "YCLargeImageInterceptor.h"
 #import "UIColor+AssistiveColor.h"
+#import "YCAssistiveUtil.h"
 
 @implementation UIImageView (AssistiveSDWebImage)
 
@@ -38,7 +39,7 @@
             
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
                 NSData *data = [[SDImageCache sharedImageCache] diskImageDataForKey:[[SDWebImageManager sharedManager] cacheKeyForURL:imageURL]];
-                NSString *size = [NSByteCountFormatter stringFromByteCount:data.length countStyle: NSByteCountFormatterCountStyleBinary];
+                NSString *size = [YCAssistiveUtil formatByte:data.length];
                 UIImage *newImage = nil;
                 if (data.length > [YCLargeImageInterceptor shareInterceptor].minimumSize) {
                     NSString *drawText = [NSString stringWithFormat:@"url : %@ \n size : %@",[url absoluteString],size];

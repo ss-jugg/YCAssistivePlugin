@@ -34,20 +34,17 @@
         [self.containerView addSubview:self.nextImg];
         
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.offset(14);
-            make.trailing.offset(-14);
-            make.top.mas_equalTo(12);
-            make.bottom.equalTo(self.contentView.mas_bottom);
+            make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 1, 0));
         }];
         [self.iconImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(20, 18));
             make.centerY.equalTo(self.containerView);
-            make.leading.offset(14);
+            make.leading.offset(10);
         }];
         [self.nextImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.containerView);
             make.size.mas_equalTo(CGSizeMake(10, 16));
-            make.trailing.offset(-14);
+            make.trailing.offset(-10);
         }];
         [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.iconImg.mas_right).offset(16);
@@ -70,7 +67,6 @@
     if (_containerView == nil) {
         _containerView = [[UIView alloc] init];
         _containerView.backgroundColor = [UIColor as_cellColor];
-        _containerView.layer.cornerRadius = 4.0;
     }
     return _containerView;
 }

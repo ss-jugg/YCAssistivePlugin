@@ -29,12 +29,12 @@
         self.contentView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.containerView];
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(12, 14, 0, 14));
+            make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 1, 0));
         }];
         [self.containerView addSubview:self.desLbl];
         [self.desLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.offset(14);
-            make.trailing.offset(-14);
+            make.leading.offset(10);
+            make.trailing.offset(-10);
             make.top.mas_equalTo(10);
             make.bottom.lessThanOrEqualTo(self.containerView.mas_bottom).offset(-10);
         }];
@@ -61,7 +61,6 @@
     if (!_containerView) {
         _containerView = [[UIView alloc] init];
         _containerView.backgroundColor = [UIColor as_cellColor];
-        _containerView.layer.cornerRadius = 4.0;
     }
     return _containerView;
 }

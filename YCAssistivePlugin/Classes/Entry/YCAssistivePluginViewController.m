@@ -14,6 +14,8 @@
 #import "YCScreenShotPlugin.h"
 #import "YCColorSnapPlugin.h"
 #import "YCAssistiveDebuggerPlugin.h"
+#import "YCNetworkEnvironmentPlugin.h"
+#import "YCURLPlugin.h"
 
 static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimationKey";
 
@@ -50,19 +52,22 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
     screenshotItem.plugin = [[YCScreenShotPlugin alloc] init];
     [items addObject:screenshotItem];
     
-    //查看视图层级
-    YCAssistivePluginItem *hierarchyItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeHierarchy imageName:@"icon_button_hierarchy"];
-
-    [items addObject:hierarchyItem];
+    //环境切换
+    YCAssistivePluginItem *switcherItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeHierarchy imageName:@"icon_button_switcher"];
+    switcherItem.plugin = [[YCNetworkEnvironmentPlugin alloc] init];
+    [items addObject:switcherItem];
+    
+    //网络
+    YCAssistivePluginItem *networkItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypePerformance imageName:@"icon_button_network"];
+    networkItem.plugin = [[YCURLPlugin alloc] init];
+    [items addObject:networkItem];
+    
     //定位当前视图VC
     YCAssistivePluginItem *findVCItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeFindVC imageName:@"icon_button_findVC"];
     findVCItem.plugin = [[YCAssistiveDebuggerPlugin alloc] init];
     [items addObject:findVCItem];
     
-    //性能检测
-    YCAssistivePluginItem *performanceItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypePerformance imageName:@"icon_button_performance"];
 
-    [items addObject:performanceItem];
     return items.copy;
 }
 

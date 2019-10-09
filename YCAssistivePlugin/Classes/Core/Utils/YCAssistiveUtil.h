@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface YCAssistiveUtil : NSObject
 
 + (NSUInteger)fetchFileSizeAtPath:(NSString *)filePath;
+
 // byte格式化为 B KB MB 方便流量查看
 + (NSString *)formatByte:(CGFloat)byte;
 

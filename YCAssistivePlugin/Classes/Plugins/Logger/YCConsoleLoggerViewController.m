@@ -10,10 +10,13 @@
 #import <YCLogger/YCLogger.h>
 #import "YCConsoleLoggerCell.h"
 #import "UIViewController+AssistiveUtil.h"
+#import "YCAssistiveSearchView.h"
+#import "YCAssistiveDefine.h"
 
 @interface YCConsoleLoggerViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSMutableArray *logs;
 
 @end
 
@@ -24,11 +27,38 @@
     [self as_setRightBarItemTitle:@"清空"];
     [self as_setNavigationBarTitle:@"用户日志"];
     [self as_setLeftBarItemTitle:@"关闭"];
+    [self initialUI];
+}
+
+- (void)initialUI {
+    
+    YCAssistiveSearchView *searchView = [[YCAssistiveSearchView alloc] initWithFrame:CGRectMake(0, 0, AS_ScreenWidth, 44)];
+    weak(self);
+    [searchView setSearchBlock:^(NSString * _Nonnull text) {
+        strong(self);
+        [self searchLogsByKey:text];
+    }];
+    [self.view addSubview:searchView];
+    
     [self.view addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self.view);
+        make.top.mas_equalTo(44);
+        make.left.right.equalTo(self.view);
         make.bottom.equalTo(self.view.mas_bottomMargin);
     }];
+    [self.tableView reloadData];
+}
+
+- (void)searchLogsByKey:(NSString *)key {
+    
+    NSMutableArray *logs = [[NSMutableArray alloc] init];
+    [[YCLoggerManager shareManager].loggers enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+       
+        if ([obj.lowercaseString containsString:key.lowercaseString] || key.length == 0) {
+            [logs addObject:obj];
+        }
+    }];
+    self.logs = logs;
     [self.tableView reloadData];
 }
 
@@ -44,7 +74,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [YCLoggerManager shareManager].loggers.count;
+    return self.logs.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -53,8 +83,7 @@
     if (!cell) {
         cell = [[YCConsoleLoggerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YCConsoleLoggerCell"];
     }
-    NSString *log = [YCLoggerManager shareManager].loggers[indexPath.row];
-    [cell bindDescribeValue:log];
+    [cell bindDescribeValue:self.logs[indexPath.row]];
     return cell;
 }
 
@@ -70,5 +99,13 @@
         _tableView.estimatedRowHeight = 60;
     }
     return _tableView;
+}
+
+- (NSMutableArray *)logs {
+    
+    if (!_logs) {
+        _logs = [NSMutableArray arrayWithArray:[YCLoggerManager shareManager].loggers];
+    }
+    return _logs;
 }
 @end

@@ -24,7 +24,7 @@
 @implementation YCAssistiveHttpCell
 
 + (CGFloat)heightForHttpCell {
-    return 92.0;
+    return 80.0;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -39,13 +39,10 @@
         [self.containerView addSubview:self.detailLbl];
         [self.containerView addSubview:self.flagImg];
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.offset(14);
-            make.top.mas_equalTo(12);
-            make.trailing.offset(-14);
-            make.height.mas_equalTo(80);
+            make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 1, 0));
         }];
         [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.offset(14);
+            make.leading.offset(10);
             make.top.equalTo(self.containerView).offset(16);
             make.height.mas_equalTo(20);
         }];
@@ -56,7 +53,7 @@
         }];
         [self.flagImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.containerView);
-            make.trailing.offset(-14);
+            make.trailing.offset(-10);
             make.size.mas_equalTo(CGSizeMake(40, 30));
         }];
     }
@@ -76,7 +73,6 @@
     if (_containerView == nil) {
         _containerView = [[UIView alloc] init];
         _containerView.backgroundColor = [UIColor as_cellColor];
-        _containerView.layer.cornerRadius = 4.0;
     }
     return _containerView;
 }

@@ -24,7 +24,7 @@
     
     if (self = [super initWithFrame:frame]) {
         
-        self.backgroundColor = [UIColor as_cellColor];
+        self.backgroundColor = [UIColor as_mainColor];
         
         self.textfield = [[UITextField alloc] initWithFrame:CGRectMake(20, 6, self.as_width-40, 32)];
         self.textfield.font = [UIFont systemFontOfSize:13.0];
