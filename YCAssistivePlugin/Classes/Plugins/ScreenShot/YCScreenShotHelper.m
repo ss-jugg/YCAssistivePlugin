@@ -131,8 +131,7 @@
     }
     for (UIView *window in windows)
     {
-        Class cls = NSClassFromString(@"YCAssistiveWindow");
-        if (!window.isHidden && cls != nil && ![window isKindOfClass:cls]) {
+        if (!window.isHidden && ![window isKindOfClass:NSClassFromString(@"YCAssistiveWindow")] && ![window isKindOfClass:NSClassFromString(@"YCAssistiveBaseWindow")]) {
             CGContextSaveGState(context);
             CGContextTranslateCTM(context, window.center.x, window.center.y);
             CGContextConcatCTM(context, window.transform);

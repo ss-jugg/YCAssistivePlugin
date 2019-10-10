@@ -67,7 +67,6 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
     findVCItem.plugin = [[YCAssistiveDebuggerPlugin alloc] init];
     [items addObject:findVCItem];
     
-
     return items.copy;
 }
 

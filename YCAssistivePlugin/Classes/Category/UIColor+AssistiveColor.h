@@ -91,6 +91,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIColor *)as_customColor:(long long)hex;
 
 + (UIColor *)as_colorWithHex:(NSString *)hex;
+
++ (UIColor *)as_randomColor;
 @end
 
 NS_ASSUME_NONNULL_END

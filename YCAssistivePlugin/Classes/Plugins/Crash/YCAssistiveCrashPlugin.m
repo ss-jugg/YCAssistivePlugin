@@ -8,6 +8,8 @@
 #import "YCAssistiveCrashPlugin.h"
 #include <libkern/OSAtomic.h>
 #include <execinfo.h>
+#import "YCAssistiveSignalCrashHandler.h"
+#import "YCAssistiveExceptionCrashHandler.h"
 
 NSString *const kAssitiveCrashSignalException = @"signal";
 NSString *const kAssitiveCrashException = @"exception";
@@ -176,20 +178,6 @@ static NSUncaughtExceptionHandler *previousUncaughtExceptionHandler;
 }
 
 #pragma mark - register
-void Assistive_HandleException(NSException *exception) {
-    
-    [[YCAssistiveCrashPlugin sharedPlugin] saveException:exception];
-    //调用之前注册的handler，避免覆盖
-    previousUncaughtExceptionHandler(exception);
-}
-
-void Assistive_SignalHandler(int sig) {
-
-    [[YCAssistiveCrashPlugin sharedPlugin] saveSignal:sig];
-    signal(sig, SIG_DFL);
-    raise(sig);
-}
-
 - (NSString *)backtraceInfo {
     
     void* callstack[128];
@@ -214,6 +202,8 @@ void Assistive_SignalHandler(int sig) {
     names[SIGILL] = "SIGILL";
     names[SIGTRAP] = "SIGTRAP";
     names[SIGSEGV] = "SIGSEGV";
+    names[SIGPIPE] = "SIGPIPE";
+    names[SIGSYS] = "SIGSYS";
     
     const char* reasons[NSIG];
     reasons[SIGABRT] = "abort()";
@@ -222,12 +212,23 @@ void Assistive_SignalHandler(int sig) {
     reasons[SIGILL] = "illegal instruction (not reset when caught)";
     reasons[SIGTRAP] = "breakpoint or other trap instruction";
     reasons[SIGSEGV] = "segmentation violation";
+    reasons[SIGPIPE] = "write on a pipe with no one to read it";
+    reasons[SIGSYS] = "bad argument to system call";
     
     //crash信息
     NSString *reason = [NSString stringWithUTF8String:reasons[signal]];
-    NSString *backtraceInfo = [[YCAssistiveCrashPlugin sharedPlugin] backtraceInfo];
+    
+    // 因为注册了信号崩溃回调方法，系统会来调用，将记录在调用堆栈上，因此此行日志需要过滤掉
+    NSMutableString *mstr = [[NSMutableString alloc] init];
+    for (NSUInteger index = 1; index < NSThread.callStackSymbols.count; index++) {
+        NSString *str = [NSThread.callStackSymbols objectAtIndex:index];
+        [mstr appendString:[str stringByAppendingString:@"\n"]];
+    }
+    [mstr appendString:@"threadInfo:\n"];
+    [mstr appendString:[[NSThread currentThread] description]];
+    
     NSMutableDictionary * detail = [NSMutableDictionary dictionary];
-    [detail setObject:backtraceInfo forKey:@"backtrace"];
+    [detail setObject:mstr forKey:@"backtrace"];
     [detail setObject:reason forKey:@"reason"];
     [detail setObject:[NSString stringWithUTF8String:names[signal]] forKey:@"name"];
     
@@ -240,27 +241,11 @@ void Assistive_SignalHandler(int sig) {
 
 - (void)install {
     
-    //注册回调函数
+    //延迟注册回调函数，保证本次注册是最后完成
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        previousUncaughtExceptionHandler = NSGetUncaughtExceptionHandler();
-        NSSetUncaughtExceptionHandler(&Assistive_HandleException);
-        signal(SIGABRT, Assistive_SignalHandler);
-        signal(SIGILL, Assistive_SignalHandler);
-        signal(SIGSEGV, Assistive_SignalHandler);
-        signal(SIGFPE, Assistive_SignalHandler);
-        signal(SIGBUS, Assistive_SignalHandler);
-        signal(SIGPIPE, Assistive_SignalHandler);
+        [YCAssistiveSignalCrashHandler registerSignalHandler];
+        [YCAssistiveExceptionCrashHandler registerExceptionHandler];
     });
-}
-
-- (void)dealloc {
-    
-    signal( SIGABRT,    SIG_DFL );
-    signal( SIGBUS,     SIG_DFL );
-    signal( SIGFPE,     SIG_DFL );
-    signal( SIGILL,     SIG_DFL );
-    signal( SIGPIPE,    SIG_DFL );
-    signal( SIGSEGV,    SIG_DFL );
 }
 
 @end

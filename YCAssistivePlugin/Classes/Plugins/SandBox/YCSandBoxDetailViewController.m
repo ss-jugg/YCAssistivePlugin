@@ -28,8 +28,7 @@
 - (void)initUI {
     [self.view addSubview:self.textView];
     [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(self.view);
-        make.bottom.equalTo(self.view.mas_bottomMargin);
+        make.edges.equalTo(self.view);
     }];
 }
 

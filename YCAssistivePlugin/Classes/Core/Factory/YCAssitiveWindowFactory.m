@@ -78,6 +78,11 @@
     return (YCSandBoxPluginWindow *)[self createWindowWithClassName:NSStringFromClass(YCSandBoxPluginWindow.class)];
 }
 
++ (YCViewHierarchyPluginWindow *)viewHierarchyPluginWindow {
+    
+    return (YCViewHierarchyPluginWindow *)[self createWindowWithClassName:NSStringFromClass(YCViewHierarchyPluginWindow.class)];
+}
+
 + (YCAssistiveBaseWindow *)createWindowWithClassName:(NSString *)className {
     NSAssert(className, ([NSString stringWithFormat:@"%@ can't register a class.",className]));
     Class cls = NSClassFromString(className);

@@ -24,6 +24,9 @@ extern NSString *const kAssitiveCrashException;
 
 - (void)install;
 
+- (void)saveSignal:(int)signal;
+- (void)saveException:(NSException*)exception;
+
 /**
  crash日志总表
 

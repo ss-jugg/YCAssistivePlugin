@@ -73,6 +73,9 @@
 
 - (void)showItems {
     
+    if (self.pluginItems.count == 0) {
+        return;
+    }
     if (!self.isShow) {
         self.isShow = YES;
         if (self.isLocationAtLeftSide) {

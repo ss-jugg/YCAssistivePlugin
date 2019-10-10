@@ -23,6 +23,8 @@
 #import "YCColorSnapPlugin.h"
 #import "YCLargeImagePlugin.h"
 #import "YCSandBoxPlugin.h"
+#import "YCAssistiveDebuggerPlugin.h"
+#import "YCViewHierarchyPlugin.h"
 #import "UIImage+AssistiveBundle.h"
 #import "UIViewController+AssistiveUtil.h"
 #import "YCAssistiveSettingViewController.h"
@@ -126,7 +128,7 @@
 
 - (YCAssistiveFunctionViewModel *)performanceDetectionFunctions {
     
-    YCAssistiveFunctionModel *performance = [YCAssistiveFunctionModel functionModelWithName:@"卡顿检测" imageName:@"icon_home_ framerate" des:@""];
+    YCAssistiveFunctionModel *performance = [YCAssistiveFunctionModel functionModelWithName:@"帧率检测" imageName:@"icon_home_ framerate" des:@""];
     performance.plugin = [[YCAssistiveFPSPlugin alloc] init];
     
     YCAssistiveFunctionModel *cpu = [YCAssistiveFunctionModel functionModelWithName:@"cpu检测" imageName:@"icon_home_cpu" des:@""];
@@ -147,11 +149,16 @@
 
 - (YCAssistiveFunctionViewModel *)visualSenseFunctions {
     
-    YCAssistiveFunctionModel *color = [YCAssistiveFunctionModel functionModelWithName:@"颜色吸取" imageName:@"icon_home_colorsucker" des:@""];
+    YCAssistiveFunctionModel *color = [YCAssistiveFunctionModel functionModelWithName:@"拾色器" imageName:@"icon_home_colorsucker" des:@""];
     color.plugin = [[YCColorSnapPlugin alloc] init];
     
-
-    YCAssistiveFunctionViewModel *viewModel = [YCAssistiveFunctionViewModel viewModelWithTitle:@"视觉工具" models:@[color]];
+    YCAssistiveFunctionModel *hierarchy = [YCAssistiveFunctionModel functionModelWithName:@"视图层级" imageName:@"icon_home_hierarchy" des:@""];
+    hierarchy.plugin = [[YCViewHierarchyPlugin alloc] init];
+    
+    YCAssistiveFunctionModel *locationView = [YCAssistiveFunctionModel functionModelWithName:@"视图定位" imageName:@"icon_home_findVC" des:@""];
+    locationView.plugin = [[YCAssistiveDebuggerPlugin alloc] init];
+    
+    YCAssistiveFunctionViewModel *viewModel = [YCAssistiveFunctionViewModel viewModelWithTitle:@"视图工具" models:@[color,hierarchy,locationView]];
     return viewModel;
 }
 

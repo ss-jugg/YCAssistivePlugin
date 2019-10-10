@@ -39,6 +39,16 @@
     [self.view addSubview:self.colorSnapInfoView];
 }
 
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    
+    CGPoint pPoint = [self.view convertPoint:point toView:self.colorSnapView];
+    CGPoint iPoint = [self.view convertPoint:point toView:self.colorSnapInfoView];
+    if ([self.colorSnapView pointInside:pPoint withEvent:nil] || [self.colorSnapInfoView pointInside:iPoint withEvent:nil]) {
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - YCAssistiveColorSnapViewDelegate
 - (void)colorSnapView:(YCColorSnapView *)colorSnapView colorHex:(NSString *)colorHex atPosition:(CGPoint)point {
     [self.colorSnapInfoView updateColor:colorHex atPoint:point];
