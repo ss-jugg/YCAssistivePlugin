@@ -8,6 +8,7 @@
 #import "UIView+Badge.h"
 #import <objc/runtime.h>
 #import "CAAnimation+BadgeAnimation.h"
+#import "UIColor+AssistiveColor.h"
 
 static const NSInteger kYCBadgeMaximumBadgeNumber = 99;
 static const CGFloat kYCBadgeDefaultRedDotRadius = 4.f;
@@ -118,14 +119,14 @@ static NSString *const  Animation_bounce  = @"bounce";
 - (void)badgeInit {
     
     if (self.badgeBgColor == nil) {
-        self.badgeBgColor = [UIColor redColor];
+        self.badgeBgColor = [UIColor as_redColor];
     }
     if (self.badgeTextColor == nil) {
         self.badgeTextColor = [UIColor whiteColor];
     }
     if (self.badge == nil) {
         CGFloat redDotWidth = kYCBadgeDefaultRedDotRadius * 2;
-        CGRect frame = CGRectMake(CGRectGetWidth(self.frame), -redDotWidth, redDotWidth, redDotWidth);
+        CGRect frame = CGRectMake(CGRectGetWidth(self.frame)-kYCBadgeDefaultRedDotRadius, -kYCBadgeDefaultRedDotRadius, redDotWidth, redDotWidth);
         self.badge = [[UILabel alloc] initWithFrame:frame];
         self.badge.textAlignment = NSTextAlignmentCenter;
         self.badge.textColor = self.badgeTextColor;

@@ -78,6 +78,7 @@
     
     UIView *borderView = self.borderViews[@(view.hash)];
     [borderView removeFromSuperview];
+    [self.borderViews removeObjectForKey:@(view.hash)];
     [view removeObserver:self forKeyPath:@"frame"];
 }
 
@@ -125,6 +126,12 @@
 #pragma mark - YCViewHierarchyInfoViewDelegate
 - (void)closeHierarchyInfoView:(YCViewHierarchyInfoView *)infoView {
     
+    if (self.observedViews.count > 0) {
+        for (UIView *view in self.observedViews) {
+            [self removeObservedView:view];
+        }
+        [self.observedViews removeAllObjects];
+    }
     [self pluginWindowDidClosed];
 }
 @end
