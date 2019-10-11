@@ -58,6 +58,7 @@
         if (self.frameLayer) {
             self.frameLayer.hidden = YES;
             [self.frameLayer removeFromSuperlayer];
+            self.frameLayer = nil;
         }
     }
 }
