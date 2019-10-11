@@ -8,6 +8,12 @@
 #import "YCViewHierarchyPickerView.h"
 #import "UIView+AssistiveUtils.h"
 #import "UIColor+AssistiveColor.h"
+#import "UIImage+AssistiveBundle.h"
+
+@interface YCViewHierarchyPickerView ()
+
+@property (nonatomic, strong) UIImageView *pickerImgView;
+@end
 
 @implementation YCViewHierarchyPickerView
 
@@ -22,19 +28,9 @@
 - (void)initialUI {
     
     self.overflow = YES;
-    self.backgroundColor = [UIColor clearColor];
-    self.layer.cornerRadius = self.as_width / 2.0;
-    self.layer.borderWidth = 1.0;
-    self.layer.borderColor = [UIColor as_mainColor].CGColor;
-    
-    CAShapeLayer *roundLayer = [CAShapeLayer layer];
-    roundLayer.frame = self.bounds;
-    CGFloat width = 10.0;
-    roundLayer.path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake((self.as_width - width)/2.0, (self.as_height - width)/2.0, width, width)].CGPath;
-    roundLayer.fillColor = [UIColor as_mainColor].CGColor;
-    roundLayer.strokeColor = [UIColor as_mainColor].CGColor;
-    roundLayer.lineWidth = 0.5;
-    [self.layer addSublayer:roundLayer];
+    self.pickerImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.as_width, self.as_width)];
+    self.pickerImgView.image = [UIImage as_imageWithName:@"icon_dingdian"];
+    [self addSubview:self.pickerImgView];
 }
 
 - (void)viewDidUpdate:(UIPanGestureRecognizer *)sender offset:(CGPoint)offsetPoint {

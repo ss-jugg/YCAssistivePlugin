@@ -13,11 +13,11 @@
 #import "YCAssistiveMacro.h"
 
 @interface YCAssistiveSettingCell ()
+
+@property (nonatomic, strong) UIView *bgView;
 @property (nonatomic, strong) UILabel *titleLbl;
 @property (nonatomic, strong) UILabel *detailLbl;
 @property (nonatomic, strong) UISwitch *settingSwitch;
-
-@property (nonatomic, strong) UIView *hLine;
 
 @property (nonatomic, strong) YCAssistiveSettingModel *bindedModel;
 @end
@@ -31,32 +31,29 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:self.bgView];
         [self.contentView addSubview:self.titleLbl];
         [self.contentView addSubview:self.detailLbl];
         [self.contentView addSubview:self.settingSwitch];
-        [self.contentView addSubview:self.hLine];
         
+        [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 1, 0));
+        }];
         [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.offset(14);
+            make.leading.offset(10);
             make.top.mas_equalTo(10);
             make.right.lessThanOrEqualTo(self.contentView.mas_centerX);
         }];
         [self.settingSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(60, 30));
-            make.trailing.offset(-14);
+            make.size.mas_equalTo(CGSizeMake(60, 40));
+            make.trailing.offset(-10);
             make.centerY.equalTo(self.titleLbl);
         }];
         [self.detailLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.titleLbl.mas_left);
             make.top.equalTo(self.titleLbl.mas_bottom).offset(10);
-            make.right.lessThanOrEqualTo(self.contentView.mas_right).offset(-14);
-        }];
-        [self.hLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.detailLbl.mas_bottom).offset(10);
-            make.leading.offset(14);
-            make.trailing.offset(-14);
-            make.height.mas_equalTo(1/[UIScreen mainScreen].scale);
-            make.bottom.equalTo(self.contentView.mas_bottom);
+            make.right.lessThanOrEqualTo(self.contentView.mas_right).offset(-10);
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(-10);
         }];
         self.switchSignal = [RACSubject subject];
     }
@@ -79,6 +76,14 @@
 }
 
 #pragma mark - getter
+- (UIView *)bgView {
+    
+    if (!_bgView) {
+        _bgView = [[UIView alloc] init];
+        _bgView.backgroundColor = [UIColor as_cellColor];
+    }
+    return _bgView;
+}
 - (UILabel *)titleLbl {
     
     if (_titleLbl == nil) {
@@ -114,15 +119,6 @@
         _settingSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5);
     }
     return _settingSwitch;
-}
-
-- (UIView *)hLine {
-    
-    if (_hLine == nil) {
-        _hLine = [[UIView alloc] init];
-        _hLine.backgroundColor = [UIColor whiteColor];
-    }
-    return _hLine;
 }
 
 @end

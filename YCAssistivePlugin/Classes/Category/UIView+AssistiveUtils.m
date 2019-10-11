@@ -44,4 +44,11 @@
     return image;
 }
 
+- (UIColor *)as_hashColor {
+    
+    CGFloat hue = ((self.hash >> 4) % 256) / 255.0;
+    UIColor *color = [UIColor colorWithHue:hue saturation:1.0 brightness:1.0 alpha:1.0];
+    return color;
+}
+
 @end

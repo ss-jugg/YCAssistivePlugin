@@ -10,10 +10,9 @@
 
 @implementation YCAssistivePluginItem
 
-+ (instancetype)pluginItemWithType:(YCAssistivePluginType)type imageName:(NSString *)imageName {
++ (instancetype)pluginItemWithImageName:(NSString *)imageName {
     
     YCAssistivePluginItem *item = [[YCAssistivePluginItem alloc] init];
-    item.pluginType = type;
     item.pluginImage = [UIImage as_imageWithName:imageName];
     return item;
 }

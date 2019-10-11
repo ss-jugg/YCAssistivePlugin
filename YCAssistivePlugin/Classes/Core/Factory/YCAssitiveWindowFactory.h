@@ -23,6 +23,8 @@
 #import "YCAssistiveMemoryPluginWindow.h"
 #import "YCSandBoxPluginWindow.h"
 #import "YCViewHierarchyPluginWindow.h"
+
+#import "YCAssistiveSettingPluginWindow.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface YCAssitiveWindowFactory : NSObject
@@ -56,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (YCSandBoxPluginWindow *)sandBoxPluginWindow;
 
 + (YCViewHierarchyPluginWindow *)viewHierarchyPluginWindow;
+
++ (YCAssistiveSettingPluginWindow *)settingPluginWindow;
 @end
 
 NS_ASSUME_NONNULL_END

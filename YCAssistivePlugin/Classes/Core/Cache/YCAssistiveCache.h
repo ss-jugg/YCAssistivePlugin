@@ -29,8 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)saveLargeImageDetectionSwitch:(BOOL)isOn;
 - (BOOL)largeImageDetectionSwitch;
 
-- (void)saveScreenShotSwitch:(BOOL)isOn;
-- (BOOL)screenShotSwitch;
+- (void)saveViewFrameSwitch:(BOOL)isOn;
+- (BOOL)viewFrameSwitch;
+
 
 @end
 

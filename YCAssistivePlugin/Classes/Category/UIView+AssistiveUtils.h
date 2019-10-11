@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (UIImage *)as_convertViewToImage;
 
+- (UIColor *)as_hashColor;
+
 @end
 
 NS_ASSUME_NONNULL_END

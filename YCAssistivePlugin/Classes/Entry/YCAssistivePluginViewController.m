@@ -16,6 +16,7 @@
 #import "YCAssistiveDebuggerPlugin.h"
 #import "YCNetworkEnvironmentPlugin.h"
 #import "YCURLPlugin.h"
+#import "YCAssistiveSettingPlugin.h"
 
 static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimationKey";
 
@@ -48,24 +49,29 @@ static NSString *rotationAnimationKey = @"TabBarButtonTransformRotationAnimation
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     //截图
-    YCAssistivePluginItem *screenshotItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeScreenShot imageName:@"icon_button_screenshot"];
+    YCAssistivePluginItem *screenshotItem = [YCAssistivePluginItem pluginItemWithImageName:@"icon_button_screenshot"];
     screenshotItem.plugin = [[YCScreenShotPlugin alloc] init];
     [items addObject:screenshotItem];
     
     //环境切换
-    YCAssistivePluginItem *switcherItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeHierarchy imageName:@"icon_button_switcher"];
+    YCAssistivePluginItem *switcherItem = [YCAssistivePluginItem pluginItemWithImageName:@"icon_button_switcher"];
     switcherItem.plugin = [[YCNetworkEnvironmentPlugin alloc] init];
     [items addObject:switcherItem];
     
     //网络
-    YCAssistivePluginItem *networkItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypePerformance imageName:@"icon_button_network"];
+    YCAssistivePluginItem *networkItem = [YCAssistivePluginItem pluginItemWithImageName:@"icon_button_network"];
     networkItem.plugin = [[YCURLPlugin alloc] init];
     [items addObject:networkItem];
     
     //定位当前视图VC
-    YCAssistivePluginItem *findVCItem = [YCAssistivePluginItem pluginItemWithType:YCAssistivePluginTypeFindVC imageName:@"icon_button_findVC"];
+    YCAssistivePluginItem *findVCItem = [YCAssistivePluginItem pluginItemWithImageName:@"icon_button_findVC"];
     findVCItem.plugin = [[YCAssistiveDebuggerPlugin alloc] init];
     [items addObject:findVCItem];
+    
+    //设置
+    YCAssistivePluginItem *settingItem = [YCAssistivePluginItem pluginItemWithImageName:@"icon_button_setting"];
+    settingItem.plugin = [[YCAssistiveSettingPlugin alloc] init];
+    [items addObject:settingItem];
     
     return items.copy;
 }

@@ -12,7 +12,7 @@ static NSString * const kYCAssistiveCPUKey = @"assistive_cpu";
 static NSString * const kYCAssistiveMemoryKey = @"assistive_memory";
 static NSString * const kYCAssistiveLeakKey = @"assistive_leak";
 static NSString * const kYCAssistiveLargeImageDetectionKey = @"assistive_largeImageDetection";
-static NSString * const kYCAssistiveScreenShotKey = @"assistive_screenShot";
+static NSString * const kYCAssistiveViewFrameKey = @"assistive_viewframe";
 
 @interface YCAssistiveCache ()
 
@@ -75,12 +75,11 @@ static NSString * const kYCAssistiveScreenShotKey = @"assistive_screenShot";
    return [[self.userDefaults objectForKey:kYCAssistiveLargeImageDetectionKey] boolValue];
 }
 
-
-- (void)saveScreenShotSwitch:(BOOL)isOn {
-    [self.userDefaults setObject:@(isOn) forKey:kYCAssistiveScreenShotKey];
+- (void)saveViewFrameSwitch:(BOOL)isOn {
+    [self.userDefaults setObject:@(isOn) forKey:kYCAssistiveViewFrameKey];
 }
-- (BOOL)screenShotSwitch {
-    return [[self.userDefaults objectForKey:kYCAssistiveScreenShotKey] boolValue];
+- (BOOL)viewFrameSwitch {
+    return [[self.userDefaults objectForKey:kYCAssistiveViewFrameKey] boolValue];
 }
 
 @end

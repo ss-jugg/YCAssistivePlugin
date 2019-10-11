@@ -36,7 +36,7 @@
     self.observedViews = [[NSMutableSet alloc] init];
     self.borderViews = [[NSMutableDictionary alloc] init];
     
-    self.pickerView = [[YCViewHierarchyPickerView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
+    self.pickerView = [[YCViewHierarchyPickerView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
     self.pickerView.delegate = self;
     [self.view addSubview:self.pickerView];
     self.pickerView.center = self.view.center;
@@ -64,9 +64,7 @@
     UIView *borderView = [[UIView alloc] init];
     [self.view insertSubview:borderView atIndex:0];
     borderView.layer.borderWidth = borderWidth;
-    CGFloat hue = ((view.hash >> 4) % 256) / 255.0;
-    UIColor *color = [UIColor colorWithHue:hue saturation:1.0 brightness:1.0 alpha:1.0];
-    borderView.layer.borderColor = color.CGColor;
+    borderView.layer.borderColor = view.as_hashColor.CGColor;
     borderView.frame = [self frameInLocalForView:view];
     [self.borderViews setObject:borderView forKey:@(view.hash)];
     [view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];

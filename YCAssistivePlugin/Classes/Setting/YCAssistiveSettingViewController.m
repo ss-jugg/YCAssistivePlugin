@@ -13,6 +13,9 @@
 #import "YCAssistiveLeaksManager.h"
 #import "YCAssistiveCache.h"
 #import "YCLargeImageInterceptor.h"
+#import "YCViewFrameManager.h"
+#import "UIViewController+AssistiveUtil.h"
+
 @interface YCAssistiveSettingViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -32,6 +35,12 @@
     }];
     [self setupSettings];
     [self as_setNavigationBarTitle:@"设置"];
+    [self as_setLeftBarItemTitle:@"关闭"];
+}
+
+- (void)as_viewControllerDidTriggerLeftClick:(UIViewController *)viewController {
+    
+    [self pluginWindowDidClosed];
 }
 
 - (void)setupSettings {
@@ -42,13 +51,22 @@
         [YCAssistiveLeaksManager shareManager].enableLeaks = [x boolValue];
         [[YCAssistiveCache shareInstance] saveLeakDetectionSwitch:[x boolValue]];
     }];
+    
     YCAssistiveSettingModel *largeImageModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否开启大图检测" detail:@"开启大图检测，若图片超过指定大小会被标记，同时记录图片，在【大图检测】可查看。"];
     largeImageModel.isOn = [[YCAssistiveCache shareInstance] largeImageDetectionSwitch];
     [largeImageModel.switchSignal subscribeNext:^(id  _Nullable x) {
         [[YCLargeImageInterceptor shareInterceptor] setCanIntercept:[x boolValue]];
         [[YCAssistiveCache shareInstance] saveLargeImageDetectionSwitch:[x boolValue]];
     }];
-    self.settings = @[leakModel,largeImageModel];
+    
+    YCAssistiveSettingModel *viewFrameModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否展示视图边框" detail:@"开启视图边框，可绘制UI组件的边框。"];
+    viewFrameModel.isOn = [[YCAssistiveCache shareInstance] viewFrameSwitch];
+    [viewFrameModel.switchSignal subscribeNext:^(id  _Nullable x) {
+        [[YCViewFrameManager defaultManager] setEnable:[x boolValue]];
+        [[YCAssistiveCache shareInstance] saveViewFrameSwitch:[x boolValue]];
+    }];
+    
+    self.settings = @[leakModel,largeImageModel,viewFrameModel];
 
     [self.tableView reloadData];
 }

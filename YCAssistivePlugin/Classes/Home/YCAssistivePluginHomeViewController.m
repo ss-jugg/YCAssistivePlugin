@@ -27,7 +27,6 @@
 #import "YCViewHierarchyPlugin.h"
 #import "UIImage+AssistiveBundle.h"
 #import "UIViewController+AssistiveUtil.h"
-#import "YCAssistiveSettingViewController.h"
 
 @interface YCAssistivePluginHomeViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -42,7 +41,6 @@
     [super viewDidLoad];
     [self as_setNavigationBarTitle:@"测试辅助工具"];
     [self as_setLeftBarItemTitle:@"关闭"];
-    [self as_setRightBarItemImage:[UIImage as_imageWithName:@"icon_shezhi"]];
     [self.view addSubview:self.tableView];
     self.tableView.frame = self.view.bounds;
     [self.tableView reloadData];
@@ -51,12 +49,6 @@
 - (void)as_viewControllerDidTriggerLeftClick:(UIViewController *)viewController {
     
     [self pluginWindowDidClosed];
-}
-
-- (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
-    
-    YCAssistiveSettingViewController *vc= [[YCAssistiveSettingViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - UITableViewDataSource
