@@ -55,15 +55,15 @@
         [self.containerView addSubview:self.levelImg];
         
         [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(12, 14, 0, 14));
+            make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 1, 0));
         }];
         [self.iconImg mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.offset(14);
+            make.leading.offset(10);
             make.centerY.equalTo(self.containerView);
             make.size.mas_equalTo(CGSizeMake(16, 27));
         }];
         [self.titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.iconImg.mas_right).offset(16);
+            make.left.equalTo(self.iconImg.mas_right).offset(8);
             make.top.mas_equalTo(16);
             make.height.mas_equalTo(20);
         }];
@@ -80,7 +80,7 @@
         [self.reasonLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.titleLbl);
             make.top.equalTo(self.nameLbl.mas_bottom).offset(8);
-            make.right.lessThanOrEqualTo(self.containerView.mas_right).offset(-14);;
+            make.right.lessThanOrEqualTo(self.containerView.mas_right).offset(-10);
             make.bottom.lessThanOrEqualTo(self.containerView.mas_bottom).offset(-8).priorityHigh();
         }];
         [self.levelImg mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -123,7 +123,6 @@
     if (_containerView == nil) {
         _containerView = [[UIView alloc] init];
         _containerView.backgroundColor = [UIColor as_cellColor];
-        _containerView.layer.cornerRadius = 4.0;
     }
     return _containerView;
 }

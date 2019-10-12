@@ -67,4 +67,8 @@
     }
     return NO;
 }
+
+- (void)dealloc {
+    [self stopRecord];
+}
 @end

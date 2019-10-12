@@ -13,12 +13,11 @@ static NSUncaughtExceptionHandler *previousUncaughtExceptionHandler = NULL;
 
 @implementation YCAssistiveExceptionCrashHandler
 
-
 + (void)registerExceptionHandler {
     
     //获取之前注册的回调
     previousUncaughtExceptionHandler = NSGetUncaughtExceptionHandler();
-    
+    NSSetUncaughtExceptionHandler(&assistiveExceptionCrashHandler);
 }
 
 static void assistiveExceptionCrashHandler(NSException *exception) {

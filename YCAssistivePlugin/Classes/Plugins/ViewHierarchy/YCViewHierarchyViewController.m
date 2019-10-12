@@ -46,6 +46,7 @@
     [self.view addSubview:self.infoView];
 }
 
+#pragma mark - 事件穿透
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     
     CGPoint pPoint = [self.view convertPoint:point toView:self.pickerView];
@@ -56,6 +57,7 @@
     return NO;
 }
 
+#pragma mark - 视图描边
 - (void)beginObserveView:(UIView *)view borderWidth:(CGFloat)borderWidth {
     
     if ([self.observedViews containsObject:view]) {
@@ -70,6 +72,7 @@
     [view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
+//MARK:移除监听的视图kvo
 - (void)removeObservedView:(UIView *)view {
     
     if (![self.observedViews containsObject:view]) {
@@ -82,6 +85,7 @@
     [view removeObserver:self forKeyPath:@"frame"];
 }
 
+//MARK:视图定位
 - (CGRect)frameInLocalForView:(UIView *)view {
     UIWindow *window = [UIApplication sharedApplication].delegate.window;
     CGRect rect = [view convertRect:view.bounds toView:window];
@@ -89,6 +93,7 @@
     return rect;
 }
 
+//kvo更新描边位置
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     
     if ([object isKindOfClass:[UIView class]]) {
@@ -133,5 +138,14 @@
         [self.observedViews removeAllObjects];
     }
     [self pluginWindowDidClosed];
+}
+
+- (void)dealloc {
+    if (self.observedViews) {
+        for (UIView *view in self.observedViews) {
+            [self removeObservedView:view];
+        }
+        [self.observedViews removeAllObjects];
+    }
 }
 @end

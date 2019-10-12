@@ -36,16 +36,16 @@
     [self.tableView reloadData];
 }
 
-- (void)viewWillLayoutSubviews {
-    
-    [super viewWillLayoutSubviews];
-    for (UIView *subView in self.tableView.subviews) {
-        if ([subView isKindOfClass:NSClassFromString(@"UISwipeActionPullView")]) {
-            CGRect frame = subView.frame;
-            subView.frame = CGRectMake(frame.origin.x, frame.origin.y+12, CGRectGetWidth(frame), CGRectGetHeight(frame)-12);
-        }
-    }
-}
+//- (void)viewWillLayoutSubviews {
+//
+//    [super viewWillLayoutSubviews];
+//    for (UIView *subView in self.tableView.subviews) {
+//        if ([subView isKindOfClass:NSClassFromString(@"UISwipeActionPullView")]) {
+//            CGRect frame = subView.frame;
+//            subView.frame = CGRectMake(frame.origin.x, frame.origin.y+12, CGRectGetWidth(frame), CGRectGetHeight(frame)-12);
+//        }
+//    }
+//}
 
 - (void)as_viewControllerDidTriggerLeftClick:(UIViewController *)viewController {
     
@@ -66,11 +66,11 @@
     [cell bindDict:self.datas[indexPath.row]];
     return cell;
 }
-
-- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    [self.view setNeedsLayout];
-}
+//
+//- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+//    
+//    [self.view setNeedsLayout];
+//}
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     

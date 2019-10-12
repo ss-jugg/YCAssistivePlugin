@@ -64,17 +64,13 @@
     
     NSMutableArray<UIView *> *subviewsAtPoint = [NSMutableArray array];
     for (UIView *subview in view.subviews) {
-        BOOL isHidden = subview.hidden || subview.alpha < 0.01;
-        if (isHidden) {
+        if (subview.hidden || subview.alpha < 0.01) {
             continue;
         }
         
         BOOL subviewContainsPoint = CGRectContainsPoint(subview.frame, pointInView);
         if (subviewContainsPoint) {
             [subviewsAtPoint addObject:subview];
-        }
-
-        if (subviewContainsPoint || !subview.clipsToBounds) {
             CGPoint pointInSubview = [view convertPoint:pointInView toView:subview];
             [subviewsAtPoint addObjectsFromArray:[self recursiveSubviewsAtPoint:pointInSubview inView:subview]];
         }

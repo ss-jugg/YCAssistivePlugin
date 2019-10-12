@@ -140,7 +140,7 @@ static NSUncaughtExceptionHandler *previousUncaughtExceptionHandler;
     return [NSString stringWithFormat:@"App_%@%@(%@)-Device_%@-System_%@-UUID%@", name, shortVersion, version,device, system, uuid];
 }
 
-#pragma mark - buplic
+#pragma mark - puplic
 /*  取出对应key的crash log */
 - (NSDictionary* )crashForKey:(NSString *)key {
     

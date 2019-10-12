@@ -65,4 +65,9 @@
     return NO;
 }
 
+- (void)dealloc {
+    
+    [self.fpsHelper endFPS];
+}
+
 @end
