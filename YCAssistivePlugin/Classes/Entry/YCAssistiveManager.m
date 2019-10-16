@@ -123,15 +123,20 @@
         return;
     }
     [self removeAllVisibleWindows];
+    window.hidden = NO;
     if (window == self.assistiveWindow) {
         [self.keyWindow makeKeyWindow];
         self.keyWindow = nil;
-        window.hidden = NO;
     }else {
         if (![[UIApplication sharedApplication].keyWindow isKindOfClass:[YCAssistiveBaseWindow class]]) {
             self.keyWindow = [UIApplication sharedApplication].keyWindow;
         }
-        [window makeKeyAndVisible];
+        if ([window yc_canBecomeKeyWindow]) {
+            [window makeKeyAndVisible];
+        }else {
+            [self.keyWindow makeKeyAndVisible];
+            self.keyWindow = nil;
+        }
     }
     [self.visibleWindows addObject:window];
     

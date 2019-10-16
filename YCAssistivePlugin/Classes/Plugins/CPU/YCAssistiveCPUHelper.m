@@ -51,14 +51,13 @@
             if (kr != KERN_SUCCESS) {
                 return NSNotFound;
             }
-        }
-        
-        basic_info_th = (thread_basic_info_t)thinfo;
-        
-        if (!(basic_info_th->flags & TH_FLAGS_IDLE)) {
-            tot_sec = tot_sec + basic_info_th->user_time.seconds + basic_info_th->system_time.seconds;
-            tot_usec = tot_usec + basic_info_th->user_time.microseconds + basic_info_th->system_time.microseconds;
-            tot_cpu = tot_cpu + basic_info_th->cpu_usage / (float)TH_USAGE_SCALE * 100.0;
+            basic_info_th = (thread_basic_info_t)thinfo;
+            
+            if (!(basic_info_th->flags & TH_FLAGS_IDLE)) {
+                tot_sec = tot_sec + basic_info_th->user_time.seconds + basic_info_th->system_time.seconds;
+                tot_usec = tot_usec + basic_info_th->user_time.microseconds + basic_info_th->system_time.microseconds;
+                tot_cpu = tot_cpu + basic_info_th->cpu_usage / (float)TH_USAGE_SCALE * 100.0;
+            }
         }
     }
     

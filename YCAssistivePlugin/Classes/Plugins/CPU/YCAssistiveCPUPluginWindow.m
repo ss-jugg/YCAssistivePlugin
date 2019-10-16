@@ -19,4 +19,8 @@
     return self;
 }
 
+- (BOOL)yc_canBecomeKeyWindow {
+    return NO;
+}
+
 @end

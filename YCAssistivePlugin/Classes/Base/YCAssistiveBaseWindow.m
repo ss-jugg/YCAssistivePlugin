@@ -13,7 +13,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        
+        self.windowLevel = UIWindowLevelStatusBar + 119;
     }
     return self;
 }
@@ -22,6 +22,10 @@
     
     UIViewController *vc = [self yc_currentShowingViewController];
     return [vc pointInside:point withEvent:event];
+}
+
+- (BOOL)yc_canBecomeKeyWindow {
+    return YES;
 }
 
 @end

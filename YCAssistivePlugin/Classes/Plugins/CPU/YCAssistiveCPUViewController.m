@@ -49,7 +49,7 @@
 - (void)doSecondFunction {
     
     CGFloat cpuUsage = [YCAssistiveCPUHelper cpuUsageOfApp];
-    [self.cpuView.detectionView addValue:[NSString stringWithFormat:@"%.1f",cpuUsage] atHeight:cpuUsage*self.cpuView.detectionView.as_height/100];
+    [self.cpuView.detectionView addValue:[NSString stringWithFormat:@"%.1f%%",cpuUsage] atHeight:cpuUsage*self.cpuView.detectionView.as_height/100];
 }
 
 - (void)stopRecord {

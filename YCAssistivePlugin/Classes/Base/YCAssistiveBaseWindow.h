@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface YCAssistiveBaseWindow : UIWindow
 
+- (BOOL)yc_canBecomeKeyWindow;
+
 @end
 
 NS_ASSUME_NONNULL_END
