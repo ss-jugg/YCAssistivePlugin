@@ -13,6 +13,7 @@ static NSString * const kYCAssistiveMemoryKey = @"assistive_memory";
 static NSString * const kYCAssistiveLeakKey = @"assistive_leak";
 static NSString * const kYCAssistiveLargeImageDetectionKey = @"assistive_largeImageDetection";
 static NSString * const kYCAssistiveViewFrameKey = @"assistive_viewframe";
+static NSString * const kYCAssistiveAPILoggerKey = @"assistive_apilogger";
 
 @interface YCAssistiveCache ()
 
@@ -80,6 +81,13 @@ static NSString * const kYCAssistiveViewFrameKey = @"assistive_viewframe";
 }
 - (BOOL)viewFrameSwitch {
     return [[self.userDefaults objectForKey:kYCAssistiveViewFrameKey] boolValue];
+}
+
+- (void)saveAPILoggerSwitch:(BOOL)isOn {
+    [self.userDefaults setObject:@(isOn) forKey:kYCAssistiveAPILoggerKey];
+}
+- (BOOL)APILoggerSwitch {
+    return [[self.userDefaults objectForKey:kYCAssistiveAPILoggerKey] boolValue];
 }
 
 @end

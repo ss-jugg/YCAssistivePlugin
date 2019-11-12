@@ -79,6 +79,10 @@
     //内存泄漏检测
     BOOL isLeakDetectionOn = [[YCAssistiveCache shareInstance] leakDetectionSwitch];
     [[YCAssistiveLeaksManager shareManager] setEnableLeaks:isLeakDetectionOn];
+    
+    //开启网络日志
+    BOOL isAPILogger = [[YCAssistiveCache shareInstance] APILoggerSwitch];
+    YCAPILoggerEnabled = isAPILogger;
 
     [[YCScreenShotHelper sharedInstance] setEnable:YES];
 }
@@ -101,14 +105,6 @@
 
 - (void)showPluginWindow:(YCAssistiveBaseWindow *)window completion:(void(^)(void))completion {
     [self addWindow:window completion:completion];
-}
-
-- (void)hidePluginWindow:(YCAssistiveBaseWindow *)window {
-    [self hidePluginWindow:window completion:nil];
-}
-
-- (void)hidePluginWindow:(YCAssistiveBaseWindow *)window completion:(void(^_Nullable)(void))completion {
-    [self removeVisibleWindow:window automaticallyShow:YES completion:completion];
 }
 
 - (void)addWindow:(YCAssistiveBaseWindow *)window completion:(void(^)(void))completion {

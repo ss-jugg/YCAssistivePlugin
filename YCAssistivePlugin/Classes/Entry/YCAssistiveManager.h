@@ -26,10 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showPluginWindow:(YCAssistiveBaseWindow *)window completion:(void(^_Nullable)(void))completion;
 
-- (void)hidePluginWindow:(YCAssistiveBaseWindow *)window;
-
-- (void)hidePluginWindow:(YCAssistiveBaseWindow *)window completion:(void(^_Nullable)(void))completion;
-
 - (void)showHomeWindow;
 
 - (void)showAssistive;

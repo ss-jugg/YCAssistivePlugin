@@ -32,7 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)saveViewFrameSwitch:(BOOL)isOn;
 - (BOOL)viewFrameSwitch;
 
-
+- (void)saveAPILoggerSwitch:(BOOL)isOn;
+- (BOOL)APILoggerSwitch;
 @end
 
 NS_ASSUME_NONNULL_END
