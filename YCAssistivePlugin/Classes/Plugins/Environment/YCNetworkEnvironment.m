@@ -9,7 +9,7 @@
 #import "YCNetworkConfigur.h"
 #import "YCNetworkConfigStorage.h"
 #import "YCAssistiveMacro.h"
-#import <YCNetworking/YCNetworking.h>
+//#import <YCNetworking/YCNetworking.h>
 
 #define YC_ENV_FORMAT(a) ({ \
 NSString *r = a; \
@@ -42,13 +42,13 @@ r; \
     
     if (self = [super init]) {
         self.environmentAddresses = [@[@{@"title":@"测试环境",
-                                         @"address":@"http://192.168.2.16"},
+                                         @"address":@""},
                                        @{@"title":@"其他环境1",
-                                         @"address":@"http://192.168.2.11"},
+                                         @"address":@""},
                                         @{@"title":@"预发环境",
-                                          @"address":@"http://demo.yunchejinrong.com"},
+                                          @"address":@""},
                                        @{@"title":@"线上环境",
-                                         @"address":@"http://system.yunchejinrong.com"}] mutableCopy];
+                                         @"address":@""}] mutableCopy];
     }
     return self;
 }
@@ -64,16 +64,16 @@ r; \
     
     //app，获取缓存中测试环境地址
     if ([self.storage configursForKey:kAppEnvironmentApiKey].count > 0) {
-        kProjectAPIRoot = YC_ENV_FORMAT([self.storage configursForKey:kAppEnvironmentApiKey].firstObject.address);
+//        kProjectAPIRoot = YC_ENV_FORMAT([self.storage configursForKey:kAppEnvironmentApiKey].firstObject.address);
     }else {
-        kProjectAPIRoot = kYCProjectAPIRoot;
+//        kProjectAPIRoot = kYCProjectAPIRoot;
         [self addDefaultAPIAddressesForKey:kAppEnvironmentApiKey];
     }
 }
 
 - (void)addDefaultAPIAddressesForKey:(NSString *)key {
     
-    YCNetworkConfigur *configur = [YCNetworkConfigur configurWithAddress:[self addressStringForApi:kYCProjectAPIRoot] remark:@"测试环境"];
+    YCNetworkConfigur *configur = [YCNetworkConfigur configurWithAddress:[self addressStringForApi:@""] remark:@"测试环境"];
     configur.selected = YES;
     [self.storage addConfigur:configur forKey:key];
     
@@ -97,7 +97,7 @@ r; \
 - (void)switchEnvironmentForKey:(NSString *)key {
     
     YCNetworkConfigur *con = [self.storage selectedConfigurForKey:key];
-    kProjectAPIRoot = YC_ENV_FORMAT(con.address);
+//    kProjectAPIRoot = YC_ENV_FORMAT(con.address);
 }
 
 #pragma mark - 环境

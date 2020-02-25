@@ -1,10 +1,5 @@
 # YCAssistivePlugin
 
-[![CI Status](https://img.shields.io/travis/shenweihang/YCAssistivePlugin.svg?style=flat)](https://travis-ci.org/shenweihang/YCAssistivePlugin)
-[![Version](https://img.shields.io/cocoapods/v/YCAssistivePlugin.svg?style=flat)](https://cocoapods.org/pods/YCAssistivePlugin)
-[![License](https://img.shields.io/cocoapods/l/YCAssistivePlugin.svg?style=flat)](https://cocoapods.org/pods/YCAssistivePlugin)
-[![Platform](https://img.shields.io/cocoapods/p/YCAssistivePlugin.svg?style=flat)](https://cocoapods.org/pods/YCAssistivePlugin)
-
 ## 介绍
 
 **YCAssistivePlugin**是一款App辅助开发测试工具，可以有效帮助开发解决常见问题，辅助测试完成功能测试。

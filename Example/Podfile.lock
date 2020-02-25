@@ -1,5 +1,11 @@
 PODS:
+  - FBRetainCycleDetector (0.1.4)
+  - Masonry (1.1.0)
+  - ReactiveObjC (3.1.1)
   - YCAssistivePlugin (0.1.0):
+    - FBRetainCycleDetector
+    - Masonry
+    - ReactiveObjC
     - YYModel
   - YYModel (1.0.4)
 
@@ -7,17 +13,24 @@ DEPENDENCIES:
   - YCAssistivePlugin (from `../`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - YYModel
+  trunk:
+    - FBRetainCycleDetector
+    - Masonry
+    - ReactiveObjC
 
 EXTERNAL SOURCES:
   YCAssistivePlugin:
     :path: "../"
 
 SPEC CHECKSUMS:
-  YCAssistivePlugin: 62764fe9c39cc9f478c022e13bfd6efc52bf53e6
+  FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  YCAssistivePlugin: 2bba08f2ce2a155d199e2bb3dee5439d010af7e2
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
 PODFILE CHECKSUM: b51d1d3772dfe73c54fb841a11170507f03ae14c
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.8.4
