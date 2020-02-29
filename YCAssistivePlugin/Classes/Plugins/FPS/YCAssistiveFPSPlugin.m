@@ -6,12 +6,13 @@
 //
 
 #import "YCAssistiveFPSPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCAssistiveFPSPluginWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 @implementation YCAssistiveFPSPlugin
 
 - (void)pluginDidLoad {
     
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory fpsPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCAssistiveFPSPluginWindow.class)];
 }
 @end

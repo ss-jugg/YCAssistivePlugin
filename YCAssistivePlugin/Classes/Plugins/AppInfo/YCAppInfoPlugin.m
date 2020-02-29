@@ -6,14 +6,14 @@
 //
 
 #import "YCAppInfoPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCAppInfoPluginWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 
 @implementation YCAppInfoPlugin
 
 - (void)pluginDidLoad {
-
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory appInfoPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCAppInfoPluginWindow.class)];
 }
 
 @end

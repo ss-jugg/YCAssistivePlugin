@@ -6,13 +6,14 @@
 //
 
 #import "YCViewHierarchyPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCViewHierarchyPluginWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 @implementation YCViewHierarchyPlugin
 
 - (void)pluginDidLoad {
     
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory viewHierarchyPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCViewHierarchyPluginWindow.class)];
 }
 
 @end

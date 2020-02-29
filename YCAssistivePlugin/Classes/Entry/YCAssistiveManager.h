@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import "YCAssistiveWindow.h"
-#import "YCScreenShotWindow.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

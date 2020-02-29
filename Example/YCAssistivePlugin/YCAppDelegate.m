@@ -7,12 +7,22 @@
 //
 
 #import "YCAppDelegate.h"
-
+#import "YCViewController.h"
+#import "YCAssistivePlugin.h"
 @implementation YCAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    [[YCAssistiveManager sharedManager] installPlugins];
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[[YCViewController alloc] init]];
+    self.window.rootViewController = nav;
+    
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

@@ -6,14 +6,14 @@
 //
 
 #import "YCURLPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCURLPluginWindow.h"
 #import "YCAssistiveManager.h"
-
+#import "YCAssistiveDefine.h"
 @implementation YCURLPlugin
 
 - (void)pluginDidLoad {
 
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory urlPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCURLPluginWindow.class)];
 }
 
 @end

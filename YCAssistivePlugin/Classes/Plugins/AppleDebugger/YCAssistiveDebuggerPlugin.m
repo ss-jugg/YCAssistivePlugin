@@ -6,12 +6,13 @@
 //
 
 #import "YCAssistiveDebuggerPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCAssistiveDebuggerPluginWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 @implementation YCAssistiveDebuggerPlugin
 
 - (void)pluginDidLoad {
     
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory debuggerPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCAssistiveDebuggerPluginWindow.class)];
 }
 @end

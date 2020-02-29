@@ -7,7 +7,6 @@
 
 #import "YCAssistiveContentViewController.h"
 #import <Masonry/Masonry.h>
-#import <MBProgressHUD/MBProgressHUD.h>
 #import "UIImage+AssistiveBundle.h"
 #import "UIFont+AssistiveFont.h"
 

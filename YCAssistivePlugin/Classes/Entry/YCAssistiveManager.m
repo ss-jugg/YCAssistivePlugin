@@ -8,14 +8,13 @@
 #import "YCAssistiveManager.h"
 #import "YCNetworkEnvironment.h"
 #import "YCAssistiveCrashPlugin.h"
-#import <YCLogger/YCLogger.h>
+//#import <YCLogger/YCLogger.h>
 #import "YCScreenShotHelper.h"
-#import "YCAssitiveWindowFactory.h"
 #import "YCAssistiveNetworkManager.h"
 #import "YCLargeImageInterceptor.h"
 #import "YCAssistiveLeaksManager.h"
 #import "YCAssistiveCache.h"
-
+#import "YCAssistiveDefine.h"
 @interface YCAssistiveManager ()
 
 /* 避免重复 */
@@ -61,7 +60,7 @@
     }
     self.hasInstalled = YES;
     //开启日志
-    [[YCLoggerManager shareManager] startLogger];
+//    [[YCLoggerManager shareManager] startLogger];
     
     //开启crash捕捉
     [[YCAssistiveCrashPlugin sharedPlugin] install];
@@ -82,14 +81,14 @@
     
     //开启网络日志
     BOOL isAPILogger = [[YCAssistiveCache shareInstance] APILoggerSwitch];
-    YCAPILoggerEnabled = isAPILogger;
+//    YCAPILoggerEnabled = isAPILogger;
 
     [[YCScreenShotHelper sharedInstance] setEnable:YES];
 }
 
 #pragma mark - public
 - (void)showHomeWindow {
-    [self addWindow:[YCAssitiveWindowFactory pluginHomeWindow] completion:nil];
+    [self addWindow:YCPluginWindow(NSClassFromString(@"YCAssistiveHomeWindow")) completion:nil];
 }
 - (void)showAssistive {
     [self addWindow:self.assistiveWindow completion:nil];

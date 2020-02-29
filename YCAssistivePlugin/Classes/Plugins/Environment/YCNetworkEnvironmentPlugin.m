@@ -6,14 +6,15 @@
 //
 
 #import "YCNetworkEnvironmentPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCNetworkEnvironmentWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 
 @implementation YCNetworkEnvironmentPlugin
 
 - (void)pluginDidLoad {
     
-    [[YCAssistiveManager sharedManager]showPluginWindow:[YCAssitiveWindowFactory networkEnvironmentWindow]];
+    [[YCAssistiveManager sharedManager]showPluginWindow:YCPluginWindow(YCNetworkEnvironmentWindow.class)];
 }
 
 @end

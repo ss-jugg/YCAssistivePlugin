@@ -7,10 +7,10 @@
 
 #import "YCScreenShotPlugin.h"
 #import "YCAssistiveManager.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCScreenShotWindow.h"
 #import "YCScreenShotPreviewViewController.h"
 #import "YCScreenShotHelper.h"
-
+#import "YCAssistiveDefine.h"
 @implementation YCScreenShotPlugin
 
 - (void)pluginDidLoad {
@@ -22,7 +22,7 @@
 
 - (void)pluginDidLoad:(NSDictionary *)data {
     
-    YCScreenShotWindow *window = [YCAssitiveWindowFactory screenShotWindow];
+    YCScreenShotWindow *window = YCPluginWindow(YCScreenShotWindow.class);
     YCScreenShotPreviewViewController *rootVC = (YCScreenShotPreviewViewController *)window.rootViewController;
     rootVC.shotImage = data[@"shotImage"];
     [[YCAssistiveManager sharedManager] showPluginWindow:window];

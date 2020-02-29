@@ -6,14 +6,14 @@
 //
 
 #import "YCLargeImagePlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCLargeImagePluginWindow.h"
 #import "YCAssistiveManager.h"
-
+#import "YCAssistiveDefine.h"
 @implementation YCLargeImagePlugin
 
 - (void)pluginDidLoad {
 
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory largeImagePluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCLargeImagePluginWindow.class)];
 }
 
 @end

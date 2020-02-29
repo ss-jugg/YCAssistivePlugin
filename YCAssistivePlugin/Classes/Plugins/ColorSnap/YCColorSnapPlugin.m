@@ -6,13 +6,14 @@
 //
 
 #import "YCColorSnapPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCColorSnapWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 @implementation YCColorSnapPlugin
 
 - (void)pluginDidLoad {
 
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory colorSnapWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCColorSnapWindow.class)];
 }
 
 @end

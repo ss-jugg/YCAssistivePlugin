@@ -6,14 +6,15 @@
 //
 
 #import "YCCrashPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCCrashPluginWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 
 @implementation YCCrashPlugin
 
 - (void)pluginDidLoad {
     
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory crashPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCCrashPluginWindow.class)];
 }
 
 @end

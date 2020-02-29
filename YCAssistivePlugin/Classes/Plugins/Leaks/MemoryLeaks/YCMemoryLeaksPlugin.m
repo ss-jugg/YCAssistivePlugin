@@ -6,14 +6,14 @@
 //
 
 #import "YCMemoryLeaksPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCMemoryLeaksPluginWindow.h"
 #import "YCAssistiveManager.h"
-
+#import "YCAssistiveDefine.h"
 @implementation YCMemoryLeaksPlugin
 
 - (void)pluginDidLoad {
     
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory leaksPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCMemoryLeaksPluginWindow.class)];
 }
 
 @end

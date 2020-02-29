@@ -7,7 +7,7 @@
 
 #import "YCConsoleLoggerViewController.h"
 #import <Masonry/Masonry.h>
-#import <YCLogger/YCLogger.h>
+//#import <YCLogger/YCLogger.h>
 #import "YCConsoleLoggerCell.h"
 #import "UIViewController+AssistiveUtil.h"
 #import "YCAssistiveSearchView.h"
@@ -52,19 +52,19 @@
 - (void)searchLogsByKey:(NSString *)key {
     
     NSMutableArray *logs = [[NSMutableArray alloc] init];
-    [[YCLoggerManager shareManager].loggers enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-       
-        if ([obj.lowercaseString containsString:key.lowercaseString] || key.length == 0) {
-            [logs addObject:obj];
-        }
-    }];
+//    [[YCLoggerManager shareManager].loggers enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//
+//        if ([obj.lowercaseString containsString:key.lowercaseString] || key.length == 0) {
+//            [logs addObject:obj];
+//        }
+//    }];
     self.logs = logs;
     [self.tableView reloadData];
 }
 
 - (void)as_viewControllerDidTriggerRightClick:(UIViewController *)viewController {
     
-    [[YCLoggerManager shareManager] removeAllConsoleLoggers];
+//    [[YCLoggerManager shareManager] removeAllConsoleLoggers];
     [self.tableView reloadData];
 }
 
@@ -104,7 +104,7 @@
 - (NSMutableArray *)logs {
     
     if (!_logs) {
-        _logs = [NSMutableArray arrayWithArray:[YCLoggerManager shareManager].loggers];
+//        _logs = [NSMutableArray arrayWithArray:[YCLoggerManager shareManager].loggers];
     }
     return _logs;
 }

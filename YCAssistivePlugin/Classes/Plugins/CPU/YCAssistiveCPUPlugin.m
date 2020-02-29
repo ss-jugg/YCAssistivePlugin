@@ -6,13 +6,14 @@
 //
 
 #import "YCAssistiveCPUPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCAssistiveCPUPluginWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 @implementation YCAssistiveCPUPlugin
 
 - (void)pluginDidLoad {
     
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory cpuPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCAssistiveCPUPluginWindow.class)];
 }
 
 @end

@@ -6,11 +6,12 @@
 //
 
 #import "YCAssistiveMemoryPlugin.h"
-#import "YCAssitiveWindowFactory.h"
+#import "YCAssistiveMemoryPluginWindow.h"
 #import "YCAssistiveManager.h"
+#import "YCAssistiveDefine.h"
 @implementation YCAssistiveMemoryPlugin
 
 - (void)pluginDidLoad {
-    [[YCAssistiveManager sharedManager] showPluginWindow:[YCAssitiveWindowFactory memoryPluginWindow]];
+    [[YCAssistiveManager sharedManager] showPluginWindow:YCPluginWindow(YCAssistiveMemoryPluginWindow.class)];
 }
 @end

@@ -15,7 +15,7 @@
 #import "YCLargeImageInterceptor.h"
 #import "YCViewFrameManager.h"
 #import "UIViewController+AssistiveUtil.h"
-#import <YCLogger/YCLogger.h>
+//#import <YCLogger/YCLogger.h>
 
 @interface YCAssistiveSettingViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -67,13 +67,13 @@
         [[YCAssistiveCache shareInstance] saveViewFrameSwitch:[x boolValue]];
     }];
     
-    YCAssistiveSettingModel *apiLoggerModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否打印网络请求日志" detail:@"默认关闭；开启后可在控制台查看网络日志"];
-    apiLoggerModel.isOn = [[YCAssistiveCache shareInstance] APILoggerSwitch];
-    [apiLoggerModel.switchSignal subscribeNext:^(id  _Nullable x) {
-        YCAPILoggerEnabled = [x boolValue];
-        [[YCAssistiveCache shareInstance] saveAPILoggerSwitch:[x boolValue]];
-    }];
-    self.settings = @[leakModel,largeImageModel,viewFrameModel,apiLoggerModel];
+//    YCAssistiveSettingModel *apiLoggerModel = [YCAssistiveSettingModel settingModelWithTitle:@"是否打印网络请求日志" detail:@"默认关闭；开启后可在控制台查看网络日志"];
+//    apiLoggerModel.isOn = [[YCAssistiveCache shareInstance] APILoggerSwitch];
+//    [apiLoggerModel.switchSignal subscribeNext:^(id  _Nullable x) {
+//        YCAPILoggerEnabled = [x boolValue];
+//        [[YCAssistiveCache shareInstance] saveAPILoggerSwitch:[x boolValue]];
+//    }];
+    self.settings = @[leakModel,largeImageModel,viewFrameModel];
 
     [self.tableView reloadData];
 }

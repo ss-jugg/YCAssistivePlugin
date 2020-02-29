@@ -19,6 +19,9 @@
 reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)] \
 userInfo:nil]
 
+#define YCPluginWindow(cls) \
+[[cls alloc] initWithFrame:[UIScreen mainScreen].bounds]
+
 CF_EXPORT void YCSwizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelector);
 
 extern NSString *const kAppEnvironmentApiKey;
